@@ -24,7 +24,7 @@ export const axiosInstance = () => {
 export const getCsrfToken = async () => {
   try {
     const res = await axiosInstance().get('/sanctum/csrf-cookie')
-    
+   
     return res
   } catch (err) {
     return err
@@ -67,8 +67,16 @@ export const putWithAxios = async (url, dataToSend) => {
 }
 
 export const getUserFromAPI = async () => {
-  const res = await getWithAxios('/api/user')
-  return res
+  await getCsrfToken()
+  try {
+    const {user} = await getWithAxios('/api/user')
+    return user
+  } catch (error) {
+    return 'false'
+  }
+ 
+  
+ 
 }
 
 

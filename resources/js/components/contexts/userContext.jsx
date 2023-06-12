@@ -1,5 +1,5 @@
 import {createContext, useEffect, useMemo, useState } from "react";
-import { getCsrfToken, getWithAxios } from "../api/axios";
+import { getCsrfToken, getUserFromAPI, getWithAxios } from "../api/axios";
 
 
 export const UserContext = createContext()
@@ -15,8 +15,9 @@ export const UserContextProvider = ({children}) => {
 
     const getUser = async () => {
         
-        const user = await getWithAxios('/api/user')
-         setUser(user)
+        const user = await getUserFromAPI()
+        const res = user
+         setUser(res)
     }
 
 

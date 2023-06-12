@@ -4,6 +4,7 @@ import DashboardLayout from "./dashboardComponents/dashbboardLayout";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Index from "./userInterface";
 import Login from "./userInterface/login";
+import Register from "./userInterface/register";
 import { UserContextProvider } from "./contexts/userContext";
 import UserDashboard from "./userInterface/userDashboard/userDashboard";
 import PlaceOrder from "./userInterface/userDashboard/placeOrder";
@@ -18,6 +19,11 @@ const router = createBrowserRouter([
     {
         path: "/account/sign-in",
         element: <Login />,
+    },
+
+    {
+        path : "/account/register",
+        element : <Register />
     },
 
     {

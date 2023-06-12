@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Carbon\Carbon;
 
@@ -17,20 +18,17 @@ class UserTableSeeder extends Seeder
     {
         
 
-        \DB::table('users')->delete();
         
-        \DB::table('users')->insert(array (
-            0 => 
-            array (
-                'id' => 1,
-                'username' => 'admin',
-                'name' => 'Admin',
+        
+        User::create([
+            'username' => 'user',
+                'name' => 'user',
                 'contact_number' => '9876543210',
                 'address' => NULL,
-                'email' => 'admin@admin.com',
+                'email' => 'user@user.com',
                 'password' => bcrypt('12345678'),
                 'email_verified_at' => NULL,
-                'user_type' => 'admin',
+                'user_type' => 'user',
                 'player_id' => NULL,
                 'remember_token' => NULL,
                 'last_notification_seen' => NULL,
@@ -40,8 +38,8 @@ class UserTableSeeder extends Seeder
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at' => NULL,
                 'deleted_at' => NULL,
-            )
-        ));
+           
+        ]);
         
         
     }

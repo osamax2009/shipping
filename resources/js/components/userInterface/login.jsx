@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { postWithAxios, getCsrfToken, checkLogStatus } from "../api/axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../contexts/userContext";
 
 const Login = () => {
@@ -20,34 +20,33 @@ const Login = () => {
             email : email,
             password : password
         }
-        const data = await postWithAxios("/api/login", dataToSend)
+        const {data} = await postWithAxios("/api/login", dataToSend)
 
-        console.log(data)
+       // console.log(data)
 
         if(data.errors)
         {
             setErrors(data.errors)
         }
 
-        if(data.status== "success")
+        if(data.email)
         {
-            setUser(data.user)
+            setUser(data)
 
-            if(data.user.user_type == "user")
+            if(data.user_type == "user")
             {
                 navigate("/account/dashboard/place-new-order")
                 document.location.reload()
             }
 
-            if(data.user.user_type == "admin")
+            if(data.user_type == "admin")
             {
-                navigate("/account/dashboard")
+                navigate("/account/admin/dashboard")
                 document.location.reload()
             }
            
         }
 
-        console.log(data)
         
     }
 
@@ -183,20 +182,20 @@ const Login = () => {
                                         </form>
                                         <hr />
                                         <div className="text-center">
-                                            <a
+                                            <Link
                                                 className="small"
-                                                href="forgot-password.html"
+                                               to={"/"}
                                             >
                                                 Forgot Password?
-                                            </a>
+                                            </Link>
                                         </div>
                                         <div className="text-center">
-                                            <a
+                                            <Link
                                                 className="small"
-                                                href="register.html"
+                                                to={'/account/sign-in'}
                                             >
                                                 Create an Account!
-                                            </a>
+                                            </Link>
                                         </div>
                                     </div>
                                 </div>

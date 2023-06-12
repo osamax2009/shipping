@@ -22,4 +22,4 @@ if (mix.inProduction()) {
     mix.version();
 }
 
-mix.browserSync('localhost:8000');
+mix.browserSync('laravel.test');

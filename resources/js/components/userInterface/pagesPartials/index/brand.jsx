@@ -14,30 +14,25 @@ const Brand = () => {
         const {data} = await getWithAxios("/api/country-list");
         
         if (data) {
-            console.log('appzpzppp')
             setCountries(data)
         }
-
-        console.log(data)
-
-        console.log(countries)
         
     };
 
     const handleOrder = async () => {
         await  getCsrfToken()
         const user = await getUserFromAPI();
-        console.log(user)
+
+        if(user ===  "false")
+        {
+            navigate("/account/sign-in");
+        }
         
         if (user) {
             const dataToSend = {
 
             }
             const res = await postWithAxios('/api/order-save',dataToSend)
-
-            console.log(res)
-        }else{
-            navigate("/account/sign-in");
         }
 
     };
@@ -47,7 +42,7 @@ const Brand = () => {
     }, []);
 
     return (
-        <div className="bg-gradient-to-b from-[#4caf50] to-[#388a3a] pb-24 px-24 ">
+        <div className="bg-gradient-to-b from-[#4caf50] to-[#388a3a] pb-24 px-24 pt-32 ">
             <div className="text-[4rem] text-white font-bold">
                 We make shipping easy
             </div>
@@ -55,16 +50,16 @@ const Brand = () => {
                 Immediate prices, easy booking
             </div>
             <div>
-                <div class="grid bg-white rounded-lg md:grid-cols-5">
-                    <div class="md:col-span-4 w-full grid rounded-t-lg md:rounded-l-lg gap-8 px-4 py-2 md:grid-cols-3">
+                <div class="grid bg-white mt-4  md:grid-cols-5">
+                    <div class="md:col-span-4 w-full grid  md:rounded-l-lg gap-8 px-4 py-2 md:grid-cols-4">
                         <div className="form-group">
                             <label className="form-label font-bold">FROM</label>
                             <select name="" id="" className="custom-select">
                                 <option value="">choose a country</option>
                                 {
-                                    countries?.map((country,index) => {
+                                    countries?.map((country,index) => 
                                         <option key={index} value={country.name}> {country.name}</option>
-                                    })
+                                    )
                                 }
                             </select>
                         </div>
@@ -74,19 +69,19 @@ const Brand = () => {
                             <select name="" id="" className="custom-select">
                             <option value="">choose a country</option>
                                 {
-                                    countries?.map((country,index) => {
+                                    countries?.map((country,index) => 
                                         <option key={index} value={country.name}> {country.name}</option>
-                                    })
+                                    )
                                 }
                             </select>
                         </div>
 
                         <Services />
                     </div>
-                    <div className="w-full bg-green-600 rounded-b-lg md:rounded-r-lg">
+                    <div className="w-full bg-green-600 ">
                         <button
                             onClick={handleOrder}
-                            className="h-full w-full text-white font-bold bg-blue-600 rounded-b-lg md:rounded-r-lg hover:bg-blue-"
+                            className="h-full w-full text-white font-bold bg-blue-600 hover:bg-blue-400"
                         >
                             Create order
                         </button>

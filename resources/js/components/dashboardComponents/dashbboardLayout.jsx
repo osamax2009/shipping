@@ -11,13 +11,14 @@ const DashboardLayout = ({children}) => {
     const navigate = useNavigate()
 
     const checkUserStatus = async () => {
-        const isConnected = await checkLogStatus()
+        const res = await checkLogStatus()
+         conbsole.log(res)
 
-        if(!isConnected)
+       /*  if(!isConnected)
         {
             navigate("/")
         }
-
+ */
       
     }
 

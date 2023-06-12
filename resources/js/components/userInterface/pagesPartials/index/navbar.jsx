@@ -3,12 +3,14 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { BsMenuApp, BsMenuButton } from 'react-icons/bs';
 import { HiBars3CenterLeft } from 'react-icons/hi2';
 import { IoClose } from 'react-icons/io5'
+import { Button, Image } from "@nextui-org/react";
 
 
 const Navbar = () => {
 
    const [color, setColor] = useState(false);
   const [hidden, setHidden] = useState(true);
+  const navigate = useNavigate()
 
   const handleColor = () => {
     if (window.scrollY >= 100) {
@@ -21,6 +23,10 @@ const Navbar = () => {
   const handleMobileMenu = () => {
     hidden ? setHidden(false) : setHidden(true);
   };
+
+  const handleLogin = () => {
+    navigate("/account/register")
+  }
 
   const menu = [
     {
@@ -64,11 +70,11 @@ const Navbar = () => {
           <Link href={'/'}>
             <div>
               {!color ? (
-                <img src={window.location.origin+ '/images/ic_app_logo_color.png'} className="h-32" alt="Logo GLab" />
+                <Image src={ '/images/ic_app_logo_color.png'} className="h-24" alt="Logo GLab" />
               ) : (
-                <img
-                  src="/logo_2.png"
-                  className="h-32  transition ease-in"
+                <Image
+                  src="/images/ic_app_logo_color.png"
+                  className="h-24  transition ease-in"
                   alt="Logo GLab"
                 />
               )}
@@ -76,7 +82,17 @@ const Navbar = () => {
           </Link>
           {/* Desktop menu */}
           <div className="hidden md:flex justify-end items-center w-full gap-8 h-24">
-           mnu
+          <div>
+            <Button css={{ background : "#ff5722" }} className="text-black" auto  onPress={handleLogin}>
+              create account
+            </Button>
+          </div>
+
+          <div>
+            <Link css={{ background : "#ffffff" }} className={!color ? "text-white" : "text-black"} auto to={"/account/sign-in"}>
+              Log in
+            </Link>
+          </div>
 
             <div>
               <Link href={'/'}>
