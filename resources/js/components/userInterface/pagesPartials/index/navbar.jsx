@@ -70,12 +70,12 @@ const Navbar = () => {
           <Link href={'/'}>
             <div>
               {!color ? (
-                <Image src={ '/images/ic_app_logo_color.png'} className="h-24" alt="Logo GLab" />
+                <Image src={ '/images/ic_app_logo_color.png'} className="h-8" alt="Logo" />
               ) : (
                 <Image
                   src="/images/ic_app_logo_color.png"
-                  className="h-24  transition ease-in"
-                  alt="Logo GLab"
+                  className="h-8  transition ease-in"
+                  alt="Logo"
                 />
               )}
             </div>

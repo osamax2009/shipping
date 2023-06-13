@@ -353,10 +353,12 @@ class UserController extends Controller
         return json_custom_response($response);
     }
 
-    public function login()
+    public function login(Request $request)
     {      
         if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){
             
+            $request->session()->regenerate();
+
             $user = Auth::user();
 
             if(request('player_id') != null){
@@ -580,6 +582,14 @@ class UserController extends Controller
     public function logout(Request $request)
     {
         $user = Auth::user();
+
+        Auth::logout();
+
+       // $request->user()->tokens()->delete();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
 
         if($request->is('api*')){
 

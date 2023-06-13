@@ -2,8 +2,9 @@ import { useContext, useEffect } from "react"
 import Sidebar from "./partials/sidebar"
 import Topbar from "./partials/topbar"
 import { UserContext } from "../contexts/userContext"
-import { checkLogStatus } from "../api/axios"
+import { checkLogStatus, getUserFromAPI } from "../api/axios"
 import { useNavigate } from "react-router-dom"
+import AskQuestion from "../partials/askQuestion"
 
 
 const DashboardLayout = ({children}) => {
@@ -11,14 +12,16 @@ const DashboardLayout = ({children}) => {
     const navigate = useNavigate()
 
     const checkUserStatus = async () => {
-        const res = await checkLogStatus()
-         conbsole.log(res)
 
-       /*  if(!isConnected)
+        const res = await getUserFromAPI()
+
+         console.log("status from dashboard layout",res)
+
+        if(res == "false")
         {
-            navigate("/")
+            navigate("/account/sign-in")
         }
- */
+
       
     }
 
@@ -38,6 +41,7 @@ const DashboardLayout = ({children}) => {
                 </div>
 
             </div>
+            <AskQuestion />
 
         </div>
     )

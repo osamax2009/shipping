@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers;
 use App\Http\Controllers\API;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,7 +18,14 @@ use App\Http\Controllers\API;
 */
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+    if(Auth::check()) {
+        return response()->json([
+            "user" => Auth::user()
+        ]);
+    }
+    return response()->json([
+        "user" => false
+    ]);
 });
 
 Route::post('register',[API\UserController::class, 'register']);

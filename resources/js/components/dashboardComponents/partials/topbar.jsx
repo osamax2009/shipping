@@ -9,15 +9,25 @@ const Topbar = () => {
     const navigate = useNavigate()
 
     const handleLogout = async() => {
-  
-        const data = await getWithAxios("/api/logout")
-        console.log(data)
-        
-        if(data.status == "success")
-        {
-            navigate("/")
-            setUser(null)
+
+        try {
+            const data = await getWithAxios("/api/logout")
+            console.log("logout response",data)
+            if(data.status_code == 200)
+            {
+                navigate("/")
+                setUser(null)
+            }
+
+        } catch (error) {
+            console.log(error.response)
         }
+  
+       
+
+       
+        
+       
 
     }
 

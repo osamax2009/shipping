@@ -38,7 +38,7 @@ const Sidebar = () => {
 
     return (
         <ul
-            className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion"
+            className="navbar-nav bg-appGreen sidebar sidebar-dark accordion"
             id="accordionSidebar"
         >
             {/* Sidebar - Brand  */}

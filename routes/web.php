@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\Storage;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::post('login',[API\UserController::class,'login']);
+Route::get('logout', [ API\UserController::class, 'logout' ]);
+
+
 Route::fallback(function()
 {
     return view("index");

@@ -7,6 +7,7 @@ export const axiosInstance = () => {
     params: {
       headers: {
         Accept: 'application/json',
+        "X-Requested-With" : "XMLHttpRequest"
       },
       
     },
@@ -67,13 +68,17 @@ export const putWithAxios = async (url, dataToSend) => {
 }
 
 export const getUserFromAPI = async () => {
-  await getCsrfToken()
-  try {
+
+  const {user} = await getWithAxios('/api/user')
+  
+  return user
+
+ /*  try {
     const {user} = await getWithAxios('/api/user')
     return user
   } catch (error) {
-    return 'false'
-  }
+    return 'an error occured'
+  } */
  
   
  
@@ -83,14 +88,15 @@ export const getUserFromAPI = async () => {
 
 export const checkLogStatus = async () => {
 
-  const res = await getWithAxios("/api/check-log-status")
-  
-  if(res.status == "success")
-  {
-    return true;
+  try {
+    const res = await getUserFromAPI()
+    console.log("status check response", res)
+    if(res !== 'false')
+    {
+      return true
+    }
+  } catch (error) {
+    return false
   }
-  else
-  {
-    return false;
-  }
+
 }

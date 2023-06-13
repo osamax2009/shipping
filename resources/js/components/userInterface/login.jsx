@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { postWithAxios, getCsrfToken, checkLogStatus } from "../api/axios";
+import { postWithAxios, getCsrfToken, checkLogStatus, getUserFromAPI } from "../api/axios";
 import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../contexts/userContext";
 
@@ -14,32 +14,32 @@ const Login = () => {
 
     const handleLogin = async (e) => {
         e.preventDefault()
-        const token = await getCsrfToken()
+         await getCsrfToken()
        
         const dataToSend = {
             email : email,
             password : password
         }
-        const {data} = await postWithAxios("/api/login", dataToSend)
+        const data = await postWithAxios("/api/login", dataToSend)
 
-       // console.log(data)
+        console.log('login response',data)
 
-        if(data.errors)
+        if(data.message)
         {
-            setErrors(data.errors)
+            setErrors(data)
         }
 
-        if(data.email)
+        if(data.data.email)
         {
-            setUser(data)
+            setUser(data.data)
 
-            if(data.user_type == "user")
+            if(data.data.user_type == "user")
             {
                 navigate("/account/dashboard/place-new-order")
                 document.location.reload()
             }
 
-            if(data.user_type == "admin")
+            if(data.data.user_type == "admin")
             {
                 navigate("/account/admin/dashboard")
                 document.location.reload()
@@ -52,11 +52,13 @@ const Login = () => {
 
 
     const checkUserStatus = async () => {
-        const isConnected = await checkLogStatus()
+        const isConnected = await getUserFromAPI()
 
-        if(isConnected)
+        console.log("stauts from login", isConnected)
+
+        if(isConnected.email)
         {
-            navigate("/")
+            navigate(-1)
         }
 
       
@@ -121,6 +123,7 @@ const Login = () => {
                                                     placeholder="Enter Email Address..."
                                                     value={email}
                                                     onChange={e => setEmail(e.target.value)}
+                                                    required
                                                 />
                                                 <span className="text-danger">
                                                     {errors?.email}
@@ -135,12 +138,13 @@ const Login = () => {
                                                     placeholder="Password"
                                                     value={password}
                                                     onChange={e => setpassword(e.target.value)}
+                                                    required
                                                 />
                                                 <span className="text-danger text-center py-4">
                                                     {errors?.password}
                                                 </span>
                                             </div>
-                                            <div className="form-group">
+                                            {/* <div className="form-group">
                                                 <div className="custom-control custom-checkbox small">
                                                     <input
                                                         type="checkbox"
@@ -154,8 +158,8 @@ const Login = () => {
                                                         Remember Me
                                                     </label>
                                                 </div>
-                                            </div>
-                                            <span className="text-danger">
+                                            </div> */}
+                                            <span className="text-danger py-2 text-center">
                                                     {errors?.message}
                                                 </span>
                                             <button
