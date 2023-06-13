@@ -23,7 +23,7 @@ export const UserContextProvider = ({children}) => {
 
     useEffect(()=>{
         getUser()
-    },[user])
+    },[])
 
     return(
         <UserContext.Provider value={contextMemo}>

@@ -583,9 +583,9 @@ class UserController extends Controller
     {
         $user = Auth::user();
 
-        Auth::logout();
+       // Auth::logout();
 
-       // $request->user()->tokens()->delete();
+        $request->user()->tokens()->delete();
 
         $request->session()->invalidate();
 

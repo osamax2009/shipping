@@ -13,7 +13,7 @@ const Topbar = () => {
         try {
             const data = await getWithAxios("/api/logout")
             console.log("logout response",data)
-            if(data.status_code == 200)
+            if(data.message == "Logout successfully")
             {
                 navigate("/")
                 setUser(null)
