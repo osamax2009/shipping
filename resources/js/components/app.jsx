@@ -1,14 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import DashboardLayout from "./dashboardComponents/dashbboardLayout";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Index from "./userInterface";
 import Login from "./userInterface/login";
 import Register from "./userInterface/register";
 import { UserContextProvider } from "./contexts/userContext";
-import UserDashboard from "./userInterface/userDashboard/userDashboard";
 import PlaceOrder from "./userInterface/userDashboard/placeOrder";
 import CountriesAndCities from "./adminInterface/countriesAndCities";
+import OrderResume from "./userInterface/userDashboard/orderResume";
 
 const router = createBrowserRouter([
     {
@@ -27,13 +26,13 @@ const router = createBrowserRouter([
     },
 
     {
-        path: "/account/dashboard",
-        element: <UserDashboard />
+        path : "/account/dashboard/place-new-order",
+        element : <PlaceOrder />
     },
 
     {
-        path : "/account/dashboard/place-new-order",
-        element : <PlaceOrder />
+        path : "/account/dashboard/new-order-resume",
+        element : <OrderResume />
     },
 
     {

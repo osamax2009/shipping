@@ -1,126 +1,126 @@
 const Footer = () => {
     return (
-        <footer class="styles_footer__7b64H" data-testid="Footer">
-            <div class="styles_footerLinksWrapper__JQ_Al">
-                <div class="styles_footerLinks__0wjQR">
-                    <div class="styles_linksGroup__Drq7I">
-                        <p class="styles_title__YXzwY">Worldwide Shipping</p>
-                        <div class="styles_list__9CrzQ">
+        <footer className="styles_footer__7b64H" data-testid="Footer">
+            <div className="styles_footerLinksWrapper__JQ_Al">
+                <div className="styles_footerLinks__0wjQR">
+                    <div className="styles_linksGroup__Drq7I">
+                        <p className="styles_title__YXzwY">Worldwide Shipping</p>
+                        <div className="styles_list__9CrzQ">
                             <a
-                                class="styles_link__wTrv3"
+                                className="styles_link__wTrv3"
                                 href="/en/global-shipping/europe"
                             >
                                 Europe shipping services
                             </a>
                             <a
-                                class="styles_link__wTrv3"
+                                className="styles_link__wTrv3"
                                 href="/en/global-shipping/north-america"
                             >
                                 North America shipping services
                             </a>
                             <a
-                                class="styles_link__wTrv3"
+                                className="styles_link__wTrv3"
                                 href="/en/global-shipping/south-america"
                             >
                                 South America shipping services
                             </a>
                             <a
-                                class="styles_link__wTrv3"
+                                className="styles_link__wTrv3"
                                 href="/en/global-shipping/asia"
                             >
                                 Asia shipping services
                             </a>
                             <a
-                                class="styles_link__wTrv3"
+                                className="styles_link__wTrv3"
                                 href="/en/global-shipping/africa"
                             >
                                 Africa shipping services
                             </a>
                             <a
-                                class="styles_link__wTrv3"
+                                className="styles_link__wTrv3"
                                 href="/en/pp/parcel-postage"
                             >
                                 International parcel postage
                             </a>
                         </div>
                     </div>
-                    <div class="styles_linksGroup__Drq7I">
-                        <p class="styles_title__YXzwY">
+                    <div className="styles_linksGroup__Drq7I">
+                        <p className="styles_title__YXzwY">
                             Package and envelope shipping
                         </p>
-                        <div class="styles_list__9CrzQ">
+                        <div className="styles_list__9CrzQ">
                             <a
-                                class="styles_link__wTrv3"
+                                className="styles_link__wTrv3"
                                 href="/en/courier-services"
                             >
                                 Courier services in Europe
                             </a>
                             <a
-                                class="styles_link__wTrv3"
+                                className="styles_link__wTrv3"
                                 href="/en/sc/parcel-delivery"
                             >
                                 Shipping to different cities worldwide
                             </a>
                             <a
-                                class="styles_link__wTrv3"
+                                className="styles_link__wTrv3"
                                 href="/en/shipping-luggage"
                             >
                                 Shipping luggage internationally
                             </a>
                             <a
-                                class="styles_link__wTrv3"
+                                className="styles_link__wTrv3"
                                 href="/en/ec/send-documents"
                             >
                                 Sending documents abroad
                             </a>
-                            <a class="styles_link__wTrv3" href="/en/pack-ship">
+                            <a className="styles_link__wTrv3" href="/en/pack-ship">
                                 Packing guidelines for different items
                             </a>
                             <a
-                                class="styles_link__wTrv3"
+                                className="styles_link__wTrv3"
                                 href="/en/sp/send-parcel"
                             >
                                 Send parcels overseas
                             </a>
                         </div>
                     </div>
-                    <div class="styles_linksGroup__Drq7I">
-                        <p class="styles_title__YXzwY">
+                    <div className="styles_linksGroup__Drq7I">
+                        <p className="styles_title__YXzwY">
                             Other logistics solutions
                         </p>
-                        <div class="styles_list__9CrzQ">
+                        <div className="styles_list__9CrzQ">
                             <a
-                                class="styles_link__wTrv3"
+                                className="styles_link__wTrv3"
                                 href="/en/business/special-logistics"
                             >
                                 Custom freight solutions
                             </a>
                             <a
-                                class="styles_link__wTrv3"
+                                className="styles_link__wTrv3"
                                 href="/en/business/dedicated-van-delivery"
                             >
                                 Dedicated van deliveries
                             </a>
                             <a
-                                class="styles_link__wTrv3"
+                                className="styles_link__wTrv3"
                                 href="/en/pallet-delivery"
                             >
                                 Pallet delivery in Europe
                             </a>
                             <a
-                                class="styles_link__wTrv3"
+                                className="styles_link__wTrv3"
                                 href="/en/courier-companies"
                             >
                                 Best courier companies
                             </a>
                             <a
-                                class="styles_link__wTrv3"
+                                className="styles_link__wTrv3"
                                 href="/en/cvc/courier-comparison"
                             >
                                 Courier comparison{" "}
                             </a>
                             <a
-                                class="styles_link__wTrv3"
+                                className="styles_link__wTrv3"
                                 href="/en/s/services/cheap-parcel-delivery"
                             >
                                 Cheapest parcel delivery
@@ -129,16 +129,16 @@ const Footer = () => {
                     </div>
                 </div>
             </div>
-            <div class="styles_wrapper__q7UNl">
-                <div class="styles_topSection__UNxZJ">
-                    <div class="styles_logosWrapper__I03xR">
+            <div className="styles_wrapper__q7UNl">
+                <div className="styles_topSection__UNxZJ">
+                    <div className="styles_logosWrapper__I03xR">
                         <a
                             href="/"
                             aria-label="HomePage"
-                            class="styles_link__MLX12"
+                            className="styles_link__MLX12"
                         >
                             <div
-                                class="styles_logo__XcQ9B "
+                                className="styles_logo__XcQ9B "
                                 style={{"width":"200px"}}
                             >
                                 <svg
@@ -168,61 +168,61 @@ const Footer = () => {
                             </div>
                         </a>
                         <div>
-                            <div class="styles_title__UYH4v">Powered by</div>
-                            <div class="styles_imagesWrapper__eEKBz">
-                                <img src="/_assets/footer/post.svg" alt="" />
+                            <div className="styles_title__UYH4v">Powered by</div>
+                            <div className="styles_imagesWrapper__eEKBz">
+                               {/*  <img src="/_assets/footer/post.svg" alt="" />
                                 <img src="/_assets/footer/ergo.svg" alt="" />
                                 <img
                                     src="/_assets/footer/proSieben.svg"
                                     alt=""
                                 />
                                 <img
-                                    class="styles_frc__K7tzg"
+                                    className="styles_frc__K7tzg"
                                     src="/_assets/footer/FRC-2x.png"
                                     alt=""
-                                />
+                                /> */}
                             </div>
                         </div>
-                        <div class="">
-                            <div class="styles_title__HWkPq">
+                        <div className="">
+                            <div className="styles_title__HWkPq">
                                 SECURE PAYMENT
                             </div>
-                            <div class="styles_imagesWrapper__1jTiR">
+                            <div className="styles_imagesWrapper__1jTiR">
                                 <img
                                     src="/_assets/footer/visa.svg"
                                     alt=""
-                                    class=""
+                                    className=""
                                 />
                                 <img
                                     src="/_assets/footer/Mastercard_branded.svg"
                                     alt=""
-                                    class=""
+                                    className=""
                                 />
                                 <img
                                     src="/_assets/footer/American_Express.svg"
                                     alt=""
-                                    class=""
+                                    className=""
                                 />
                                 <img
                                     src="/_assets/footer/PayPal_vertical.svg"
                                     alt=""
-                                    class=""
+                                    className=""
                                 />
                                 <img
                                     src="/_assets/footer/google.svg"
                                     alt=""
-                                    class=""
+                                    className=""
                                 />
                                 <img
                                     src="/_assets/footer/apple.svg"
                                     alt=""
-                                    class="styles_apple__i4xif"
+                                    className="styles_apple__i4xif"
                                 />
                             </div>
                         </div>
                     </div>
-                    <div class="styles_infoLinksWrapper__6h27v">
-                        <dl class="styles_list__8_R5e">
+                    <div className="styles_infoLinksWrapper__6h27v">
+                        <dl className="styles_list__8_R5e">
                             <dt>Company</dt>
                             <dd>
                                 <a href="/en/about-us">About us</a>
@@ -239,7 +239,7 @@ const Footer = () => {
                                 </a>
                             </dd>
                         </dl>
-                        <dl class="styles_list__8_R5e">
+                        <dl className="styles_list__8_R5e">
                             <dt>Product</dt>
                             <dd>
                                 <a href="/en/public-api">API integration</a>
@@ -258,7 +258,7 @@ const Footer = () => {
                                 <a href="/en/business">Business dashboard</a>
                             </dd>
                         </dl>
-                        <dl class="styles_list__8_R5e">
+                        <dl className="styles_list__8_R5e">
                             <dt>Support</dt>
                             <dd>
                                 <a href="/en/help-center">Help centre</a>
@@ -274,29 +274,29 @@ const Footer = () => {
                             </dd>
                         </dl>
                     </div>
-                    <div class="styles_langSocialSection__mkxdo">
-                        <div class="styles_langWrapper__XIb_3">
+                    <div className="styles_langSocialSection__mkxdo">
+                        <div className="styles_langWrapper__XIb_3">
                             <div
                                 data-testid="Dropdown"
-                                class="styles_dropdown__pz4PI"
+                                className="styles_dropdown__pz4PI"
                                 role="none"
                             >
                                 <a
                                     role="menuitem"
-                                    class="styles_option__lgN_e styles_toggle__HCUPS styles_item__tXPYx"
+                                    className="styles_option__lgN_e styles_toggle__HCUPS styles_item__tXPYx"
                                     href="#"
                                     orientation="top_left"
                                 >
                                     <div
                                         id="footerLanguageSelector"
-                                        class="styles_iconWrapper__2CRnA"
+                                        className="styles_iconWrapper__2CRnA"
                                     >
                                         <svg
                                             aria-hidden="true"
                                             focusable="false"
                                             data-prefix="far"
                                             data-icon="globe"
-                                            class="svg-inline--fa fa-globe styles_globeSign___TZU1"
+                                            className="svg-inline--fa fa-globe styles_globeSign___TZU1"
                                             role="img"
                                             xmlns="http://www.w3.org/2000/svg"
                                             viewBox="0 0 512 512"
@@ -313,16 +313,16 @@ const Footer = () => {
                                             </g>
                                         </svg>
                                     </div>
-                                    <div class="styles_label__qHxF2">
+                                    <div className="styles_label__qHxF2">
                                         English
                                     </div>
-                                    <div class="styles_arrowWrapper__qY6SS">
+                                    <div className="styles_arrowWrapper__qY6SS">
                                         <svg
                                             aria-hidden="true"
                                             focusable="false"
                                             data-prefix="fas"
                                             data-icon="chevron-down"
-                                            class="svg-inline--fa fa-chevron-down styles_arrowDown__e4Q7D styles_arrowBlack__tchIX"
+                                            className="svg-inline--fa fa-chevron-down styles_arrowDown__e4Q7D styles_arrowBlack__tchIX"
                                             role="img"
                                             xmlns="http://www.w3.org/2000/svg"
                                             viewBox="0 0 512 512"
@@ -336,22 +336,22 @@ const Footer = () => {
                                 </a>
                             </div>
                         </div>
-                        <div class="styles_footerFollowUsSection__nyhin">
-                            <p class="styles_followTitle___kG22">Follow us!</p>
-                            <div class="styles_socialWrapper__qB3Ej">
+                        <div className="styles_footerFollowUsSection__nyhin">
+                            <p className="styles_followTitle___kG22">Follow us!</p>
+                            <div className="styles_socialWrapper__qB3Ej">
                                 <a
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     href="https://www.facebook.com/Eurosender/"
                                     aria-label="Facebook"
-                                    class="styles_socialLink__JNwEk"
+                                    className="styles_socialLink__JNwEk"
                                 >
                                     <svg
                                         aria-hidden="true"
                                         focusable="false"
                                         data-prefix="fab"
                                         data-icon="square-facebook"
-                                        class="svg-inline--fa fa-square-facebook "
+                                        className="svg-inline--fa fa-square-facebook "
                                         role="img"
                                         xmlns="http://www.w3.org/2000/svg"
                                         viewBox="0 0 448 512"
@@ -368,14 +368,14 @@ const Footer = () => {
                                     rel="noopener noreferrer"
                                     href="https://www.instagram.com/eurosender/"
                                     aria-label="Instagram"
-                                    class="styles_socialLink__JNwEk"
+                                    className="styles_socialLink__JNwEk"
                                 >
                                     <svg
                                         aria-hidden="true"
                                         focusable="false"
                                         data-prefix="fab"
                                         data-icon="square-instagram"
-                                        class="svg-inline--fa fa-square-instagram "
+                                        className="svg-inline--fa fa-square-instagram "
                                         role="img"
                                         xmlns="http://www.w3.org/2000/svg"
                                         viewBox="0 0 448 512"
@@ -391,14 +391,14 @@ const Footer = () => {
                                     rel="noopener noreferrer"
                                     href="https://in.linkedin.com/company/eurosender"
                                     aria-label="LinkedIn"
-                                    class="styles_socialLink__JNwEk"
+                                    className="styles_socialLink__JNwEk"
                                 >
                                     <svg
                                         aria-hidden="true"
                                         focusable="false"
                                         data-prefix="fab"
                                         data-icon="linkedin"
-                                        class="svg-inline--fa fa-linkedin "
+                                        className="svg-inline--fa fa-linkedin "
                                         role="img"
                                         xmlns="http://www.w3.org/2000/svg"
                                         viewBox="0 0 448 512"
@@ -414,14 +414,14 @@ const Footer = () => {
                                     rel="noopener noreferrer"
                                     href="https://twitter.com/eurosender"
                                     aria-label="Twitter"
-                                    class="styles_socialLink__JNwEk"
+                                    className="styles_socialLink__JNwEk"
                                 >
                                     <svg
                                         aria-hidden="true"
                                         focusable="false"
                                         data-prefix="fab"
                                         data-icon="square-twitter"
-                                        class="svg-inline--fa fa-square-twitter "
+                                        className="svg-inline--fa fa-square-twitter "
                                         role="img"
                                         xmlns="http://www.w3.org/2000/svg"
                                         viewBox="0 0 448 512"
@@ -437,31 +437,31 @@ const Footer = () => {
                     </div>
                 </div>
             </div>
-            <div class="styles_bottomSection__1Ic9L">
-                <div class="styles_wrapper__q7UNl">
-                    <div class="styles_bottomSection__isimY">
-                        <div class="styles_addressWrapper__GuW9I">
-                            <p class="styles_address__igiaA">
+            <div className="styles_bottomSection__1Ic9L">
+                <div className="styles_wrapper__q7UNl">
+                    <div className="styles_bottomSection__isimY">
+                        <div className="styles_addressWrapper__GuW9I">
+                            <p className="styles_address__igiaA">
                                 {" "}
                                 Eurosender SARL, 9 Rue du Laboratoire, 1911
                                 Luxembourg
                             </p>
                         </div>
-                        <div class="styles_socialsAndPolicies__FzfoC">
+                        <div className="styles_socialsAndPolicies__FzfoC">
                             <a
                                 target="_blank"
-                                class="styles_policyLink__7xYjq"
+                                className="styles_policyLink__7xYjq"
                                 href="#"
                             >
                                 Sitemap
                             </a>
-                            <div class="styles_dot__LC_V_">
+                            <div className="styles_dot__LC_V_">
                                 <svg
                                     aria-hidden="true"
                                     focusable="false"
                                     data-prefix="fas"
                                     data-icon="circle"
-                                    class="svg-inline--fa fa-circle "
+                                    className="svg-inline--fa fa-circle "
                                     role="img"
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 512 512"
@@ -475,18 +475,18 @@ const Footer = () => {
                             </div>
                             <a
                                 target="_blank"
-                                class="styles_policyLink__7xYjq"
+                                className="styles_policyLink__7xYjq"
                                 href="#"
                             >
                                 Status
                             </a>
-                            <div class="styles_dot__LC_V_">
+                            <div className="styles_dot__LC_V_">
                                 <svg
                                     aria-hidden="true"
                                     focusable="false"
                                     data-prefix="fas"
                                     data-icon="circle"
-                                    class="svg-inline--fa fa-circle "
+                                    className="svg-inline--fa fa-circle "
                                     role="img"
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 512 512"
@@ -499,18 +499,18 @@ const Footer = () => {
                                 </svg>
                             </div>
                             <a
-                                class="styles_policyLink__7xYjq"
+                                className="styles_policyLink__7xYjq"
                                 href="/en/cookies"
                             >
                                 cookie policy
                             </a>
-                            <div class="styles_dot__LC_V_">
+                            <div className="styles_dot__LC_V_">
                                 <svg
                                     aria-hidden="true"
                                     focusable="false"
                                     data-prefix="fas"
                                     data-icon="circle"
-                                    class="svg-inline--fa fa-circle "
+                                    className="svg-inline--fa fa-circle "
                                     role="img"
                                     xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 512 512"
@@ -523,7 +523,7 @@ const Footer = () => {
                                 </svg>
                             </div>
                             <a
-                                class="styles_policyLink__7xYjq styles_termsLink__jC2vl"
+                                className="styles_policyLink__7xYjq styles_termsLink__jC2vl"
                                 href="/en/terms-conditions"
                             >
                                 Terms &amp; Privacy Policy

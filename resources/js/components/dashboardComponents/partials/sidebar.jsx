@@ -54,7 +54,7 @@ const Sidebar = () => {
             {/* Divider  */}
             <hr className="sidebar-divider" />
 
-            {user?.user_type == "user" ? (
+            {user?.user_type == "client" ? (
                 <>
                     {/* Heading  */}
                     <div className="sidebar-heading">Orders</div>

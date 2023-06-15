@@ -2,44 +2,10 @@ import { Bs1Circle, BsEnvelope } from "react-icons/bs";
 import { FaPallet } from "react-icons/fa";
 import { LuPackage2 } from 'react-icons/lu';
 import { TbTruckDelivery } from "react-icons/tb"
+import { parcelTypes } from "../../../shared/constancy";
 
 const ParcelTypes = () => {
-    const parcels = [
-        {
-            icon: <BsEnvelope />,
-            title: "Document",
-        },
-
-        {
-            icon: <LuPackage2 />,
-            title: "Package",
-        },
-
-        {
-            icon: <LuPackage2 />,
-            title: "Express package",
-        },
-
-        {
-            icon: <FaPallet />,
-            title: "Pallet",
-        },
-
-        {
-            icon: <TbTruckDelivery />,
-            title: "Van delivery",
-        },
-
-        {
-            icon: <Bs1Circle />,
-            title: "parcel",
-        },
-
-        {
-            icon: <Bs1Circle />,
-            title: "parcel",
-        },
-    ];
+   
     return (
         <div className="flex flex-col gap-4 justify-center items-center  py-8 md:border-l md:border-r md:border-red-700">
             <div className="uppercase text-xl font-semibold text-appGreen">
@@ -48,11 +14,11 @@ const ParcelTypes = () => {
             <div className="uppercase text-md font-semibold text-gray-700 mt-8">
             Door-to-door shipping services
             </div>
-            <div className="grid gap-4 px-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7">
-                {parcels.map((parcel, index) => (
+            <div className="grid gap-4 px-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+                {parcelTypes.map((parcel, index) => (
                     <SingleParcel
                         key={index}
-                        title={parcel.title}
+                        title={parcel.label}
                         icon={parcel.icon}
                     />
                 ))}

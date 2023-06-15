@@ -5,6 +5,7 @@ import { UserContext } from "../contexts/userContext"
 import { checkLogStatus, getUserFromAPI } from "../api/axios"
 import { useNavigate } from "react-router-dom"
 import AskQuestion from "../partials/askQuestion"
+import { ToastContainer } from 'react-toastify';
 
 
 const DashboardLayout = ({children}) => {
@@ -14,8 +15,6 @@ const DashboardLayout = ({children}) => {
     const checkUserStatus = async () => {
 
         const res = await getUserFromAPI()
-
-         console.log("status from dashboard layout",res)
 
         if(res == "false")
         {
@@ -41,7 +40,7 @@ const DashboardLayout = ({children}) => {
                 </div>
 
             </div>
-            <AskQuestion />
+            {/* <AskQuestion /> */}
 
         </div>
     )

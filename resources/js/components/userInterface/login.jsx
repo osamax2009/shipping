@@ -2,6 +2,8 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { postWithAxios, getCsrfToken, checkLogStatus, getUserFromAPI } from "../api/axios";
 import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../contexts/userContext";
+import { ToastContainer, toast } from "react-toastify";
+import { appName } from "../shared/constancy";
 
 const Login = () => {
     const [email,setEmail] = useState("")
@@ -26,6 +28,10 @@ const Login = () => {
 
         if(data.message)
         {
+            toast(data.message,{
+                type : "error",
+                hideProgressBar : true
+            })
             setErrors(data)
         }
 
@@ -33,18 +39,25 @@ const Login = () => {
         {
             setUser(data.data)
 
-            if(data.data.user_type == "user")
+            if(data.data.user_type == "client")
             {
-                navigate("/account/dashboard/place-new-order")
-                document.location.reload()
+                toast('connected successfully',{
+                    type : "success",
+                    hideProgressBar : true
+                })
+                navigate("/")
+                
             }
 
             if(data.data.user_type == "admin")
             {
+                toast('connected successfully',{
+                    type : "success",
+                    hideProgressBar : true
+                })
                 navigate("/account/admin/dashboard")
-                document.location.reload()
+                
             }
-           
         }
 
         
@@ -64,9 +77,9 @@ const Login = () => {
       
     }
 
-    useEffect(() =>{
-        document.title = "Eurosender - Login page"
-    },[])
+    useEffect(() => {
+        document.title = appName + " - Login page";
+    }, []);
 
     useEffect(() => {
         checkUserStatus()
@@ -96,9 +109,9 @@ const Login = () => {
     },[errors])
 
     return (
-        <div className="container">
+        <div className="container min-h-screen">
             {/* Outer Row  */}
-            <div className="row justify-content-center">
+            <div className="row h-full justify-content-center">
                 <div className="col-xl-10 col-lg-12 col-md-9">
                     <div className="card o-hidden border-0 shadow-lg my-5">
                         <div className="card-body p-0">
@@ -168,7 +181,7 @@ const Login = () => {
                                             >
                                                 Login
                                             </button>
-                                            <hr />
+                                           {/*  <hr />
                                             <a
                                                 href="index.html"
                                                 className="btn btn-google btn-user btn-block"
@@ -182,7 +195,7 @@ const Login = () => {
                                             >
                                                 <i className="fab fa-facebook-f fa-fw"></i>{" "}
                                                 Login with Facebook
-                                            </a>
+                                            </a> */}
                                         </form>
                                         <hr />
                                         <div className="text-center">
@@ -196,7 +209,7 @@ const Login = () => {
                                         <div className="text-center">
                                             <Link
                                                 className="small"
-                                                to={'/account/sign-in'}
+                                                to={'/account/register'}
                                             >
                                                 Create an Account!
                                             </Link>
@@ -208,8 +221,9 @@ const Login = () => {
                     </div>
                 </div>
             </div>
+           
         </div>
     );
 };
 
-export default Login;
+export default Login
