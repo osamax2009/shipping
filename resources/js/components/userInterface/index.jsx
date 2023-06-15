@@ -41,8 +41,8 @@ const Index = () => {
             <PopularShipment/>
             <ForEveryNeed />
             <ResumeSection />
-            <Footer />
-            <AskQuestion />
+            {/* <Footer /> */}
+            {/* <AskQuestion /> */}
         </div>
     )
 }

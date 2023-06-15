@@ -32,11 +32,14 @@ export const getCsrfToken = async () => {
   }
 }
 
-export const getWithAxios = async (url) => {
+export const getWithAxios = async (url,dataToSend=null) => {
   let data
+  const params = {
+    params : dataToSend
+  }
   try {
     data = axiosInstance()
-      .get(url)
+      .get(url,params)
       .then((response) => {
         return response.data
       })
