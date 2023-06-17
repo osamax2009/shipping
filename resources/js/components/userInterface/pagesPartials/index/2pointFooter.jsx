@@ -4,6 +4,15 @@ import { Link } from "react-router-dom"
 import { BsEnvelope, BsEnvelopeFill, BsFacebook, BsGeoAltFill, BsInstagram, BsLinkedin, BsTelephoneFill } from "react-icons/bs"
 
 const PointFooter = ( ) => {
+    
+    const handleClickScroll = () => {
+        const element = document.getElementById('partner');
+      
+        if (element) {
+          // 👇 Will scroll smoothly to the top of the next section
+          element.scrollIntoView({ behavior: 'smooth', block :"center" });
+        }
+      };
     return(
         <div className="bg-appGreen px-24 text-white pt-8 pb-4">
             <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4">
@@ -57,9 +66,12 @@ const PointFooter = ( ) => {
                         </Link>
                     </div>
                     <div>
-                        <Link to={"#partner"}>
-                            {appName} for partner
-                        </Link>
+                        <button onClick={handleClickScroll} >
+                            <Link>
+                                {appName} for partner
+                            </Link>
+                        </button>
+                        
                     </div>
                 </div>
 
@@ -89,7 +101,7 @@ const PointFooter = ( ) => {
 
                 <div className="grid gap-2 font-bold">
                     <div className="uppercase pt-4">
-                        Socila media
+                        Social media
                     </div>
                     <div className="flex flax-wrap gap-8 items-center text-2xl">
                         
