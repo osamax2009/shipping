@@ -584,6 +584,9 @@ class UserController extends Controller
     {
         $user = Auth::user();
 
+        $request->session()->invalidate();
+
+
         if($request->is('api*')){
 
             $clear = request('clear');

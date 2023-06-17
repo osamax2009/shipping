@@ -17,7 +17,7 @@ const DashboardLayout = ({children}) => {
         const res = await getUserFromAPI()
         console.log(res)
 
-        if(res == "false")
+        if(res == false)
         {
             navigate("/account/sign-in")
         }

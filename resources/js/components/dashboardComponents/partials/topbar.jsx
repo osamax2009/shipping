@@ -15,6 +15,7 @@ const Topbar = () => {
             console.log("logout response",data)
             if(data.message == "Logout successfully")
             {
+                localStorage.removeItem("api_token")
                 navigate("/")
                 setUser(null)
             }
