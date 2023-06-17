@@ -29,3 +29,20 @@ export const parcelTypes = [
     }
 ]
 
+export const deliveryDetails = [
+    {
+        title : "Work on your schedule",
+        description : "delivery for few hours in the mornings; every nightn or just on weekends... it's up to you. You are your own boss and you can choose when and how much you work."
+    },
+
+    {
+        title : "Choose your wheels",
+        description : "depending on the rules in your city, you may be able to deliver with your car, bike..."
+    },
+
+    {
+        title : "Earn good money",
+        description : "You will make by bringing people the things they love. Between deliveries, it's just you"
+    }
+]
+

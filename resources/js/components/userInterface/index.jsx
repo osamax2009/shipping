@@ -25,6 +25,7 @@ import './css/9cf2.style-4501a7264ba2cff67161.css' */
 import Brand from "./pagesPartials/index/brand"
 import AskQuestion from "../partials/askQuestion"
 import ParcelTypes from "./pagesPartials/index/parcelTypes"
+import DeliveryMan from "./pagesPartials/index/deliveryMan"
 
 const Index = () => {
     return(
@@ -35,7 +36,8 @@ const Index = () => {
             {/* <HowToShip/> */}
             <FollowShipment/>
             <LogisticSolutions />
-            <WorkWith/>
+            <DeliveryMan />
+           {/*  <WorkWith/> */}
             <About/>
             <PopularRoutes/>
             <PopularShipment/>

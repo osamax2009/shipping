@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title inertia>{{ config('app.name', 'Laravel') }}</title>
+    <title>2pointDelivery</title>
 
     <!-- Fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
@@ -27,12 +27,15 @@
     <link rel="stylesheet" href="{{ asset('css/d41d8.style-01f1f8559dddac3d7ede.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style-4501a7264ba2cff67161.css') }}">
 
+    <link rel="stylesheet" href="{{ asset("css/app.css") }}">
+
+
 
     <!-- Scripts -->
     @routes
     <script src="{{ asset(mix('js/app.js')) }}" defer></script>
 
-    <script src="/js/app.js"></script>
+    <script src="{{ asset('js/app.js') }}"></script>
 </head>
 <body class="font-sans antialiased">
     <div id="root"></div>
