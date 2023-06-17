@@ -6,7 +6,7 @@ import { BsEnvelope, BsEnvelopeFill, BsFacebook, BsGeoAltFill, BsInstagram, BsLi
 const PointFooter = ( ) => {
     return(
         <div className="bg-appGreen px-24 text-white pt-8 pb-4">
-            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4">
                 <div>
                     <div className="flex gap-2 items-center justify-start h-8 mb-4">
                         <img src="/images/ic_app_logo_color.png" className="h-8 " />

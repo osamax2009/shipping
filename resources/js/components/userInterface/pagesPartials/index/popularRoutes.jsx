@@ -164,7 +164,7 @@ const PopularRoutes = () => {
                             </div>
                         </Link>
                         <Link
-                            to="/en/gdd/shipping-united-kingdom-india"
+                           to={"/account/dashboard/place-new-order"}
                             class="styles_card__gXa2X"
                         >
                             <div>
@@ -201,7 +201,7 @@ const PopularRoutes = () => {
                             </div>
                         </Link>
                         <Link
-                            to="/en/gdd/shipping-united-kingdom-united-states"
+                            to={"/account/dashboard/place-new-order"}
                             class="styles_card__gXa2X"
                         >
                             <div>
