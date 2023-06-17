@@ -143,7 +143,7 @@ const PlaceOrder = () => {
                                 <div className="grid gap-4 px-2 pt-4 md:grid-cols-2">
                                     <div className="p-2 bg-gray-100/25">
                                         <div className="mb-4">Pick Time</div>
-                                        <div className="grid md:grid-cols-3">
+                                        <div className="grid md:grid-cols-2 lg:grid-cols-3">
                                             <div className="form-group">
                                                 <label htmlFor="">Date</label>
                                                 <Input
@@ -204,7 +204,7 @@ const PlaceOrder = () => {
 
                                     <div className="p-2 bg-gray-100/25">
                                         <div className="mb-4">Deliver Time</div>
-                                        <div className="grid md:grid-cols-3">
+                                        <div className="grid md:grid-cols-2 lg:grid-cols-3">
                                             <div className="form-group">
                                                 <label htmlFor="">Date</label>
                                                 <Input
@@ -264,7 +264,7 @@ const PlaceOrder = () => {
                                     </div>
                                 </div>
                             )}
-                            <div className="grid mt-4 gap-8 md:grid-cols-3">
+                            <div className="grid mt-4 gap-8 md:grid-cols-2 lg:grid-cols-3">
                                 <div className="form-group">
                                     <label htmlFor="">Weight</label>
                                     <input
@@ -335,7 +335,7 @@ const PlaceOrder = () => {
                             Pick informations
                         </div>
                         <div className="card-body">
-                            <div className="grid gap-8 md:grid-cols-3">
+                            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
                                 <div className="form-group">
                                     <label htmlFor="">Pick Up Location</label>
                                     <input
@@ -383,14 +383,18 @@ const PlaceOrder = () => {
                                         Pickup Contact Number
                                     </label>
 
+                                    <div className="form-control">
                                     <PhoneInput
                                         value={pickNumber}
+                                        
                                         country={"ca"}
                                         inputProps={{
                                             required: true,
+                                            
                                         }}
                                         onChange={(e) => setPickNumber(e)}
                                     />
+                                    </div>
                                 </div>
 
                                 <div className="form-group">
@@ -416,7 +420,7 @@ const PlaceOrder = () => {
                             Delivery informations
                         </div>
                         <div className="card-body">
-                            <div className="grid gap-8 md:grid-cols-3">
+                            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
                                 <div className="form-group">
                                     <label htmlFor="">Delivery Location</label>
                                     <input

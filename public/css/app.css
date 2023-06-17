@@ -2999,6 +2999,9 @@ html {
 .z-50 {
   z-index: 50;
 }
+.z-30 {
+  z-index: 30;
+}
 .col-span-3 {
   grid-column: span 3 / span 3;
 }
@@ -3176,6 +3179,9 @@ html {
 .h-full {
   height: 100%;
 }
+.h-2 {
+  height: 0.5rem;
+}
 .min-h-screen {
   min-height: 100vh;
 }
@@ -3236,6 +3242,9 @@ html {
 }
 .w-screen {
   width: 100vw;
+}
+.w-\[50vw\] {
+  width: 50vw;
 }
 .min-w-0 {
   min-width: 0px;
@@ -3312,6 +3321,9 @@ html {
 .grid-cols-6 {
   grid-template-columns: repeat(6, minmax(0, 1fr));
 }
+.grid-cols-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
 .flex-row {
   flex-direction: row;
 }
@@ -3356,6 +3368,9 @@ html {
 }
 .gap-8 {
   gap: 2rem;
+}
+.gap-3 {
+  gap: 0.75rem;
 }
 .space-x-8 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 0;
@@ -3569,6 +3584,14 @@ html {
 .bg-white\/75 {
   background-color: rgb(255 255 255 / 0.75);
 }
+.bg-blue-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(219 234 254 / var(--tw-bg-opacity));
+}
+.bg-black {
+  --tw-bg-opacity: 1;
+  background-color: rgb(0 0 0 / var(--tw-bg-opacity));
+}
 .bg-opacity-25 {
   --tw-bg-opacity: 0.25;
 }
@@ -3685,6 +3708,10 @@ html {
   padding-top: 2rem;
   padding-bottom: 2rem;
 }
+.px-\[15px\] {
+  padding-left: 15px;
+  padding-right: 15px;
+}
 .pb-1 {
   padding-bottom: 0.25rem;
 }
@@ -3780,6 +3807,9 @@ html {
   font-size: 0.75rem;
   line-height: 1rem;
 }
+.text-\[15px\] {
+  font-size: 15px;
+}
 .font-black {
   font-weight: 900;
 }
@@ -3790,6 +3820,9 @@ html {
   font-weight: 500;
 }
 .font-semibold {
+  font-weight: 600;
+}
+.font-\[600\] {
   font-weight: 600;
 }
 .uppercase {
@@ -3815,6 +3848,9 @@ html {
 }
 .tracking-widest {
   letter-spacing: 0.1em;
+}
+.tracking-\[3px\] {
+  letter-spacing: 3px;
 }
 .\!text-white {
   --tw-text-opacity: 1 !important;
@@ -4502,6 +4538,14 @@ html {
 
   .lg\:grid-cols-5 {
     grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .lg\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .lg\:grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
   .lg\:px-8 {

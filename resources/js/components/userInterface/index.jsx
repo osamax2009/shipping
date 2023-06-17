@@ -26,6 +26,7 @@ import Brand from "./pagesPartials/index/brand"
 import AskQuestion from "../partials/askQuestion"
 import ParcelTypes from "./pagesPartials/index/parcelTypes"
 import DeliveryMan from "./pagesPartials/index/deliveryMan"
+import PointFooter from "./pagesPartials/index/2pointFooter"
 
 const Index = () => {
     return(
@@ -40,11 +41,12 @@ const Index = () => {
            {/*  <WorkWith/> */}
             <About/>
             <PopularRoutes/>
-            <PopularShipment/>
+            {/* <PopularShipment/>
             <ForEveryNeed />
-            <ResumeSection />
+            <ResumeSection /> */}
             {/* <Footer /> */}
             {/* <AskQuestion /> */}
+            <PointFooter />
         </div>
     )
 }

@@ -1,6 +1,6 @@
 import { BsBox, BsBox2Heart, BsEnvelope, BsFileText, BsFolder } from "react-icons/bs"
 
-export const appName = '2pointDelivery'
+export const appName = '2point Delivery'
 
 export const parcelTypes = [
     {

@@ -3,7 +3,7 @@ import { deliveryDetails } from "../../../shared/constancy";
 
 const DeliveryMan = () => {
     return (
-        <div className="py-6 px-8 bg-white/75">
+        <div className="py-6 px-8 bg-white/75" id="partner">
             <div className="text-2xl text-appGreen font-bold mb-8 uppercase">
                 Register as delivery man
             </div>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getWithAxios } from "../../../api/axios";
+import { Link } from "react-router-dom";
 
 const PopularRoutes = () => {
 
@@ -22,12 +23,42 @@ const PopularRoutes = () => {
         }
     };
 
+    const getCitiesPhoto = async () => {
+       
+        cities.map( async (city) => {
+
+            const dataToSend = {
+                search_text: city.name,
+                country_code: "ca",
+                language: "en",
+            };
+
+            const res = await getWithAxios(
+                "/api/place-autocomplete-api",
+                dataToSend
+            );
+            
+            const dataToSend2 = {
+                placeid : res.predictions[0].place_id
+            }
+            const res2 = await getWithAxios("/api/place-detail-api",dataToSend2)
+
+            console.log(res2)
+            
+        })
+       
+    }
+
     useEffect(() => {
         getCountries();
     }, []);
 
     useEffect(() => {
         getCities();
+    }, []);
+
+    useEffect(() => {
+        getCitiesPhoto();
     }, []);
 
 
@@ -58,8 +89,8 @@ const PopularRoutes = () => {
                         </div>
                     </div>
                     <div class="styles_section__CZ5qB styles_show__G7nUX">
-                        <a
-                            href="/en/dd/united-kingdom-germany"
+                        <Link
+                            to={"/account/dashboard/place-new-order"}
                             class="styles_card__gXa2X"
                         >
                             <div>
@@ -73,7 +104,7 @@ const PopularRoutes = () => {
                             </div>
                             <div class="styles_description__2nvG_">
                                 <div class="styles_text__TEfPQ">
-                                    Ship from the UK to Germany
+                                    Ship from {cities? cities[0].name : null}  to {cities? cities[1].name : null}
                                 </div>
                                 <div class="styles_cta__7Gk_S">
                                     Send now
@@ -94,9 +125,9 @@ const PopularRoutes = () => {
                                     </svg>
                                 </div>
                             </div>
-                        </a>
-                        <a
-                            href="/en/dd/united-kingdom-sweden"
+                        </Link>
+                        <Link
+                            to={"/account/dashboard/place-new-order"}
                             class="styles_card__gXa2X"
                         >
                             <div>
@@ -110,7 +141,7 @@ const PopularRoutes = () => {
                             </div>
                             <div class="styles_description__2nvG_">
                                 <div class="styles_text__TEfPQ">
-                                    Ship from the UK to Sweden
+                                Ship from {cities? cities[0].name : null}  to {cities? cities[3].name : null}
                                 </div>
                                 <div class="styles_cta__7Gk_S">
                                     Send now
@@ -131,9 +162,9 @@ const PopularRoutes = () => {
                                     </svg>
                                 </div>
                             </div>
-                        </a>
-                        <a
-                            href="/en/gdd/shipping-united-kingdom-india"
+                        </Link>
+                        <Link
+                            to="/en/gdd/shipping-united-kingdom-india"
                             class="styles_card__gXa2X"
                         >
                             <div>
@@ -147,7 +178,7 @@ const PopularRoutes = () => {
                             </div>
                             <div class="styles_description__2nvG_">
                                 <div class="styles_text__TEfPQ">
-                                    Ship from the UK to India
+                                Ship from {cities? cities[0].name : null}  to {cities? cities[5].name : null}
                                 </div>
                                 <div class="styles_cta__7Gk_S">
                                     Send now
@@ -168,9 +199,9 @@ const PopularRoutes = () => {
                                     </svg>
                                 </div>
                             </div>
-                        </a>
-                        <a
-                            href="/en/gdd/shipping-united-kingdom-united-states"
+                        </Link>
+                        <Link
+                            to="/en/gdd/shipping-united-kingdom-united-states"
                             class="styles_card__gXa2X"
                         >
                             <div>
@@ -184,7 +215,7 @@ const PopularRoutes = () => {
                             </div>
                             <div class="styles_description__2nvG_">
                                 <div class="styles_text__TEfPQ">
-                                    Ship from the UK to the United States
+                                Ship from {cities? cities[0].name : null}  to {cities? cities[9].name : null}
                                 </div>
                                 <div class="styles_cta__7Gk_S">
                                     Send now
@@ -205,7 +236,7 @@ const PopularRoutes = () => {
                                     </svg>
                                 </div>
                             </div>
-                        </a>
+                        </Link>
                     </div>
                     
                 </div>
@@ -216,15 +247,15 @@ const PopularRoutes = () => {
 
 export default PopularRoutes
 
-const DeliverRoute = ({cities}) => {
+const DeliverRoute = ({from, to}) => {
 
    const cityDetails = () => {
 
    }
    
     return (
-        <a
-        href="/en/dd/united-kingdom-germany"
+        <Link
+        to="/account/dashobard/place-new-order"
         class="styles_card__gXa2X"
     >
         <div>
@@ -238,7 +269,7 @@ const DeliverRoute = ({cities}) => {
         </div>
         <div class="styles_description__2nvG_">
             <div class="styles_text__TEfPQ">
-                Ship from the UK to Germany
+                Ship from {from} to {to}
             </div>
             <div class="styles_cta__7Gk_S">
                 Send now
@@ -259,6 +290,6 @@ const DeliverRoute = ({cities}) => {
                 </svg>
             </div>
         </div>
-    </a>
+    </Link>
     )
 }
