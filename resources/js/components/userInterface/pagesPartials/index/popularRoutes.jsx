@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getWithAxios } from "../../../api/axios";
 import { Link } from "react-router-dom";
+import { appName } from "../../../shared/constancy";
 
 const PopularRoutes = () => {
 
@@ -69,7 +70,7 @@ const PopularRoutes = () => {
                     TAILORED TO YOU
                 </span>
                 <h3 class="styles_title__p_41M">
-                    2Ppoint delivery - Popular Routes
+                    {appName} - Popular Routes
                 </h3>
                 <div>
                     <div class="styles_tabs__3IhxM">

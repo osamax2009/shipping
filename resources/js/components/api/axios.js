@@ -7,7 +7,8 @@ export const axiosInstance = () => {
     params: {
       headers: {
         Accept: 'application/json',
-        "X-Requested-With" : "XMLHttpRequest"
+        "X-Requested-With" : "XMLHttpRequest",
+        "Authorization" : 'Bearer ' + localStorage.getItem('api_token')
       },
       
     },

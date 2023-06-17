@@ -580,16 +580,9 @@ class UserController extends Controller
     }
 
     public function logout(Request $request)
+    
     {
         $user = Auth::user();
-
-       // Auth::logout();
-
-        $request->user()->tokens()->delete();
-
-        $request->session()->invalidate();
-
-        $request->session()->regenerateToken();
 
         if($request->is('api*')){
 

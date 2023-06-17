@@ -37,6 +37,8 @@ const Login = () => {
 
         if(data.data.email)
         {
+            localStorage.setItem('api_token', data.data.api_token)
+            
             setUser(data.data)
 
             if(data.data.user_type == "client")
