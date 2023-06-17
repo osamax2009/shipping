@@ -73,9 +73,9 @@ const PointFooter = ( ) => {
                     </div>
                     <div className="flex gap-3 items-center">
                         <BsTelephoneFill />
-                        <Link>
+                        <a href="tel:+1 (639) 997-2710">
                             +1 (639) 997-2710
-                        </Link>
+                        </a>
                     </div>
                     <div className="flex gap-3 items-center">
                         <BsGeoAltFill />
