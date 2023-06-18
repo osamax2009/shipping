@@ -81,15 +81,6 @@ const PlaceOrder = () => {
         locationIdSetter(location.place_id);
     };
 
-    /*  const getCountries = async () => {
-        const data = await getWithAxios("/api/country-list");
-    
-
-        if (data.status == "success") {
-            setCountries(data.data.countries);
-        }
-    };
- */
 
     const handleDeliverNow = () => {
         deliverNow ? setDeliverNow(false) : setDeliverNow(true);
@@ -114,9 +105,7 @@ const PlaceOrder = () => {
         });
     };
 
-    /* useEffect(() => {
-        getCountries();
-    }, []); */
+   
 
     return (
         <DashboardLayout>
@@ -125,7 +114,7 @@ const PlaceOrder = () => {
                     {/* General informations */}
                     <div className="card shadow">
                         <div className="card-header bg-primary text-white">
-                            Delivery informations
+                            Order  informations
                         </div>
                         <div className="card-body">
                             <div>
@@ -140,10 +129,10 @@ const PlaceOrder = () => {
                                 </Radio.Group>
                             </div>
                             {!deliverNow && (
-                                <div className="grid gap-4 px-2 pt-4 md:grid-cols-2">
+                                <div className="grid gap-4 px-2 pt-4 ">
                                     <div className="p-2 bg-gray-100/25">
                                         <div className="mb-4">Pick Time</div>
-                                        <div className="grid md:grid-cols-2 lg:grid-cols-3">
+                                        <div className="grid  lg:grid-cols-3">
                                             <div className="form-group">
                                                 <label htmlFor="">Date</label>
                                                 <Input
@@ -204,7 +193,7 @@ const PlaceOrder = () => {
 
                                     <div className="p-2 bg-gray-100/25">
                                         <div className="mb-4">Deliver Time</div>
-                                        <div className="grid md:grid-cols-2 lg:grid-cols-3">
+                                        <div className="grid  lg:grid-cols-3">
                                             <div className="form-group">
                                                 <label htmlFor="">Date</label>
                                                 <Input
@@ -264,7 +253,7 @@ const PlaceOrder = () => {
                                     </div>
                                 </div>
                             )}
-                            <div className="grid mt-4 gap-8 md:grid-cols-2 lg:grid-cols-3">
+                            <div className="grid mt-4 gap-8 lg:grid-cols-3">
                                 <div className="form-group">
                                     <label htmlFor="">Weight</label>
                                     <input
@@ -335,7 +324,7 @@ const PlaceOrder = () => {
                             Pick informations
                         </div>
                         <div className="card-body">
-                            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                            <div className="grid gap-8  lg:grid-cols-3">
                                 <div className="form-group">
                                     <label htmlFor="">Pick Up Location</label>
                                     <input
@@ -383,7 +372,6 @@ const PlaceOrder = () => {
                                         Pickup Contact Number
                                     </label>
 
-                                    <div className="form-control">
                                     <PhoneInput
                                         value={pickNumber}
                                         
@@ -391,10 +379,12 @@ const PlaceOrder = () => {
                                         inputProps={{
                                             required: true,
                                             
+                                            
                                         }}
+
+                                        inputStyle={{  }}
                                         onChange={(e) => setPickNumber(e)}
                                     />
-                                    </div>
                                 </div>
 
                                 <div className="form-group">
@@ -420,7 +410,7 @@ const PlaceOrder = () => {
                             Delivery informations
                         </div>
                         <div className="card-body">
-                            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                            <div className="grid gap-8  lg:grid-cols-3">
                                 <div className="form-group">
                                     <label htmlFor="">Delivery Location</label>
                                     <input

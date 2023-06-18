@@ -15,7 +15,7 @@ const DashboardLayout = ({children}) => {
     const checkUserStatus = async () => {
 
         const res = await getUserFromAPI()
-        console.log(res)
+     
 
         if(res == false)
         {

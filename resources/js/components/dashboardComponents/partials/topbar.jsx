@@ -1,7 +1,7 @@
 import { useContext } from "react"
 import { UserContext } from "../../contexts/userContext"
 import { getWithAxios, postWithAxios } from "../../api/axios"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import {BsPersonCircle, BsSearch} from 'react-icons/bs'
 
 const Topbar = () => {
@@ -92,13 +92,13 @@ const Topbar = () => {
             </a>
             {/* Dropdown - User Information */}
             <div className="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                <a className="dropdown-item" href="#">
+                <Link className="dropdown-item" to={"/account/dashboard/user-profile"} >
                     <i className="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                     Profile
-                </a>
+                </Link>
                 <a className="dropdown-item" href="#">
                     <i className="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                    Settings
+                    Bank informations
                 </a>
                 <a className="dropdown-item" href="#">
                     <i className="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>

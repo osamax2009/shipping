@@ -8,6 +8,8 @@ import { UserContextProvider } from "./contexts/userContext";
 import PlaceOrder from "./userInterface/userDashboard/placeOrder";
 import CountriesAndCities from "./adminInterface/countriesAndCities";
 import OrderResume from "./userInterface/userDashboard/orderResume";
+import Profile from "./userInterface/userDashboard/profile";
+import UpdatePassword from "./userInterface/userDashboard/changePassword";
 
 const router = createBrowserRouter([
     {
@@ -38,7 +40,13 @@ const router = createBrowserRouter([
     {
         path : '/account/dashboard/countries-cities',
         element : <CountriesAndCities/>
-    }
+    },
+
+    {
+        path : "/account/dashboard/user-profile",
+        element : <Profile />
+    },
+
 ]);
 
 if (document.getElementById("root")) {
