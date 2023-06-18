@@ -109,7 +109,7 @@ const Login = () => {
                     </div>
                 </div>
                 <form onSubmit={handleLogin} className="w-full">
-                    <div className="bg-white shadow rounded lg:w-1/3  md:w-1/2 w-full p-10 mt-16">
+                    <div className="bg-white shadow rounded lg:!w-1/3  md:!w-1/2 w-fit p-10 mt-16">
                         <p
                             tabIndex={0}
                             role="heading"
