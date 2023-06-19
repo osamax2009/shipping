@@ -34,7 +34,7 @@ const DashboardLayout = ({children}) => {
             <div id="content-wrapper" className="d-flex flex-column">
                 <div id="content">
                     <Topbar/>
-                    <div>
+                    <div className="px-6 py-4">
                         {children}
                     </div>
 

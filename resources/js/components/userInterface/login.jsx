@@ -58,6 +58,14 @@ const Login = () => {
                     type: "success",
                     hideProgressBar: true,
                 });
+                navigate("/admin/new-orders");
+            }
+
+            if (data.data.user_type == "delivery_man") {
+                toast("connected successfully", {
+                    type: "success",
+                    hideProgressBar: true,
+                });
                 navigate("/account/admin/dashboard");
             }
         }

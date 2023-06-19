@@ -50,6 +50,7 @@ const Navbar = () => {
     return (
         <>
             <div className="fixed z-40 w-screen transition ease-in">
+                {user?.user_type}
                 <div
                     className={
                         !color
