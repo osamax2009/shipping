@@ -21,12 +21,13 @@ const DeliveryMan = () => {
                 </div>
             </div>
             <div className="mt-2">
-                <Button color={"success"} size={'lg'} >
-                    <a target="blank" href="https://play.google.com/store/apps/details?id=com.point.delivery">
+                <a
+                    className="px-8 py-3 bg-black text-white text-md hover:bg-black/75 hover:no-underline"
+                    target="blank"
+                    href="https://play.google.com/store/apps/details?id=com.point.delivery"
+                >
                     Become a 2point delivery partner
-                    </a>
-                    
-                </Button>
+                </a>
             </div>
         </div>
     );

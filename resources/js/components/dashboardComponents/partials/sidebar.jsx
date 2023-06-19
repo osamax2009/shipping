@@ -38,7 +38,7 @@ const Sidebar = () => {
 
         {
             title: "city",
-            path: "/admin/new-orders",
+            path: "/admin/city",
             icon: <BsBuilding />,
         },
 
@@ -74,7 +74,7 @@ const Sidebar = () => {
 
         {
             title: "All Orders",
-            path: "/admin/new-orders",
+            path: "/admin/orders",
             icon: <BsListCheck />,
         },
 

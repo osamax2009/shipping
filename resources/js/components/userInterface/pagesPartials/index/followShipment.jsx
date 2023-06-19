@@ -14,7 +14,7 @@ const FollowShipment = () => {
                     </h2>
                 </div>
                 <div className="relative w-full">
-                    <div className="flex items-center relative py-4 w-full ">
+                    <div className="flex items-center relative  w-full ">
                         <div className="absolute right-3 flex items-center  cursor-pointer">
                             <button className="bg-appGreen  hover:bg-appGreen/75 focus:bg-appGreen/75 w-fit h-fit text-white font-bold py-2 px-4 rounded">
                                 Track
@@ -22,7 +22,7 @@ const FollowShipment = () => {
                         </div>
                         <input
                             id="email1"
-                            className="text-gray-600  focus:outline-none focus:border focus:border-indigo-700  bg-white font-normal w-full h-16 flex items-center pl-12 text-sm border-gray-300 rounded shadow"
+                            className="text-gray-600  focus:outline-none focus:border focus:border-slate-700  bg-white font-normal w-full h-16 flex items-center pl-12 text-sm border-gray-300 rounded shadow"
                             placeholder="order number here"
                             required
                         />

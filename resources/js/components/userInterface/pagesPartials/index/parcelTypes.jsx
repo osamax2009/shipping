@@ -25,7 +25,7 @@ export default ParcelTypes;
 
 const SingleParcel = ({ title, icon }) => {
     return (
-        <div className="p-3 flex flex-col bg-white/25 gap-2 items-center justify-center">
+        <div className="p-3 flex flex-col bg-gray-100/25 gap-2 items-center justify-center">
             <div className="text-2xl">{icon}</div>
             <div className="text-lg">{title}</div>
         </div>

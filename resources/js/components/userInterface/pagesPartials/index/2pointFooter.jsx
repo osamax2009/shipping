@@ -28,14 +28,14 @@ const PointFooter = ( ) => {
                     </div>
                     <div className="flex gap-2 flex-wrap mt-4">
                         <div>
-                            <a target="blank" href="https://play.google.com/store/apps/details?id=com.point.delivery">
+                            <a className="text-white" target="blank" href="https://play.google.com/store/apps/details?id=com.point.delivery">
                                 <img src="/images/ic_play_store.png" className="h-10" />
                             </a>
 
                         </div>
 
                         <div>
-                            <a target="blank" href="https://apps.apple.com/app/2point-delivery/id6450139295">
+                            <a className="text-white" target="blank" href="https://apps.apple.com/app/2point-delivery/id6450139295">
                                 <img src="/images/ic_app_store.png" className="h-10" />
                             </a>
 
@@ -50,24 +50,24 @@ const PointFooter = ( ) => {
                         {appName}
                     </div>
                     <div>
-                        <Link>
+                        <Link className="text-white ">
                             About us
                         </Link>
                     </div>
                     <div>
-                        <Link>
+                        <Link className="text-white ">
                             Contact us
                         </Link>
                     </div>
 
                     <div>
-                        <Link>
+                        <Link className="text-white ">
                             Privacy policy
                         </Link>
                     </div>
                     <div>
                         <button onClick={handleClickScroll} >
-                            <Link>
+                            <Link className="text-white ">
                                 {appName} for partner
                             </Link>
                         </button>
@@ -81,17 +81,17 @@ const PointFooter = ( ) => {
                     </div>
                     <div className="flex gap-3 items-center">
                         <BsEnvelopeFill />
-                        <a href="mailto:info@2pointdelivery.com">info@2pointdelivery.com</a>
+                        <a className="text-white" href="mailto:info@2pointdelivery.com">info@2pointdelivery.com</a>
                     </div>
                     <div className="flex gap-3 items-center">
                         <BsTelephoneFill />
-                        <a href="tel:+1 (639) 997-2710">
+                        <a className="text-white" href="tel:+1 (639) 997-2710">
                             +1 (639) 997-2710
                         </a>
                     </div>
                     <div className="flex gap-3 items-center">
                         <BsGeoAltFill />
-                        <Link>
+                        <Link className="text-white ">
                             14-2752 Montague street; S4S 0J9 <br />
                             Regina - Saskatchewan, Canada
                         </Link>
@@ -105,15 +105,15 @@ const PointFooter = ( ) => {
                     </div>
                     <div className="flex flax-wrap gap-8 items-center text-2xl">
                         
-                        <a target="blank" href="https://www.facebook.com/profile.php?id=100092747889754 ">
+                        <a className="text-white" target="blank" href="https://www.facebook.com/profile.php?id=100092747889754 ">
                         <BsFacebook />
                         </a>
 
-                        <a target="blank" href="https://www.linkedin.com/in/2point-delivery-889159278/">
+                        <a className="text-white" target="blank" href="https://www.linkedin.com/in/2point-delivery-889159278/">
                         <BsLinkedin />
                         </a>
 
-                        <a target="blank" href="https://www.instagram.com/2pointdelivery/">
+                        <a className="text-white" target="blank" href="https://www.instagram.com/2pointdelivery/">
                         <BsInstagram />
                         </a>
                     </div>

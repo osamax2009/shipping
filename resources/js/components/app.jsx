@@ -10,10 +10,11 @@ import CountriesAndCities from "./adminInterface/countriesAndCities";
 import OrderResume from "./userInterface/userDashboard/orderResume";
 import Profile from "./userInterface/userDashboard/profile";
 import UpdatePassword from "./userInterface/userDashboard/changePassword";
-import NewOrders from "./adminInterface/newOrders";
 import AdminDashboardLayout from "./adminInterface/layout";
 import { Loading } from "@nextui-org/react";
 import Country from "./adminInterface/country";
+import City from "./adminInterface/city";
+import Orders from "./adminInterface/orders";
 
 const router = createBrowserRouter([
     {
@@ -64,8 +65,13 @@ const router = createBrowserRouter([
             },
 
             {
-                path: "new-orders",
-                element: <NewOrders />,
+                path : "city",
+                element : <City />
+            },
+
+            {
+                path: "orders",
+                element: <Orders />,
             },
         ],
     },

@@ -4,7 +4,7 @@ const WorkWith = () => {
             <div className="flex px-8 justify-center">
                 <div className="grid gap-8 md:grid-cols-4">
                     <div role="tab" className="styles_item__ERxNa">
-                        <div className="flex items-center justify-center px-4 pt-12 pb-6 rounded-lg bg-white">
+                        <div className="flex items-center justify-center shadow-md px-4 pt-12 pb-6 rounded-lg bg-white">
                             <a href="/en/courier-companies/gls">
                                 <img
                                     className="styles_image__3JdgQ"
@@ -15,7 +15,7 @@ const WorkWith = () => {
                         </div>
                     </div>
                     <div role="tab" className="styles_item__ERxNa">
-                        <div className="flex items-center justify-center px-4 pt-12 pb-6 rounded-lg bg-white">
+                        <div className="flex items-center justify-center shadow-md px-4 pt-12 pb-6 rounded-lg bg-white">
                             <a href="/en/courier-companies/dpd">
                                 <img
                                     className="styles_image__3JdgQ"
@@ -26,7 +26,7 @@ const WorkWith = () => {
                         </div>
                     </div>
                     <div role="tab" className="styles_item__ERxNa">
-                        <div className="flex items-center justify-center px-4 pt-12 pb-6 rounded-lg bg-white">
+                        <div className="flex items-center justify-center shadow-md px-4 pt-12 pb-6 rounded-lg bg-white">
                             <a href="/en/courier-companies/ups">
                                 <img
                                     className="styles_image__3JdgQ"
@@ -37,7 +37,7 @@ const WorkWith = () => {
                         </div>
                     </div>
                     <div role="tab" className="styles_item__ERxNa">
-                        <div className="flex items-center justify-center px-4 pt-12 pb-6 rounded-lg bg-white">
+                        <div className="flex items-center justify-center shadow-md px-4 pt-12 pb-6 rounded-lg bg-white">
                             <a href="/en/courier-companies/dhl">
                                 <img
                                     className="styles_image__3JdgQ"
