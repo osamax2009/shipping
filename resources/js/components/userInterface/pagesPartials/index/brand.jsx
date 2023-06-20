@@ -18,12 +18,16 @@ import {
 import { appName, parcelTypes } from "../../../shared/constancy";
 import { Loading } from "@nextui-org/react";
 import { toast } from "react-toastify";
+import { useContext } from "react";
+import { UserContext } from "../../../contexts/userContext";
 
 const Brand = () => {
     const [from, setFrom] = useState();
     const [to, setTo] = useState();
     const [service, setServive] = useState();
     const [processing, setProcessing] = useState(false);
+
+    const { user, setUser } = useContext(UserContext);
 
     const navigate = useNavigate();
 
@@ -51,38 +55,43 @@ const Brand = () => {
         }
     };
     const handleOrder = async () => {
-        if(!from || !to || !service)
-        {
-            toast("Empty filed submitted", {
-                type : "error",
-                hideProgressBar : true
-            })
-        }
         setProcessing(true);
 
-        const pickpoint = await getLocation(from.name);
-        const delivery = await getLocation(to.name);
-        const stateDate = {
-            state: {
-                parcelType: service.label,
-                pickLocation: pickpoint.description,
-                deliveryLocation: delivery.description,
-                requestFrom: "create_order",
-            },
-        };
+        if (!from || !to || !service) {
+            setProcessing(false);
+            toast("Empty filed submitted", {
+                type: "error",
+                hideProgressBar: true,
+            });
+        } else {
+            const pickpoint = await getLocation(from.name);
+            const delivery = await getLocation(to.name);
+            const stateDate = {
+                state: {
+                    parcelType: service.label,
+                    pickLocation: pickpoint.description,
+                    deliveryLocation: delivery.description,
+                    pickNumber: user?.contact_number,
+                   // deliveryNumber : user?.contact_number,
+                    requestFrom: "create_order",
+                    pickCountry : from.country.code.toLowerCase(),
+                    deliveryCountry : to.country.code.toLowerCase()
+                },
+            };
 
-        await getCsrfToken();
-        const user = await getUserFromAPI();
+            await getCsrfToken();
+            const user = await getUserFromAPI();
 
-        if (user == false) {
-            navigate("/account/sign-in", stateDate);
+            if (user == false) {
+                navigate("/account/sign-in", stateDate);
+            }
+
+            if (user) {
+                navigate("/account/dashboard/place-new-order", stateDate);
+            }
+
+            setProcessing(false);
         }
-
-        if (user) {
-            navigate("/account/dashboard/place-new-order", stateDate);
-        }
-
-        setProcessing(false);
     };
 
     useEffect(() => {
@@ -92,7 +101,7 @@ const Brand = () => {
     return (
         <div className="bg-gradient-to-b from-[#4caf50] to-[#388a3a] pb-24 px-24 pt-32 h-fit ">
             <div className="text-[4rem] text-white text-center mt-4 font-bold">
-                Save on wolrlwide
+                Save on wolrlwide 
             </div>
             <div className=" text-white text-center text-3xl  mb-4">
                 shipping with {appName}
@@ -111,9 +120,7 @@ const Brand = () => {
                         onClick={handleOrder}
                         className="py-6 md:py-0 h-full w-full  text-white font-bold bg-blue-700 hover:bg-blue-600"
                     >
-                        {
-                            processing ? <Loading /> : "Create Order"
-                        }
+                        {processing ? <Loading /> : "Create Order"}
                     </button>
                 </div>
             </div>

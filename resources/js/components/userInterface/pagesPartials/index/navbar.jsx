@@ -50,7 +50,7 @@ const Navbar = () => {
     return (
         <>
             <div className="fixed z-40 w-screen transition ease-in">
-                {user?.user_type}
+               
                 <div
                     className={
                         !color
@@ -58,12 +58,14 @@ const Navbar = () => {
                             : "flex gap-24 items-center bg-white px-8 w-full h-[90px] drop-shadow-lg"
                     }
                 >
-                    <Link href={"/"}>
-                        <div>
+                    <Link href={"/"} className="h-8">
+                        <div className="h-8 -mt-6">
                             {!color ? (
                                 <Image
                                     src={"/images/ic_app_logo_color.png"}
                                     className="h-8"
+                                   /*  width={80}
+                                    height={50} */
                                     alt="Logo"
                                 />
                             ) : (

@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
 import DashboardLayout from "../../dashboardComponents/dashbboardLayout";
-import Select from "react-select";
 import { getWithAxios } from "@/components/api/axios";
 import { Button, Dropdown, Input, Radio } from "@nextui-org/react";
 import { parcelTypes } from "../../shared/constancy";
-import { BsClock } from "react-icons/bs";
 import { useLocation, useNavigate } from "react-router-dom";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
@@ -12,7 +10,7 @@ import "react-phone-input-2/lib/style.css";
 const PlaceOrder = () => {
     const location = useLocation();
     const { state } = location;
-  
+
     const [weight, setWeight] = useState(state?.weight ? state.weight : 1);
     const [numberOfParcel, setNumberOfParcel] = useState(
         state?.numberOfParcel ? state.numberOfParcel : 1
@@ -81,7 +79,6 @@ const PlaceOrder = () => {
         locationIdSetter(location.place_id);
     };
 
-
     const handleDeliverNow = () => {
         deliverNow ? setDeliverNow(false) : setDeliverNow(true);
     };
@@ -105,8 +102,6 @@ const PlaceOrder = () => {
         });
     };
 
-   
-
     return (
         <DashboardLayout>
             <form onSubmit={handleSubmit}>
@@ -114,7 +109,7 @@ const PlaceOrder = () => {
                     {/* General informations */}
                     <div className="card shadow">
                         <div className="card-header bg-primary text-white">
-                            Order  informations
+                            Order informations 
                         </div>
                         <div className="card-body">
                             <div>
@@ -374,15 +369,11 @@ const PlaceOrder = () => {
 
                                     <PhoneInput
                                         value={pickNumber}
-                                        
-                                        country={"ca"}
                                         inputProps={{
                                             required: true,
-                                            
-                                            
                                         }}
-
-                                        inputStyle={{  }}
+                                        country={state?.pickCountry ? state.pickCountry : "ca"}
+                                        inputStyle={{}}
                                         onChange={(e) => setPickNumber(e)}
                                     />
                                 </div>
@@ -462,7 +453,8 @@ const PlaceOrder = () => {
                                         inputProps={{
                                             required: true,
                                         }}
-                                        country={"ca"}
+                                        country={state?.deliveryCountry ? state.deliveryCountry : "ca"}
+
                                         value={deliveryNumber}
                                         onChange={(e) => setDeliveryNumber(e)}
                                     />
