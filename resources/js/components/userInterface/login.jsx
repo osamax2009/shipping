@@ -5,7 +5,7 @@ import {
     checkLogStatus,
     getUserFromAPI,
 } from "../api/axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { UserContext } from "../contexts/userContext";
 import { ToastContainer, toast } from "react-toastify";
 import { appName } from "../shared/constancy";
@@ -19,6 +19,9 @@ const Login = () => {
     const emailInput = useRef(null);
     const { user, setUser } = useContext(UserContext);
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const state = location.state;
 
     const [sidebar, setsidebar] = useState();
 
@@ -50,7 +53,14 @@ const Login = () => {
                     type: "success",
                     hideProgressBar: true,
                 });
-                navigate("/");
+
+                if (state.requestFrom == "create_order") {
+                    navigate("/account/dashboard/place-new-order",{
+                        state : state
+                    });
+                } else {
+                    navigate("/");
+                }
             }
 
             if (data.data.user_type == "admin") {
@@ -72,8 +82,8 @@ const Login = () => {
     };
 
     const handlePassHidden = () => {
-       passType == "password" ? setPassType("text") : setPassType('password')
-    }
+        passType == "password" ? setPassType("text") : setPassType("password");
+    };
 
     const checkUserStatus = async () => {
         const isConnected = await getUserFromAPI();
@@ -111,10 +121,12 @@ const Login = () => {
         <div className="h-full bg-gradient-to-tl from-green-400 to-indigo-900 w-full py-16 px-4">
             <div className="flex flex-col items-center justify-center">
                 <div className="flex  items-center gap-3 h-8">
-                    <img src="/images/ic_app_logo_color.png" alt="app logo"  className="-h-8"/>
-                    <div className="text-white text-2xl ">
-                        {appName}
-                    </div>
+                    <img
+                        src="/images/ic_app_logo_color.png"
+                        alt="app logo"
+                        className="-h-8"
+                    />
+                    <div className="text-white text-2xl ">{appName}</div>
                 </div>
                 <form onSubmit={handleLogin} className="w-full">
                     <div className="bg-white shadow rounded lg:!w-1/3  md:!w-1/2 w-fit p-10 mt-16">
@@ -128,7 +140,8 @@ const Login = () => {
                         </p>
                         <p className="text-sm mt-4 font-medium leading-none text-gray-500">
                             Dont have account?{" "}
-                            <Link to={"/account/register"}
+                            <Link
+                                to={"/account/register"}
                                 tabIndex={0}
                                 role="link"
                                 aria-label="Sign up here"
@@ -178,7 +191,10 @@ const Login = () => {
                                     type={passType}
                                     className="bg-gray-200 border rounded focus:outline-none text-xs font-medium leading-none text-gray-800 py-3 w-full pl-3 mt-2"
                                 />
-                                <div onMouseDown={handlePassHidden} className="absolute right-0 mt-2 mr-3 cursor-pointer">
+                                <div
+                                    onMouseDown={handlePassHidden}
+                                    className="absolute right-0 mt-2 mr-3 cursor-pointer"
+                                >
                                     <svg
                                         width={16}
                                         height={16}
@@ -200,7 +216,7 @@ const Login = () => {
                                 aria-label="login my account"
                                 className="focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 text-sm font-semibold leading-none text-white focus:outline-none bg-indigo-700 border rounded hover:bg-indigo-600 py-4 w-full"
                             >
-                               Login 
+                                Login
                             </button>
                         </div>
                     </div>
@@ -211,5 +227,3 @@ const Login = () => {
 };
 
 export default Login;
-
-
