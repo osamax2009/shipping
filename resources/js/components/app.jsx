@@ -15,6 +15,7 @@ import { Loading } from "@nextui-org/react";
 import Country from "./adminInterface/country";
 import City from "./adminInterface/city";
 import Orders from "./adminInterface/orders";
+import ParcelTypes from "./adminInterface/parcelTypes";
 
 const router = createBrowserRouter([
     {
@@ -72,6 +73,11 @@ const router = createBrowserRouter([
             {
                 path: "orders",
                 element: <Orders />,
+            },
+
+            {
+                path: "parcel-types",
+                element: <ParcelTypes />,
             },
         ],
     },

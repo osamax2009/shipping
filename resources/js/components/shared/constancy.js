@@ -3,8 +3,11 @@ import {
     BsBox2Heart,
     BsEnvelope,
     BsFileText,
+    BsFlower1,
     BsFolder,
 } from "react-icons/bs";
+
+
 
 export const appName = "2point Delivery";
 
@@ -20,12 +23,22 @@ export const parcelTypes = [
     },
 
     {
+        label: "Farm Packages",
+        icon: <BsBox />,
+    },
+
+    {
+        label: "Flowers",
+        icon: <BsFlower1 />,
+    },
+
+    {
         label: "Letters",
         icon: <BsFileText />,
     },
 
     {
-        label: "Pharmaceutical Package",
+        label: "Pharmaceutical",
         icon: <BsBox2Heart />,
     },
 

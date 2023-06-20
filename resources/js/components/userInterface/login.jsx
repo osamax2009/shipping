@@ -68,7 +68,7 @@ const Login = () => {
                     type: "success",
                     hideProgressBar: true,
                 });
-                navigate("/admin/new-orders");
+                navigate("/admin/orders");
             }
 
             if (data.data.user_type == "delivery_man") {

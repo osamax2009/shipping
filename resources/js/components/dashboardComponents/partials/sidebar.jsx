@@ -56,7 +56,7 @@ const Sidebar = () => {
 
         {
             title: "Parcel Type",
-            path: "/admin/new-orders",
+            path: "/admin/parcel-types",
             icon: <BsFillBoxSeamFill />
         },
 
