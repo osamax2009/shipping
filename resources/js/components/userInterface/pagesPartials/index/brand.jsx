@@ -227,7 +227,7 @@ const CityGetter = ({ title, selected, setSelected }) => {
                 type="text"
                 onBlur={() => setExpanded(false)}
                 placeholder="tape to search"
-                className="rounded-lg h-full text-lg border-0 w-full font-bold  focus:outline-none pl-3 pb-3 pt-10"
+                className="rounded-lg text-lg border-0 w-full font-bold  focus:outline-none pl-3 pb-3 pt-16"
             >
                 {selected ? (
                     <div className="flex gap-2 pt-1">
@@ -324,7 +324,7 @@ const Services = ({ selected, setSelected }) => {
                 type="text"
                 onBlur={() => setExpanded(false)}
                 placeholder="tape to search"
-                className="rounded-lg h-full text-lg border-0 w-full font-bold  focus:outline-none pl-3 pb-3 pt-10"
+                className="rounded-lg  text-lg border-0 w-full font-bold  focus:outline-none pl-3 pb-3 pt-16"
             >
                 {selected ? (
                     <div className="flex gap-2 pt-1">
