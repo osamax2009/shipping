@@ -175,8 +175,8 @@ const CreateModal = ({ open, setOpen }) => {
                 </div>
             </Modal.Header>
             <Modal.Body>
-                <div className="grid justify-between h-72">
-                    <div className="form-group ">
+                <div className="grid w-full h-72">
+                    <div className="form-group w-full">
                         <label htmlFor="country name">Country Name</label>
 
                         <ReactFlagsSelect
@@ -185,8 +185,8 @@ const CreateModal = ({ open, setOpen }) => {
                             onSelect={(code) => setSelected(code)}
                         />
                     </div>
-                    <div className="grid  justify-center md:grid-cols-2">
-                        <div className="form-group">
+                    <div className="grid w-full md:grid-cols-2">
+                        <div className="form-group w-full">
                             <label htmlFor=""> Distance type</label>
                             <select
                                 name=""
@@ -195,28 +195,28 @@ const CreateModal = ({ open, setOpen }) => {
                                 onChange={(e) =>
                                     setDistanceType(e.target.value)
                                 }
-                                className="from-control"
+                                className="form-control w-full"
                             >
                                 <option value={"km"}>km</option>
                                 <option value={"miles"}>miles</option>
                             </select>
                         </div>
 
-                        <div className="form-group">
+                        <div className="form-group w-full">
                             <label htmlFor=""> Weight type</label>
                             <select
                                 name=""
                                 id=""
                                 value={weightType}
                                 onChange={(e) => setWeightType(e.target.value)}
-                                className="from-control"
+                                className="form-control w-full"
                             >
                                 <option value={"km"}>kg</option>
                                 <option value={"pound"}>Pound</option>
                             </select>
                         </div>
                     </div>
-                    <div className="flex flex-wrap  w-full gap-6 justify-between sm:justify-end">
+                    <div className="flex flex-wrap  w-full gap-6 justify-end">
                         <Button
                             auto
                             css={{ backgroundColor: "Grey" }}
@@ -255,8 +255,8 @@ const UpdateModal = ({ country, open, setOpen }) => {
                 </div>
             </Modal.Header>
             <Modal.Body>
-                <div className="grid justify-between h-72">
-                    <div className="form-group ">
+                <div className="grid w-full h-72">
+                    <div className="form-group w-full">
                         <label htmlFor="country name">Country Name</label>
 
                         <ReactFlagsSelect
@@ -266,7 +266,7 @@ const UpdateModal = ({ country, open, setOpen }) => {
                         />
                     </div>
                     <div className="grid  justify-center md:grid-cols-2">
-                        <div className="form-group">
+                        <div className="form-group w-full">
                             <label htmlFor=""> Distance type</label>
                             <select
                                 name=""
@@ -275,21 +275,21 @@ const UpdateModal = ({ country, open, setOpen }) => {
                                 onChange={(e) =>
                                     setDistanceType(e.target.value)
                                 }
-                                className="from-control"
+                                className="form-control w-full"
                             >
                                 <option value={"km"}>km</option>
                                 <option value={"miles"}>miles</option>
                             </select>
                         </div>
 
-                        <div className="form-group">
+                        <div className="form-group w-full">
                             <label htmlFor=""> Weight type</label>
                             <select
                                 name=""
                                 id=""
                                 value={weightType}
                                 onChange={(e) => setWeightType(e.target.value)}
-                                className="from-control"
+                                className="form-control w-full"
                             >
                                 <option value={"km"}>kg</option>
                                 <option value={"pound"}>Pound</option>

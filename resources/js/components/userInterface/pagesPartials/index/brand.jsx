@@ -31,13 +31,6 @@ const Brand = () => {
 
     const navigate = useNavigate();
 
-    const getCities = async () => {
-        const { data } = await getWithAxios("/api/city-list");
-
-        if (data) {
-            setCities(data);
-        }
-    };
 
     const getLocation = async (location) => {
         const dataToSend = {
@@ -94,9 +87,7 @@ const Brand = () => {
         }
     };
 
-    useEffect(() => {
-        getCities();
-    }, []);
+   
 
     return (
         <div className="bg-gradient-to-b from-[#4caf50] to-[#388a3a] pb-24 px-24 pt-32 h-fit ">
@@ -138,10 +129,7 @@ const CityGetter = ({ title, selected, setSelected }) => {
 
     const divRef = useRef(null);
 
-    const handleSelection = (parcel) => {
-        setSelected(parcel);
-        //  setExpanded(false)
-    };
+  
 
     const handleFocus = () => {
         if (expanded) {

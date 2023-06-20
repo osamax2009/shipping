@@ -1,13 +1,16 @@
 import {
     BsBox,
+    BsBox2,
     BsBox2Heart,
     BsEnvelope,
     BsFileText,
     BsFlower1,
     BsFolder,
+    BsTruck,
 } from "react-icons/bs";
+import { FaShippingFast } from "react-icons/fa";
 
-
+import { LuBus } from "react-icons/lu";
 
 export const appName = "2point Delivery";
 
@@ -70,6 +73,46 @@ export const deliveryDetails = [
 
 export const deliveryServices = [
     {
-        
-    }
-]
+        title: "Express Package",
+        description: "Urgent deliveries in 24 - 72  hours worldwide",
+        icon: <FaShippingFast />,
+    },
+
+    {
+        title: "Standard Package",
+        description: "Simple and affordable solution for sending regular box",
+        icon: <BsBox2 />,
+    },
+
+    {
+        title: "Freight Transport",
+        description: "Efficient solution for transporting large quantities",
+        icon: <BsTruck />,
+    },
+
+    {
+        title: "Van Delivery",
+        description: "A dedicated van for transport within Europe",
+        icon: <LuBus />,
+    },
+];
+
+export const howItWorks = [{
+    title : "Select the cities",
+    description : "of pick-up and delivery on the booking tool"
+},
+
+{
+    title : "Insert the address",
+    description : "where you want to the parcel to be collected and dellivered"
+},
+
+{
+    title : "Pack your times",
+    description : "and have the package ready on the scheduled date"
+},
+
+{
+    title : "The courier will collect it",
+    description : "and  deliver exactly where you wish"
+}];

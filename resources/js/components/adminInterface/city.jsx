@@ -131,10 +131,14 @@ const CityLine = ({ city }) => {
 
 const CreateModal = ({ open, setOpen }) => {
     const [selected, setSelected] = useState();
-    const [distanceType, setDistanceType] = useState("km");
-    const [weightType, setWeightType] = useState("kg");
+    const [city, setCity] = useState({});
 
-    const countriesList = countryList();
+    const [countries, setCountries] = useState();
+
+    const getCountries = async () => {
+        const res = await getWithAxios("/api/country-list");
+        setCountries(res.data);
+    };
 
     const handleCreate = async () => {
         const cityName = countriesList.getLabel(selected);
@@ -163,6 +167,11 @@ const CreateModal = ({ open, setOpen }) => {
             });
         }
     };
+
+    useEffect(() => {
+        getCountries();
+    }, []);
+
     return (
         <Modal
             open={open}
@@ -177,16 +186,137 @@ const CreateModal = ({ open, setOpen }) => {
             </Modal.Header>
             <Modal.Body>
                 <div className="grid justify-between h-72">
-                    <div className="form-group ">
-                        <label htmlFor="city name">city Name</label>
+                    <div className="grid md:grid-cols-2">
+                        <div className="form-group">
+                            <label htmlFor=""> City Name</label>
+                            <input
+                                type="text"
+                                className="form-control w-full"
+                                value={city.name}
+                                onChange={(e) =>
+                                    setCity({ ...city, name: e.target.value })
+                                }
+                            />
+                        </div>
 
-                        <ReactFlagsSelect
-                            selected={selected}
-                            searchable
-                            onSelect={(code) => setSelected(code)}
-                        />
+                        <div className="form-group">
+                            <label htmlFor="">Country</label>
+                            <select
+                                name=""
+                                id=""
+                                value={city.country}
+                                onChange={(e) =>
+                                    setCity({
+                                        ...city,
+                                        country: e.target.value,
+                                    })
+                                }
+                                className="form-control"
+                            >
+                                {countries?.map((country, index) => (
+                                    <option key={index} value={country.id}>
+                                        {" "}
+                                        {country.name}{" "}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
                     </div>
-                    <div className="grid  justify-center md:grid-cols-2">
+                    <div className="grid md:grid-cols-3">
+                        <div className="form-group">
+                            <label htmlFor=""> Fixed charges</label>
+                            <input
+                                type="text"
+                                className="form-control w-full"
+                                value={city.charges}
+                                onChange={(e) =>
+                                    setCity({
+                                        ...city,
+                                        charges: e.target.value,
+                                    })
+                                }
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor=""> Cancel charges</label>
+                            <input
+                                type="text"
+                                className="form-control w-full"
+                                value={city.cancelCharges}
+                                onChange={(e) =>
+                                    setCity({
+                                        ...city,
+                                        cancelCharges: e.target.value,
+                                    })
+                                }
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor=""> %inimum Distance</label>
+                            <input
+                                type="text"
+                                className="form-control w-full"
+                                value={city.distance}
+                                onChange={(e) =>
+                                    setCity({
+                                        ...city,
+                                        distance: e.target.value,
+                                    })
+                                }
+                            />
+                        </div>
+                    </div>
+
+                    <div className="grid md:grid-cols-3">
+                        <div className="form-group">
+                            <label htmlFor=""> Fixed charges</label>
+                            <input
+                                type="text"
+                                className="form-control w-full"
+                                value={city.charges}
+                                onChange={(e) =>
+                                    setCity({
+                                        ...city,
+                                        charges: e.target.value,
+                                    })
+                                }
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor=""> Cancel charges</label>
+                            <input
+                                type="text"
+                                className="form-control w-full"
+                                value={city.cancelCharges}
+                                onChange={(e) =>
+                                    setCity({
+                                        ...city,
+                                        cancelCharges: e.target.value,
+                                    })
+                                }
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor=""> %inimum Distance</label>
+                            <input
+                                type="text"
+                                className="form-control w-full"
+                                value={city.distance}
+                                onChange={(e) =>
+                                    setCity({
+                                        ...city,
+                                        distance: e.target.value,
+                                    })
+                                }
+                            />
+                        </div>
+                    </div>
+                    
+                    <div className="grid md:grid-cols-2">
                         <div className="form-group">
                             <label htmlFor=""> Distance type</label>
                             <select
@@ -196,7 +326,7 @@ const CreateModal = ({ open, setOpen }) => {
                                 onChange={(e) =>
                                     setDistanceType(e.target.value)
                                 }
-                                className="from-control"
+                                className="form-control w-full"
                             >
                                 <option value={"km"}>km</option>
                                 <option value={"miles"}>miles</option>
@@ -271,7 +401,7 @@ const UpdateModal = ({ city, open, setOpen }) => {
                             onSelect={(code) => setSelected(code)}
                         />
                     </div>
-                    <div className="grid  justify-center md:grid-cols-2">
+                    <div className="grid md:grid-cols-2">
                         <div className="form-group">
                             <label htmlFor=""> Distance type</label>
                             <select
