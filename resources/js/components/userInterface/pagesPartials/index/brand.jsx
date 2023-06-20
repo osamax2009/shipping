@@ -217,7 +217,7 @@ const CityGetter = ({ title, selected, setSelected }) => {
             onMouseDown={() => setExpanded(true)}
             className="relative w-full cursor-pointer"
         >
-            <label htmlFor="" className="absolute top-3 left-4">
+            <label htmlFor="" className="pl-3 pt-2">
                 <span className="uppercase font-bold text-black text-xl">
                     {title}
                 </span>
@@ -227,7 +227,7 @@ const CityGetter = ({ title, selected, setSelected }) => {
                 type="text"
                 onBlur={() => setExpanded(false)}
                 placeholder="tape to search"
-                className="rounded-lg text-lg border-0 w-full font-bold  focus:outline-none pl-3 pb-3 pt-16"
+                className="rounded-lg text-lg border-0 w-full font-bold  focus:outline-none pl-3 pb-3 pt-1"
             >
                 {selected ? (
                     <div className="flex gap-2 pt-1">
@@ -314,7 +314,7 @@ const Services = ({ selected, setSelected }) => {
             onMouseDown={() => setExpanded(true)}
             className="relative w-full cursor-pointer"
         >
-            <label htmlFor="" className="absolute top-3 left-4">
+            <label htmlFor="" className="pl-3 pt-2">
                 <span className="uppercase font-bold text-black text-xl">
                     Service
                 </span>
@@ -324,7 +324,7 @@ const Services = ({ selected, setSelected }) => {
                 type="text"
                 onBlur={() => setExpanded(false)}
                 placeholder="tape to search"
-                className="rounded-lg  text-lg border-0 w-full font-bold  focus:outline-none pl-3 pb-3 pt-16"
+                className="rounded-lg  text-lg border-0 w-full font-bold  focus:outline-none pl-3 pb-3 pt-1"
             >
                 {selected ? (
                     <div className="flex gap-2 pt-1">
