@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { getWithAxios } from "@/components/api/axios";
 import Select from "react-select";
 import {
@@ -21,9 +21,10 @@ import {
 import { FaPallet } from "react-icons/fa";
 import { LuPackage2 } from "react-icons/lu";
 import { TbTruckDelivery } from "react-icons/tb";
+import { appName, parcelTypes } from "../../../shared/constancy";
 
 const Brand = () => {
-    const [countries, setCountries] = useState(null);
+    const [cities, setCities] = useState(null);
 
     const navigate = useNavigate();
 
@@ -53,11 +54,11 @@ const Brand = () => {
         },
     ];
 
-    const getCountries = async () => {
-        const { data } = await getWithAxios("/api/country-list");
+    const getCities = async () => {
+        const { data } = await getWithAxios("/api/city-list");
 
         if (data) {
-            setCountries(data);
+            setCities(data);
         }
     };
 
@@ -78,34 +79,30 @@ const Brand = () => {
     };
 
     useEffect(() => {
-        getCountries();
+        getCities();
     }, []);
 
     return (
         <div className="bg-gradient-to-b from-[#4caf50] to-[#388a3a] pb-24 px-24 pt-32 h-fit ">
-            <div className="text-[4rem] text-white font-bold">
-                We make shipping easy
+            <div className="text-[4rem] text-white text-center mt-4 font-bold">
+                Save on wolrlwide
             </div>
-            <div className=" text-white text-3xl ">
-                Immediate prices, easy booking
+            <div className=" text-white text-center text-3xl  mb-4">
+                shipping with {appName}
             </div>
-            <div className="pt-8">
-                <ul className="steps steps-vertical lg:steps-horizontal">
-                    {steps.map((step, index) => (
-                        <li className="step step-info text-sm ">
-                            <Step
-                                key={index}
-                                title={step.title}
-                                subtitle={step.subtitle}
-                                icon={step.icon}
-                            />{" "}
-                        </li>
-                    ))}
-                </ul>
-                <div className="flex justify-end">
-                    <Button onPress={handleOrder}>
-                        create order
-                    </Button>
+            
+
+            <div className="grid bg-white  md:grid-cols-4">
+                <CityGetter title={"From"} />
+                <CityGetter title={"To"} />
+                <Services />
+                <div>
+                    <button
+                        onClick={handleOrder}
+                        className="h-full w-full text-white font-bold bg-blue-700 hover:bg-blue-600"
+                    >
+                        Create Order
+                    </button>
                 </div>
             </div>
         </div>
@@ -113,6 +110,154 @@ const Brand = () => {
 };
 
 export default Brand;
+
+const CityGetter = ({ title }) => {
+    const [selected, setSelected] = useState();
+    const [expanded, setExpanded] = useState(false);
+    const [cities, setCities] = useState(null);
+    const [p_cities, setP_cities] = useState();
+    const [cityName, setCityName] = useState();
+   
+
+    const divRef = useRef(null);
+
+   
+
+    const handleSelection = (parcel) => {
+        setSelected(parcel);
+        //  setExpanded(false)
+    };
+
+    const handleFocus = () => {
+        if (expanded) {
+            
+            divRef.current.classList.add("ring-1");
+            divRef.current.classList.add("ring-blue-700");
+        } else {
+            divRef.current.classList.remove("ring-1");
+            divRef.current.classList.remove("ring-blue-700");
+        }
+    };
+
+    const handleFilter = (e) => {
+        const value = e.target.value;
+        setCityName(value);
+
+        if (value == "") {
+            setP_cities(cities);
+        } else {
+            value.toLowerCase();
+            let copie = cities;
+
+            const res = copie.filter((item) => {
+                const l_item = item.name.toLowerCase();
+
+                return l_item.includes(value);
+            });
+
+            setP_cities(res);
+        }
+    };
+
+    const getCities = async () => {
+        const { data } = await getWithAxios("/api/city-list");
+
+        if (data) {
+            setCities(data);
+            setP_cities(data);
+        }
+    };
+
+    useEffect(() => {
+        handleFocus();
+    }, [expanded]);
+
+    useEffect(() => {
+       setExpanded(false)
+    }, [selected]);
+
+   
+
+    useEffect(() => {
+        getCities();
+    }, []);
+    
+    useEffect(() => {
+        document.addEventListener("click", (evt) => {
+            const flyoutEl = divRef.current;
+            let targetEl = evt.target; // clicked element      
+            do {
+              if(targetEl == flyoutEl) {
+                // This is a click inside, does nothing, just return.
+               
+                return;
+              }
+              // Go up the DOM
+              targetEl = targetEl.parentNode;
+            } while (targetEl);
+            // This is a click outside.      
+           setExpanded(false)
+          });
+    },[])
+    return (
+        <div ref={divRef}  onMouseDown={() => setExpanded(true)}  className="relative w-full cursor-pointer">
+            <label htmlFor="" className="absolute top-3 left-4">
+                <span className="uppercase font-bold text-black text-xl">
+                    {title}
+                </span>
+            </label>
+
+            <div
+                type="text"
+      
+                onBlur={() => setExpanded(false)}
+                placeholder="tape to search"
+                className="rounded-lg h-full text-lg border-0 w-full font-bold  focus:outline-none pl-3 pb-3 pt-10"
+            >
+                {selected ? (
+                    <div className="flex gap-2 pt-1">
+                        <div>{selected.name}</div>
+                    </div>
+                ) : (
+                    <div className="text-lg font-bold text-gray-600">
+                        Type to search
+                    </div>
+                )}
+            </div>
+            {expanded && (
+                <div className="bg-white max-h-[290px] z-10 shadow absolute top-24 left-0 right-0 border rounded-lg overflow-hidden overflow-y-scroll ">
+                    <div className="px-4 py-2">
+                        <input type="text" placeholder="type here" className="form-control" value={cityName} onChange={handleFilter} />
+                    </div>
+                    {p_cities?.map((city, index) => (
+                        <div
+                            key={index}
+                            onMouseDown={() => setSelected(city)}
+                            className="flex cursor-pointer gap-2 py-2 px-4"
+                        >
+                            <div>{city.name}</div>
+                           
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
+
+const SetterButton = ({ city }) => {
+    return (
+        <div className=" text-bold cursor-pointer font-bold text-start w-full text-sm py-2 px-4 hover:bg-gray-100/50 focus:bg-gray-100/50">
+            <button
+                type="button"
+                onClick={() => setCityName(city.name)}
+                className="text-start w-full h-full"
+            >
+                {city.name}
+            </button>
+        </div>
+    );
+};
 
 const Step = ({ title, subtitle, icon }) => {
     return (
@@ -127,92 +272,96 @@ const Step = ({ title, subtitle, icon }) => {
 };
 
 const Services = () => {
-    const [selected, setSelected] = useState(new Set(["Document"]));
+    const [selected, setSelected] = useState();
+    const [expanded, setExpanded] = useState(false);
+    const divRef = useRef(null);
 
-    const selectedValue = useMemo(
+    /* const selectedValue = useMemo(
         () => Array.from(selected).join(", ").replaceAll("_", " "),
         [selected]
-    );
+    ); */
 
-    const services = [
-        {
-            icon: <BsEnvelope />,
-            title: "Document",
-        },
+    const handleSelection = (parcel) => {
+        setSelected(parcel);
+        //  setExpanded(false)
+    };
 
-        {
-            icon: <LuPackage2 />,
-            title: "Package",
-        },
+    const handleFocus = () => {
+        if (expanded) {
+            
+            divRef.current.classList.add("ring-1");
+            divRef.current.classList.add("ring-blue-700");
+        } else {
+            divRef.current.classList.remove("ring-1");
+            divRef.current.classList.remove("ring-blue-700");
+        }
+    };
+    useEffect(() => {
+        handleFocus();
+    }, [expanded]);
 
-        {
-            icon: <LuPackage2 />,
-            title: "Express package",
-        },
+    useEffect(() => {
+       setExpanded(false)
+    }, [selected]);
 
-        {
-            icon: <FaPallet />,
-            title: "Pallet",
-        },
-
-        {
-            icon: <TbTruckDelivery />,
-            title: "Van delivery",
-        },
-
-        {
-            icon: <Bs1Circle />,
-            title: "parcelone",
-        },
-
-        {
-            icon: <Bs1Circle />,
-            title: "parceltzo",
-        },
-    ];
+    useEffect(() => {
+        document.addEventListener("click", (evt) => {
+            const flyoutEl = divRef.current;
+            let targetEl = evt.target; // clicked element      
+            do {
+              if(targetEl == flyoutEl) {
+                // This is a click inside, does nothing, just return.
+               
+                return;
+              }
+              // Go up the DOM
+              targetEl = targetEl.parentNode;
+            } while (targetEl);
+            // This is a click outside.      
+           setExpanded(false)
+          });
+    },[])
+    
     return (
-        <div className="form-group">
-            <label htmlFor="">Service</label>
-            <div>
-                <Dropdown>
-                    <Dropdown.Button
-                        flat
-                        className="w-full"
-                        color="success"
-                        css={{ tt: "capitalize" }}
-                    >
-                        {selectedValue}
-                    </Dropdown.Button>
-                    <Dropdown.Menu
-                        aria-label="Single selection actions"
-                        color="secondary"
-                        disallowEmptySelection
-                        selectionMode="single"
-                        selectedKeys={selected}
-                        onSelectionChange={setSelected}
-                    >
-                        {services.map((service, index) => (
-                            <Dropdown.Item key={service.title}>
-                                <div className="flex gap-4">
-                                    <div className="text-xl">
-                                        {service.icon}
-                                    </div>
-                                    <div>
-                                        <div className="uppercase">
-                                            {service.title}
-                                        </div>
-                                        {/* <div>
-                        {service.subTitle}
-                        </div> */}
-                                    </div>
-                                </div>
-                            </Dropdown.Item>
-                        ))}
-                    </Dropdown.Menu>
-                </Dropdown>
+        <div ref={divRef}  onMouseDown={() => setExpanded(true)} className="relative w-full cursor-pointer">
+            <label htmlFor="" className="absolute top-3 left-4">
+                <span className="uppercase font-bold text-black text-xl">
+                    Service
+                </span>
+            </label>
+
+            <div
+                type="text"
+      
+                onBlur={() => setExpanded(false)}
+                placeholder="tape to search"
+                className="rounded-lg h-full text-lg border-0 w-full font-bold  focus:outline-none pl-3 pb-3 pt-10"
+            >
+                {selected ? (
+                    <div className="flex gap-2 pt-1">
+                        <div>{selected.icon}</div>
+                        <div>{selected.label}</div>
+                    </div>
+                ) : (
+                    <div className="text-lg font-bold text-gray-600">
+                        select a service
+                    </div>
+                )}
             </div>
+            {expanded && (
+                <div className="bg-white max-h-[290px] z-10 shadow absolute top-24 left-0 right-0 border rounded-lg overflow-hidden overflow-y-scroll ">
+                    {parcelTypes.map((parcel, index) => (
+                        <div
+                            key={index}
+                            onMouseDown={() => setSelected(parcel)}
+                            className="flex cursor-pointer gap-2 py-2 px-4"
+                        >
+                            <div>{parcel.icon}</div>
+                            <div>{parcel.label}</div>
+                        </div>
+                    ))}
+                </div>
+            )}
         </div>
     );
 };
-
-
