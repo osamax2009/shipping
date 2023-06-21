@@ -27,7 +27,7 @@ const OrderResume = () => {
             placeid : placeId
         }
         const res = await getWithAxios("/api/place-detail-api",dataToSend)
-        console.log(res)
+      
         if(res.status == 'OK')
         {
             placeDetailSetter(res.result)      
@@ -52,11 +52,11 @@ const OrderResume = () => {
     }
 
     const pickupDPoint = () => {
-        if(state.schedule)
+        if(state.schedule.pickDate)
         {
             return {
-                start_time : state.pickDate + " " + state.pickFrom,
-                end_time : state.pickDate + " " + state.pickTo,
+                start_time : state.schedule.pickDate + " " + state.schedule.pickFrom,
+                end_time : state.schedule.pickDate + " " + state.schedule.pickTo,
                 "address": state?.pickLocation,
                 "latitude": pickLocationDetails.geometry.location.lat,
                 "longitude": pickLocationDetails.geometry.location.lng,
@@ -77,11 +77,11 @@ const OrderResume = () => {
     }
 
     const deliveryPoint = () => {
-        if(state.schedule)
+        if(state.schedule.deliverDate)
         {
             return {
-                start_time : state.deliveryDate + " " + state.deliveryFrom,
-                end_time : state.deliveryDate + " " + state.deliveryTo,
+                start_time : state.schedule.deliveryDate + " " + state.schedule.deliveryFrom,
+                end_time : state.schedule.deliveryDate + " " + state.schedule.deliveryTo,
                 "address": state?.deliveryLocation,
                 "latitude": deliveryLocationDetails.geometry.location.lat,
                 "longitude": deliveryLocationDetails.geometry.location.lng,
@@ -114,17 +114,19 @@ const OrderResume = () => {
             "extra_charges" : [],
             "parcel_type" : state?.parcelType,
             "total_weight" : state?.weight,
-            "total_distance" : distance,
+         //   "total_distance" : distance,
             "payment_collect_from" : receivePaymentFrom,
             "status" : "draft",
             "payment_type" : "",
             "payment_status" : "",
-            "fixed_charges" : "100",
-            "parent_order_id" : "",
+           // "fixed_charges" : "100",
+           // "parent_order_id" : "",
             "save_user_address" : 1
         }
 
         const res = await postWithAxios("/api/order-save", dataToSend)
+
+        console.log(res)
 
         if(res.order_id)
         {
@@ -155,7 +157,7 @@ const OrderResume = () => {
             <div className="px-8">
                 <div className="card">
                     <div className="card-header bg-primary text-white">
-                        Your order resume
+                        Your order resume {state.pickId}
                     </div>
                     <div className="card-body">
                         <div className="grid gap-6  md:grid-cols-2">

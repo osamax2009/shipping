@@ -46,8 +46,8 @@ const PlaceOrder = () => {
     const [deliverNow, setDeliverNow] = useState(true);
     const [locations, setLocations] = useState([]);
     const [deLlocations, setDelLocations] = useState([]);
-    const [pickId, setPickId] = useState();
-    const [deliveryId, setDeliveryId] = useState(0);
+    const [pickId, setPickId] = useState(state?.pickId);
+    const [deliveryId, setDeliveryId] = useState(state?.deliveryId);
 
     const navigate = useNavigate();
 
@@ -82,6 +82,8 @@ const PlaceOrder = () => {
     const handleDeliverNow = () => {
         deliverNow ? setDeliverNow(false) : setDeliverNow(true);
     };
+
+    
     const handleSubmit = (e) => {
         e.preventDefault();
         navigate("/account/dashboard/new-order-resume", {

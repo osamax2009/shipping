@@ -46,6 +46,7 @@ Route::get('vehicle-list', [ API\VehicleController::class, 'getList' ] );
 
 Route::get('place-autocomplete-api', [ API\CommonController::class, 'placeAutoComplete' ] );
 Route::get('place-detail-api', [ API\CommonController::class, 'placeDetail' ] );
+Route::get('distance-between-places', [ API\CommonController::class, 'distanceBetwennTwoPlaces' ] );
 
 
 

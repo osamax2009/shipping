@@ -54,13 +54,15 @@ const Login = () => {
                     hideProgressBar: true,
                 });
 
-                if (state.requestFrom == "create_order") {
+                if (state?.requestFrom == "create_order") {
                     navigate("/account/dashboard/place-new-order",{
                         state : state
                     });
-                } else {
+                } else{
                     navigate("/");
                 }
+                
+                
             }
 
             if (data.data.user_type == "admin") {
