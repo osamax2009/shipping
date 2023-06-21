@@ -59,7 +59,6 @@ const Brand = () => {
 
     const handleOpen = () => {
         if (!from || !to || !service || !weight) {
-            
             toast("Empty field submitted", {
                 type: "error",
                 hideProgressBar: true,
@@ -150,7 +149,7 @@ const Brand = () => {
                 payment_status: "",
                 fixed_charges: 3.8,
                 parent_order_id: "",
-                 total_amount : price,
+                total_amount: price,
                 save_user_address: user?.id,
             },
         };
@@ -167,7 +166,7 @@ const Brand = () => {
             const res = await postWithAxios("/api/order-save", dataToSend);
 
             if (res.order_id) {
-                setProcessing(false)
+                setProcessing(false);
                 toast(res.message, {
                     type: "success",
                     hideProgressBar: true,
@@ -266,8 +265,6 @@ const CityGetter = ({ title, selected, setSelected }) => {
         }
     };
 
-   
-
     const getPlaces = async (e, locationSetter, locationsSetter) => {
         locationSetter(e.target.value);
         const dataToSend = {
@@ -285,8 +282,6 @@ const CityGetter = ({ title, selected, setSelected }) => {
         }
     };
 
-  
-
     useEffect(() => {
         handleFocus();
     }, [expanded]);
@@ -294,8 +289,6 @@ const CityGetter = ({ title, selected, setSelected }) => {
     useEffect(() => {
         setExpanded(false);
     }, [selected]);
-
-   
 
     useEffect(() => {
         document.addEventListener("click", (evt) => {
@@ -795,32 +788,17 @@ const QuoteModal = ({
                     </div>
                 </div>
                 <div className="py-6">
-                <div className="text-black text-xl font-bold">Collect payment from</div>
-                    <Dropdown>
-                        <Dropdown.Button
-                            flat
-                            className="w-full"
-                            color="success"
-                            css={{ tt: "capitalize" }}
-                        >
-                            {receivePaymentFrom}
-                        </Dropdown.Button>
-                        <Dropdown.Menu
-                            disallowEmptySelection
-                            defaultChecked
-                            selectionMode="single"
-                            selectedKeys={receivePaymentFrom}
-                            onSelectionChange={setReceivePaymentFrom}
-                        >
-                            <Dropdown.Item key={"on_pickup"}>
-                                pickup Location
-                            </Dropdown.Item>
-
-                            <Dropdown.Item key={"on_delivery"}>
-                                Delivery Location
-                            </Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown>
+                    <div className="text-black text-xl font-bold">
+                        Collect payment from
+                    </div>
+                    <select
+                        className="form-control"
+                        value={receivePaymentFrom}
+                        onChange={(e) => setReceivePaymentFrom(e.target.value)}
+                    >
+                        <option value="on_pickup">On PickUp</option>
+                        <option value="on_delivery">On Delivery</option>
+                    </select>
                 </div>
 
                 <div className="flex gap-4 justify-end">

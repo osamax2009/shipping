@@ -13,6 +13,7 @@ const MyOrders = () => {
     const getOrders = async () => {
         const id = user?.id;
         const res = await getWithAxios("/api/order-list", { client_id: id });
+        console.log(res)
         setOrders(res.data);
     };
 
@@ -29,9 +30,10 @@ const MyOrders = () => {
                         <Table.Column>Distance</Table.Column>
                         <Table.Column>Weight</Table.Column>
                         <Table.Column>Price</Table.Column>
-                        <Table.Column>Status</Table.Column>
+                        
                         <Table.Column>PickUp Address</Table.Column>
                         <Table.Column>Delivery Address</Table.Column>
+                        <Table.Column>Status</Table.Column>
                         <Table.Column>Actions</Table.Column>
                     </Table.Header>
                     <Table.Body>
@@ -44,7 +46,6 @@ const MyOrders = () => {
                                 </Table.Cell>
                                 <Table.Cell> {order.total_weight} </Table.Cell>
                                 <Table.Cell> {order.total_amount} </Table.Cell>
-                                <Table.Cell> {order.status} </Table.Cell>
                                 <Table.Cell>
                                     {" "}
                                     {order.pickup_point.address}{" "}
@@ -53,6 +54,8 @@ const MyOrders = () => {
                                     {" "}
                                     {order.delivery_point.address}{" "}
                                 </Table.Cell>
+                                <Table.Cell> {order.status} </Table.Cell>
+
                                 <Table.Cell>
                                     {" "}
                                     {order.total_distance}{" "}
@@ -67,3 +70,5 @@ const MyOrders = () => {
 };
 
 export default MyOrders;
+
+

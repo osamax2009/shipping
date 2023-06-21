@@ -53,12 +53,12 @@ const Login = () => {
                 console.log(state)
 
                 if (state?.delivery_point) {
-                    
+                    const _user = data.data
                     const dataToSend = state;
-                    state.client_id = user?.id
-                    state.country_id = user?.country_id,
-                    state.city_id = user?.city_id,
-                    state. save_user_address = user?.id
+                    state.client_id = _user?.id
+                    state.country_id = _user?.country_id,
+                    state.city_id = _user?.city_id,
+                    state. save_user_address = _user?.id
                     
                     const res = await postWithAxios(
                         "/api/order-save",

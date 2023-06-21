@@ -142,7 +142,7 @@ const Navbar = () => {
                                         !color ? "text-white" : "text-black"
                                     }
                                     auto
-                                    to={"/account/dashboard/place-new-order"}
+                                    to={"/account/dashboard/order-list"}
                                 >
                                     Dashboard
                                 </Link>
@@ -255,7 +255,7 @@ const Navbar = () => {
                                 css={{ background: "#ffffff" }}
                                 className={!color ? "text-black" : "text-black"}
                                 auto
-                                to={"/account/dashboard/place-new-order"}
+                                to={"/account/dashboard/order-list"}
                             >
                                 Dashboard
                             </Link>
