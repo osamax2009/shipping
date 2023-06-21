@@ -60,7 +60,7 @@ const Brand = () => {
     const handleOpen = () => {
         if (!from || !to || !service || !weight) {
             
-            toast("Empty filed submitted", {
+            toast("Empty field submitted", {
                 type: "error",
                 hideProgressBar: true,
             });
@@ -795,6 +795,7 @@ const QuoteModal = ({
                     </div>
                 </div>
                 <div className="py-6">
+                <div className="text-black text-xl font-bold">Collect payment from</div>
                     <Dropdown>
                         <Dropdown.Button
                             flat

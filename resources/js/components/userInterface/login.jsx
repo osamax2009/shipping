@@ -49,20 +49,36 @@ const Login = () => {
             setUser(data.data);
 
             if (data.data.user_type == "client") {
-                toast("connected successfully", {
-                    type: "success",
-                    hideProgressBar: true,
-                });
+                
+                console.log(state)
 
-                if (state?.requestFrom == "create_order") {
-                    navigate("/account/dashboard/new-order-resume",{
-                        state : state
+                if (state?.delivery_point) {
+                    
+                    const dataToSend = state;
+                    state.client_id = user?.id
+                    state.country_id = user?.country_id,
+                    state.city_id = user?.city_id,
+                    state. save_user_address = user?.id
+                    
+                    const res = await postWithAxios(
+                        "/api/order-save",
+                        dataToSend
+                    );
+
+                    if (res.order_id) {
+                        toast(res.message, {
+                            type: "success",
+                            hideProgressBar: true,
+                        });
+                    }
+                    navigate("/");
+                } else {
+                    toast("connected successfully", {
+                        type: "success",
+                        hideProgressBar: true,
                     });
-                } else{
                     navigate("/");
                 }
-                
-                
             }
 
             if (data.data.user_type == "admin") {
@@ -162,24 +178,24 @@ const Login = () => {
                             <hr className="w-full bg-gray-400  " />
                         </div>
                         <div>
-                            <lable className="text-sm font-medium leading-none text-gray-800">
+                            <label className="text-sm font-medium leading-none text-gray-800">
                                 Email
-                            </lable>
+                            </label>
                             <input
                                 value={email}
                                 ref={emailInput}
-                                onChange={(e) => setEmail(e.target.value)}
+                                onChange={e => setEmail(e.target.value)}
                                 required
                                 aria-label="enter email adress"
-                                role="input"
+                                
                                 type="email"
                                 className="bg-gray-200 border rounded focus:outline-none text-xs font-medium leading-none text-gray-800 py-3 w-full pl-3 mt-2"
                             />
                         </div>
                         <div className="mt-6  w-full">
-                            <lable className="text-sm font-medium leading-none text-gray-800">
+                            <label className="text-sm font-medium leading-none text-gray-800">
                                 Password
-                            </lable>
+                            </label>
                             <div className="relative flex items-center justify-center">
                                 <input
                                     value={password}
@@ -189,7 +205,7 @@ const Login = () => {
                                     }
                                     required
                                     aria-label="enter Password"
-                                    role="input"
+                                  
                                     type={passType}
                                     className="bg-gray-200 border rounded focus:outline-none text-xs font-medium leading-none text-gray-800 py-3 w-full pl-3 mt-2"
                                 />

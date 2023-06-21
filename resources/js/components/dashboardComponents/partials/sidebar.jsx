@@ -12,13 +12,13 @@ const Sidebar = () => {
     const userRoutes = [
         {
             title: "Place new Order",
-            path: "/account/dashboard/place-new-order",
+            path: "/",
             icon: <BsBagPlusFill />,
         },
 
         {
             title: "My orders",
-            path: "/account/dashboard/my-orders",
+            path: "/account/dashboard/order-list",
             icon: <BsBagPlusFill />,
         },
     ];

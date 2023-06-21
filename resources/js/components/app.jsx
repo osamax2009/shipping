@@ -16,6 +16,7 @@ import Country from "./adminInterface/country";
 import City from "./adminInterface/city";
 import Orders from "./adminInterface/orders";
 import ParcelTypes from "./adminInterface/parcelTypes";
+import MyOrders from "./userInterface/userDashboard/myOrders";
 
 const router = createBrowserRouter([
     {
@@ -33,10 +34,10 @@ const router = createBrowserRouter([
         element: <Register />,
     },
 
-    {
+   /*  {
         path: "/account/dashboard/place-new-order",
         element: <PlaceOrder />,
-    },
+    }, */
 
     {
         path: "/account/dashboard/new-order-resume",
@@ -51,6 +52,11 @@ const router = createBrowserRouter([
     {
         path: "/account/dashboard/user-profile",
         element: <Profile />,
+    },
+
+    {
+        path: "/account/dashboard/order-list",
+        element : <MyOrders/>
     },
 
     /* Admin routes */
