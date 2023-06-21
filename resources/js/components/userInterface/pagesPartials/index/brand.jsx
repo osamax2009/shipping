@@ -517,11 +517,11 @@ const QuoteModal = ({from, to, weight, service, open, setOpen, handleCreateOrder
                 </div>
 
                 <div className="font-bold">
-                    Weight : {weight? weight : null}
+                    Weight : {weight? weight : null} kg
                 </div>
 
                 <div className="text-end text-lg font-bold text-orange-700">
-                    Total price = {price ? price : 'calculating...'}
+                   $  Total price = {price ? price : 'calculating...'}
                 </div>
                 <div className="flex gap-4 justify-end">
                     

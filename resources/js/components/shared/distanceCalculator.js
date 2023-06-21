@@ -42,8 +42,8 @@ export function charges(distance, weight, service) {
         let ttc;
 
 
-        distance > 10 ? dCharge = distance * 0.5 : null;
-        weight > 5 ? dWeight= weight * 0.5 : null; 
+        distance > 10 ? dCharge = (distance - 10) * 0.5 : null ;
+        weight > 5 ? dWeight= (weight- 5 ) * 0.5 : null; 
         th = dCharge + dWeight + fixCharge;
         gst = th * 0.06;
         pst = th * 0.05;
@@ -60,8 +60,8 @@ export function charges(distance, weight, service) {
         let ttc;
 
 
-        distance > 10 ? dCharge = distance * 0.9 : null;
-        weight > 5 ? dWeight= weight * 0.9 : null; 
+        distance > 10 ? dCharge = (distance - 10) * 0.9 : null;
+        weight > 5 ? dWeight= (weight- 5 ) * 0.9 : null; 
         th = dCharge + dWeight + fixCharge;
         gst = th * 0.06;
         pst = th * 0.05;
