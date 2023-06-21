@@ -114,19 +114,19 @@ const OrderResume = () => {
             "extra_charges" : [],
             "parcel_type" : state?.parcelType,
             "total_weight" : state?.weight,
-         //   "total_distance" : distance,
+            "total_distance" : distance,
             "payment_collect_from" : receivePaymentFrom,
             "status" : "draft",
             "payment_type" : "",
             "payment_status" : "",
-           // "fixed_charges" : "100",
-           // "parent_order_id" : "",
-            "save_user_address" : 1
+            "fixed_charges" : "100",
+            "parent_order_id" : "",
+           // "save_user_address" : 1
         }
 
         const res = await postWithAxios("/api/order-save", dataToSend)
 
-        console.log(res)
+ 
 
         if(res.order_id)
         {

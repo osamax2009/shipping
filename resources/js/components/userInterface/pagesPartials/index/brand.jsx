@@ -1,24 +1,31 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 
-import {
-    Bs1CircleFill,
-    Bs2CircleFill,
-    Bs4CircleFill,
-    BsFill3CircleFill,
-} from "react-icons/bs";
-
 import { appName, parcelTypes } from "../../../shared/constancy";
-import { Button, Input, Loading, Modal, Radio } from "@nextui-org/react";
+import {
+    Button,
+    Dropdown,
+    Input,
+    Loading,
+    Modal,
+    Radio,
+} from "@nextui-org/react";
 import { toast } from "react-toastify";
 
 import {
     charges,
     haversine_distance,
 } from "../../../shared/distanceCalculator";
-import { getCsrfToken, getUserFromAPI, getWithAxios } from "../../../api/axios";
+import {
+    getCsrfToken,
+    getUserFromAPI,
+    getWithAxios,
+    postWithAxios,
+} from "../../../api/axios";
 import PhoneInput from "react-phone-input-2";
+import { todaysDate, tomorrowsDate } from "../../../shared/date";
+import { UserContext } from "../../../contexts/userContext";
 
 const Brand = () => {
     const [from, setFrom] = useState();
@@ -43,14 +50,16 @@ const Brand = () => {
     const [pickDescription, setPickDescription] = useState();
     const [deliveryNumber, setDeliveryNumber] = useState();
     const [deliveryDescription, setDeliveryDescription] = useState();
-
+    const [distance, setDistance] = useState();
+    const [receivePaymentFrom, setReceivePaymentFrom] = useState("on_pickup");
     const [price, setPrice] = useState();
+    const { user, setUser } = useContext(UserContext);
 
     const navigate = useNavigate();
 
     const handleOpen = () => {
         if (!from || !to || !service || !weight) {
-            setProcessing(false);
+            
             toast("Empty filed submitted", {
                 type: "error",
                 hideProgressBar: true,
@@ -71,19 +80,78 @@ const Brand = () => {
         }
     };
 
+    const pickupDPoint = () => {
+        if (schedule.pickDate) {
+            return {
+                start_time: schedule.pickDate + " " + schedule.pickFrom,
+                end_time: schedule.pickDate + " " + schedule.pickTo,
+                address: pickLocationDetails.formatted_address,
+                latitude: pickLocationDetails.geometry.location.lat,
+                longitude: pickLocationDetails.geometry.location.lng,
+                description: pickDescription,
+                contact_number: pickNumber,
+            };
+        } else {
+            return {
+                date: todaysDate(),
+                address: pickLocationDetails.formatted_address,
+                latitude: pickLocationDetails.geometry.location.lat,
+                longitude: pickLocationDetails.geometry.location.lng,
+                description: pickDescription,
+                contact_number: pickNumber,
+            };
+        }
+    };
+
+    const deliveryPoint = () => {
+        if (schedule.deliverDate) {
+            return {
+                start_time: schedule.deliveryDate + " " + schedule.deliveryFrom,
+                end_time: schedule.deliveryDate + " " + schedule.deliveryTo,
+                address: deliveryLocationDetails.formatted_address,
+                latitude: deliveryLocationDetails.geometry.location.lat,
+                longitude: deliveryLocationDetails.geometry.location.lng,
+                description: deliveryDescription,
+                contact_number: deliveryNumber,
+            };
+        } else {
+            return {
+                date: tomorrowsDate(),
+                address: deliveryLocationDetails.formatted_address,
+                latitude: deliveryLocationDetails.geometry.location.lat,
+                longitude: deliveryLocationDetails.geometry.location.lng,
+                description: deliveryDescription,
+                contact_number: deliveryNumber,
+            };
+        }
+    };
+
+    let currentDate = new Date().toJSON().slice(0, 10);
+
     const handleOrder = async () => {
         setOpen(false);
         setProcessing(true);
 
         const stateDate = {
             state: {
-                parcel: service,
-                pickLocation: pickLocationDetails,
-                deliveryLocation: deliveryLocationDetails,
-                service: service,
-                weight: weight,
-                price: price,
-                requestFrom: "create_order",
+                client_id: user?.id,
+                date: currentDate,
+                country_id: user?.country_id,
+                city_id: user?.city_id,
+                pickup_point: pickupDPoint(),
+                delivery_point: deliveryPoint(),
+                extra_charges: [],
+                parcel_type: service.value,
+                total_weight: weight,
+                total_distance: distance,
+                payment_collect_from: receivePaymentFrom,
+                status: "draft",
+                payment_type: "",
+                payment_status: "",
+                fixed_charges: 3.8,
+                parent_order_id: "",
+                 total_amount : price,
+                save_user_address: user?.id,
             },
         };
 
@@ -95,10 +163,17 @@ const Brand = () => {
         }
 
         if (user) {
-            navigate("/account/dashboard/new-order-resume", stateDate);
-        }
+            const dataToSend = stateDate.state;
+            const res = await postWithAxios("/api/order-save", dataToSend);
 
-        setProcessing(false);
+            if (res.order_id) {
+                setProcessing(false)
+                toast(res.message, {
+                    type: "success",
+                    hideProgressBar: true,
+                });
+            }
+        }
     };
 
     useEffect(() => {
@@ -120,7 +195,7 @@ const Brand = () => {
                 shipping with {appName}
             </div>
 
-            <div className="grid bg-white  md:grid-cols-5">
+            <div className="grid bg-white mt-6  md:grid-cols-5">
                 <CityGetter
                     title={"From"}
                     selected={from}
@@ -160,6 +235,10 @@ const Brand = () => {
                 setDeliverNow={setDeliverNow}
                 setSchedule={setSchedule}
                 handleCreateOrder={handleOrder}
+                distance={distance}
+                setDistance={setDistance}
+                receivePaymentFrom={receivePaymentFrom}
+                setReceivePaymentFrom={setReceivePaymentFrom}
             />
         </div>
     );
@@ -187,25 +266,7 @@ const CityGetter = ({ title, selected, setSelected }) => {
         }
     };
 
-    /* const handleFilter = (e) => {
-        const value = e.target.value;
-        setCityName(value);
-
-        if (value == "") {
-            setP_cities(cities);
-        } else {
-            value.toLowerCase();
-            let copie = cities;
-
-            const res = copie.filter((item) => {
-                const l_item = item.name.toLowerCase();
-
-                return l_item.includes(value);
-            });
-
-            setP_cities(res);
-        }
-    }; */
+   
 
     const getPlaces = async (e, locationSetter, locationsSetter) => {
         locationSetter(e.target.value);
@@ -224,14 +285,7 @@ const CityGetter = ({ title, selected, setSelected }) => {
         }
     };
 
-    /* const getCities = async () => {
-        const { data } = await getWithAxios("/api/city-list");
-
-        if (data) {
-            setCities(data);
-            setP_cities(data);
-        }
-    }; */
+  
 
     useEffect(() => {
         handleFocus();
@@ -241,9 +295,7 @@ const CityGetter = ({ title, selected, setSelected }) => {
         setExpanded(false);
     }, [selected]);
 
-    /*     useEffect(() => {
-        getCities();
-    }, []); */
+   
 
     useEffect(() => {
         document.addEventListener("click", (evt) => {
@@ -268,7 +320,7 @@ const CityGetter = ({ title, selected, setSelected }) => {
             onMouseDown={() => setExpanded(true)}
             className="relative w-full cursor-pointer"
         >
-            <div  className="pl-3 pt-2">
+            <div className="pl-3 pt-2">
                 <span className="uppercase font-bold text-black text-xl">
                     {title}
                 </span>
@@ -281,11 +333,11 @@ const CityGetter = ({ title, selected, setSelected }) => {
                 className="rounded-lg text-lg border-0 w-full font-bold  focus:outline-none pl-3 pb-3 pt-1"
             >
                 {selected ? (
-                    <div className="flex gap-2 pt-1 text-sm">
+                    <div className="flex gap-2 pt-1 text-md">
                         <div>{selected.description}</div>
                     </div>
                 ) : (
-                    <div className="text-sm font-bold text-gray-600">
+                    <div className="text-md font-bold pt-1 text-gray-600">
                         Type to search
                     </div>
                 )}
@@ -365,7 +417,7 @@ const Services = ({ selected, setSelected }) => {
             onMouseDown={() => setExpanded(true)}
             className="relative w-full cursor-pointer"
         >
-            <div  className="pl-3 pt-2">
+            <div className="pl-3 pt-2">
                 <span className="uppercase font-bold text-black text-xl">
                     Service
                 </span>
@@ -380,7 +432,7 @@ const Services = ({ selected, setSelected }) => {
                 {selected ? (
                     <div className="flex gap-2 pt-1">
                         <div>{selected.icon}</div>
-                        <div>{selected.div}</div>
+                        <div>{selected.label}</div>
                     </div>
                 ) : (
                     <div className="text-lg font-bold text-gray-600">
@@ -397,7 +449,7 @@ const Services = ({ selected, setSelected }) => {
                             className="flex cursor-pointer gap-2 py-2 px-4"
                         >
                             <div>{parcel.icon}</div>
-                            <div>{parcel.div}</div>
+                            <div>{parcel.label}</div>
                         </div>
                     ))}
                 </div>
@@ -450,7 +502,7 @@ const WeightGetter = ({ selected, setSelected }) => {
             onMouseDown={() => setExpanded(true)}
             className="relative w-full cursor-pointer"
         >
-            <div  className="pl-3 pt-2">
+            <div className="pl-3 pt-2">
                 <span className="uppercase font-bold text-black text-xl">
                     Weight
                 </span>
@@ -496,9 +548,12 @@ const QuoteModal = ({
     setDeliveryDescription,
     schedule,
     setSchedule,
+    distance,
+    setDistance,
+    receivePaymentFrom,
+    setReceivePaymentFrom,
 }) => {
     const deliveryCharges = 3.8;
-    const [distance, setDistance] = useState();
     const [inProcess, setInProcess] = useState();
 
     const handleDeliverNow = () => {
@@ -572,7 +627,9 @@ const QuoteModal = ({
                 {!deliverNow && (
                     <div className="grid gap-4 px-2 pt-4 md:grid-cols-2">
                         <div className="p-2 bg-gray-100/25">
-                            <div className=" text-center font-bold mb-4 text-xl">Pick Time</div>
+                            <div className=" text-center font-bold mb-4 text-xl">
+                                Pick Time
+                            </div>
                             <div className="grid ">
                                 <div className="grid gap-2 font-bold">
                                     <div className="">Date</div>
@@ -593,7 +650,7 @@ const QuoteModal = ({
                                 </div>
 
                                 <div className="grid gap-2 font-bold">
-                                    <div >From</div>
+                                    <div>From</div>
                                     <Input
                                         required
                                         className="w-full"
@@ -610,7 +667,7 @@ const QuoteModal = ({
                                     />
                                 </div>
                                 <div className="grid gap-2 font-bold">
-                                    <div >To</div>
+                                    <div>To</div>
                                     <Input
                                         required
                                         className="w-full"
@@ -630,10 +687,12 @@ const QuoteModal = ({
                         </div>
 
                         <div className="p-2 bg-gray-100/25">
-                            <div className="mb-4 text-center font-bold text-xl">Deliver Time</div>
+                            <div className="mb-4 text-center font-bold text-xl">
+                                Deliver Time
+                            </div>
                             <div className="grid">
                                 <div className="grid gap-2 font-bold">
-                                    <div >Date</div>
+                                    <div>Date</div>
                                     <Input
                                         status="secondary"
                                         required
@@ -651,7 +710,7 @@ const QuoteModal = ({
                                 </div>
 
                                 <div className="grid gap-2 font-bold">
-                                    <div >From</div>
+                                    <div>From</div>
                                     <Input
                                         required
                                         className="w-full"
@@ -668,7 +727,7 @@ const QuoteModal = ({
                                     />
                                 </div>
                                 <div className="grid gap-2 font-bold">
-                                    <div >To</div>
+                                    <div>To</div>
                                     <Input
                                         required
                                         className="w-full"
@@ -691,7 +750,7 @@ const QuoteModal = ({
 
                 <div className="grid gap-4 md:grid-cols-2">
                     <div className="form-group">
-                        <div >Pickup Contact Number</div>
+                        <div>Pickup Contact Number</div>
 
                         <PhoneInput
                             value={pickNumber}
@@ -704,7 +763,7 @@ const QuoteModal = ({
                         />
                     </div>
                     <div className="form-group">
-                        <div >Delivery Contact Number</div>
+                        <div>Delivery Contact Number</div>
                         <PhoneInput
                             inputProps={{
                                 required: true,
@@ -715,9 +774,8 @@ const QuoteModal = ({
                         />
                     </div>
                     <div className="form-group">
-                        <div >Pickup description</div>
+                        <div>Pickup description</div>
                         <textarea
-                          
                             rows="2"
                             className="form-control w-full resize-none"
                             value={pickDescription}
@@ -725,9 +783,8 @@ const QuoteModal = ({
                         ></textarea>
                     </div>
                     <div className="form-group">
-                        <div >Delivery description</div>
+                        <div>Delivery description</div>
                         <textarea
-                            
                             rows="2"
                             className="form-control w-full resize-none"
                             value={deliveryDescription}
@@ -736,7 +793,33 @@ const QuoteModal = ({
                             }
                         ></textarea>
                     </div>
-                    
+                </div>
+                <div className="py-6">
+                    <Dropdown>
+                        <Dropdown.Button
+                            flat
+                            className="w-full"
+                            color="success"
+                            css={{ tt: "capitalize" }}
+                        >
+                            {receivePaymentFrom}
+                        </Dropdown.Button>
+                        <Dropdown.Menu
+                            disallowEmptySelection
+                            defaultChecked
+                            selectionMode="single"
+                            selectedKeys={receivePaymentFrom}
+                            onSelectionChange={setReceivePaymentFrom}
+                        >
+                            <Dropdown.Item key={"on_pickup"}>
+                                pickup Location
+                            </Dropdown.Item>
+
+                            <Dropdown.Item key={"on_delivery"}>
+                                Delivery Location
+                            </Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
                 </div>
 
                 <div className="flex gap-4 justify-end">
