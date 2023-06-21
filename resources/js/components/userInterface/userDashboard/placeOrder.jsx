@@ -87,6 +87,7 @@ const PlaceOrder = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         navigate("/account/dashboard/new-order-resume", {
+            
             state: {
                 weight: weight,
                 numberOfParcel: numberOfParcel,

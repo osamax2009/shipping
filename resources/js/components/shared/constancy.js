@@ -17,36 +17,43 @@ export const appName = "2point Delivery";
 export const parcelTypes = [
     {
         label: "Court Document",
+        value : "court_document",
         icon: <BsFolder />,
     },
 
     {
         label: "Envelopes",
+        value : "envelopes",
         icon: <BsEnvelope />,
     },
 
     {
         label: "Farm Packages",
+        value : "farm_packages",
         icon: <BsBox />,
     },
 
     {
         label: "Flowers",
+        value : "flowers",
         icon: <BsFlower1 />,
     },
 
     {
         label: "Letters",
+        value : "letters",
         icon: <BsFileText />,
     },
 
     {
         label: "Pharmaceutical",
+        value : "pharmaceutical",
         icon: <BsBox2Heart />,
     },
 
     {
         label: "Small Package Box",
+        value : "small_package_box",
         icon: <BsBox />,
     },
 ];

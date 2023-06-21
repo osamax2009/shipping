@@ -55,7 +55,7 @@ const Login = () => {
                 });
 
                 if (state?.requestFrom == "create_order") {
-                    navigate("/account/dashboard/place-new-order",{
+                    navigate("/account/dashboard/new-order-resume",{
                         state : state
                     });
                 } else{

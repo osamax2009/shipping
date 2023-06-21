@@ -10,12 +10,15 @@ import {
 } from "react-icons/bs";
 
 import { appName, parcelTypes } from "../../../shared/constancy";
-import { Button, Loading, Modal } from "@nextui-org/react";
+import { Button, Input, Loading, Modal, Radio } from "@nextui-org/react";
 import { toast } from "react-toastify";
-import { useContext } from "react";
-import { UserContext } from "../../../contexts/userContext";
-import { charges, haversine_distance } from "../../../shared/distanceCalculator";
-import { getUserFromAPI, getWithAxios } from "../../../api/axios";
+
+import {
+    charges,
+    haversine_distance,
+} from "../../../shared/distanceCalculator";
+import { getCsrfToken, getUserFromAPI, getWithAxios } from "../../../api/axios";
+import PhoneInput from "react-phone-input-2";
 
 const Brand = () => {
     const [from, setFrom] = useState();
@@ -24,131 +27,96 @@ const Brand = () => {
     const [weight, setWeight] = useState(1);
     const [processing, setProcessing] = useState(false);
     const [open, setOpen] = useState(false);
-    const [pickLocation, setPickLocation] = useState()
-    const [deliveryLocation, setDeliveryLocation] = useState()
-    const [pickLocationDetails, setPickLocationDetails] = useState()
-    const [deliveryLocationDetails, setDeliveryLocationDetails] = useState()
+    const [pickLocationDetails, setPickLocationDetails] = useState();
+    const [deliveryLocationDetails, setDeliveryLocationDetails] = useState();
+    const [schedule, setSchedule] = useState({
+        pickDate: null,
+        pickFrom: null,
+        pickTo: null,
+        deliverDate: null,
+        deliverFrom: null,
+        deliverTo: null,
+    });
 
-    const { user, setUser } = useContext(UserContext);
+    const [deliverNow, setDeliverNow] = useState(true);
+    const [pickNumber, setPickNumber] = useState();
+    const [pickDescription, setPickDescription] = useState();
+    const [deliveryNumber, setDeliveryNumber] = useState();
+    const [deliveryDescription, setDeliveryDescription] = useState();
+
+    const [price, setPrice] = useState();
 
     const navigate = useNavigate();
 
     const handleOpen = () => {
-        open ? setOpen(false) : setOpen(true);
-    };
-
-    const getLocation = async (location) => {
-        const dataToSend = {
-            search_text: location,
-            country_code: "ca",
-            language: "en",
-        };
-        const res = await getWithAxios(
-            "/api/place-autocomplete-api",
-            dataToSend
-        );
-
-        if (res.status == "OK") {
-            return res.predictions[0];
-        }
-    };
-
-    const getPlaceDetails = async (placeId,placeDetailSetter) => {
-        const dataToSend = {
-            placeid : placeId
-        }
-        const res = await getWithAxios("/api/place-detail-api",dataToSend)
-        
-      
-        if(res.status == 'OK')
-        {
-            placeDetailSetter(res.result)      
-        }
-    }
-
-    const handleOrder = async () => {
-        setProcessing(true);
-
-        if (!from || !to || !service) {
+        if (!from || !to || !service || !weight) {
             setProcessing(false);
             toast("Empty filed submitted", {
                 type: "error",
                 hideProgressBar: true,
             });
         } else {
-           
-           /*  const distanceData = {
-                origin : pickpoint.description,
-                destination : delivery.description,
-            } */
-           // const distance = await getWithAxios('/api/distance-between-places', distanceData)
-           // console.log(distance)
-
-            const stateDate = {
-                state: {
-                    parcelType: service.label,
-                    pickLocation: pickLocation.description,
-                    deliveryLocation: deliveryLocation.description,
-                    pickId : pickLocation.place_id,
-                    deliveryId : deliveryLocation.place_id,
-                    pickNumber: user?.contact_number,
-                    // deliveryNumber : user?.contact_number,
-                    requestFrom: "create_order",
-                    pickCountry: from.country.code.toLowerCase(),
-                    deliveryCountry: to.country.code.toLowerCase(),
-                },
-            };
-
-            await getCsrfToken();
-            const user = await getUserFromAPI();
-
-            if (user == false) {
-                navigate("/account/sign-in", stateDate);
-            }
-
-            if (user) {
-                navigate("/account/dashboard/place-new-order", stateDate);
-            }
-
-            setProcessing(false);
+            setOpen(true);
         }
     };
 
-    useEffect(() => {
-      const run = async() => {
-        const res = await getLocation(from?.name)
-        setPickLocation(res)
-        
-       }
+    const getPlaceDetails = async (placeId, placeDetailSetter) => {
+        const dataToSend = {
+            placeid: placeId,
+        };
+        const res = await getWithAxios("/api/place-detail-api", dataToSend);
 
-       run()
-    },[from])
-
-    useEffect(() => {
-       const run = async() => {
-         const res = await getLocation(to?.name)
-         setDeliveryLocation(res)
+        if (res.status == "OK") {
+            placeDetailSetter(res.result);
         }
-        run()
-     },[to])
+    };
 
-     useEffect(() => {
-        getPlaceDetails(pickLocation?.place_id,setPickLocationDetails)
-       // console.log(pickLocationDetails)
+    const handleOrder = async () => {
+        setOpen(false);
+        setProcessing(true);
 
-    },[pickLocation])
+        const stateDate = {
+            state: {
+                parcel: service,
+                pickLocation: pickLocationDetails,
+                deliveryLocation: deliveryLocationDetails,
+                service: service,
+                weight: weight,
+                price: price,
+                requestFrom: "create_order",
+            },
+        };
+
+        await getCsrfToken();
+        const user = await getUserFromAPI();
+
+        if (user == false) {
+            navigate("/account/sign-in", stateDate);
+        }
+
+        if (user) {
+            navigate("/account/dashboard/new-order-resume", stateDate);
+        }
+
+        setProcessing(false);
+    };
 
     useEffect(() => {
-        getPlaceDetails(deliveryLocation?.place_id,setDeliveryLocationDetails)
-      //  console.log(deliveryLocationDetails)
-    },[deliveryLocation])
+        getPlaceDetails(from?.place_id, setPickLocationDetails);
+        // console.log(pickLocationDetails)
+    }, [from]);
+
+    useEffect(() => {
+        getPlaceDetails(to?.place_id, setDeliveryLocationDetails);
+        //  console.log(deliveryLocationDetails)
+    }, [to]);
 
     return (
         <div className="bg-gradient-to-b from-[#4caf50] to-[#388a3a] pb-24 px-24 pt-32 h-fit ">
             <div className="text-[4rem] text-white text-center mt-4 font-bold">
                 Save on wolrdwide
             </div>
-            <div className=" text-white text-center text-3xl  mb-4">
+            <div className=" text-white text-3xl text-center">
                 shipping with {appName}
             </div>
 
@@ -163,15 +131,36 @@ const Brand = () => {
                 <WeightGetter selected={weight} setSelected={setWeight} />
                 <div>
                     <button
-                        onClick={() => setOpen(true)}
-                        disabled={deliveryLocationDetails?.place_id ? false : true}
+                        onClick={handleOpen}
                         className="py-6 md:py-0 h-full w-full  text-white font-bold bg-blue-700 hover:bg-blue-600"
                     >
                         {processing ? <Loading /> : "Create Order"}
                     </button>
                 </div>
             </div>
-            <QuoteModal from={pickLocationDetails} to={deliveryLocationDetails} weight={weight} service={service} open={open} setOpen={setOpen} handleCreateOrder={handleOrder} />
+            <QuoteModal
+                from={pickLocationDetails}
+                to={deliveryLocationDetails}
+                price={price}
+                setPrice={setPrice}
+                weight={weight}
+                service={service}
+                open={open}
+                setOpen={setOpen}
+                pickNumber={pickNumber}
+                deliveryNumber={deliveryNumber}
+                pickDescription={pickDescription}
+                deliveryDescription={deliveryDescription}
+                deliverNow={deliverNow}
+                schedule={schedule}
+                setPickNumber={setPickNumber}
+                setDeliveryNumber={setDeliveryNumber}
+                setPickDescription={setPickDescription}
+                setDeliveryDescription={setDeliveryDescription}
+                setDeliverNow={setDeliverNow}
+                setSchedule={setSchedule}
+                handleCreateOrder={handleOrder}
+            />
         </div>
     );
 };
@@ -183,6 +172,8 @@ const CityGetter = ({ title, selected, setSelected }) => {
     const [cities, setCities] = useState(null);
     const [p_cities, setP_cities] = useState();
     const [cityName, setCityName] = useState();
+    const [places, setPlaces] = useState();
+    const [place, setPlace] = useState();
 
     const divRef = useRef(null);
 
@@ -196,7 +187,7 @@ const CityGetter = ({ title, selected, setSelected }) => {
         }
     };
 
-    const handleFilter = (e) => {
+    /* const handleFilter = (e) => {
         const value = e.target.value;
         setCityName(value);
 
@@ -214,16 +205,33 @@ const CityGetter = ({ title, selected, setSelected }) => {
 
             setP_cities(res);
         }
+    }; */
+
+    const getPlaces = async (e, locationSetter, locationsSetter) => {
+        locationSetter(e.target.value);
+        const dataToSend = {
+            search_text: e.target.value,
+            country_code: "ca",
+            language: "en",
+        };
+        const res = await getWithAxios(
+            "/api/place-autocomplete-api",
+            dataToSend
+        );
+
+        if (res.status == "OK") {
+            locationsSetter(res.predictions);
+        }
     };
 
-    const getCities = async () => {
+    /* const getCities = async () => {
         const { data } = await getWithAxios("/api/city-list");
 
         if (data) {
             setCities(data);
             setP_cities(data);
         }
-    };
+    }; */
 
     useEffect(() => {
         handleFocus();
@@ -233,9 +241,9 @@ const CityGetter = ({ title, selected, setSelected }) => {
         setExpanded(false);
     }, [selected]);
 
-    useEffect(() => {
+    /*     useEffect(() => {
         getCities();
-    }, []);
+    }, []); */
 
     useEffect(() => {
         document.addEventListener("click", (evt) => {
@@ -260,11 +268,11 @@ const CityGetter = ({ title, selected, setSelected }) => {
             onMouseDown={() => setExpanded(true)}
             className="relative w-full cursor-pointer"
         >
-            <label htmlFor="" className="pl-3 pt-2">
+            <div  className="pl-3 pt-2">
                 <span className="uppercase font-bold text-black text-xl">
                     {title}
                 </span>
-            </label>
+            </div>
 
             <div
                 type="text"
@@ -273,11 +281,11 @@ const CityGetter = ({ title, selected, setSelected }) => {
                 className="rounded-lg text-lg border-0 w-full font-bold  focus:outline-none pl-3 pb-3 pt-1"
             >
                 {selected ? (
-                    <div className="flex gap-2 pt-1">
-                        <div>{selected.name}</div>
+                    <div className="flex gap-2 pt-1 text-sm">
+                        <div>{selected.description}</div>
                     </div>
                 ) : (
-                    <div className="text-lg font-bold text-gray-600">
+                    <div className="text-sm font-bold text-gray-600">
                         Type to search
                     </div>
                 )}
@@ -289,17 +297,17 @@ const CityGetter = ({ title, selected, setSelected }) => {
                             type="text"
                             placeholder="type here"
                             className="form-control"
-                            value={cityName}
-                            onChange={handleFilter}
+                            value={place}
+                            onChange={(e) => getPlaces(e, setPlace, setPlaces)}
                         />
                     </div>
-                    {p_cities?.map((city, index) => (
+                    {places?.map((place, index) => (
                         <div
                             key={index}
-                            onMouseDown={() => setSelected(city)}
-                            className="flex cursor-pointer gap-2 py-2 px-4"
+                            onMouseDown={() => setSelected(place)}
+                            className="flex hover:bg-gray-100 cursor-pointer gap-2 py-3 px-4"
                         >
-                            <div>{city.name}</div>
+                            <div>{place.description}</div>
                         </div>
                     ))}
                 </div>
@@ -357,11 +365,11 @@ const Services = ({ selected, setSelected }) => {
             onMouseDown={() => setExpanded(true)}
             className="relative w-full cursor-pointer"
         >
-            <label htmlFor="" className="pl-3 pt-2">
+            <div  className="pl-3 pt-2">
                 <span className="uppercase font-bold text-black text-xl">
                     Service
                 </span>
-            </label>
+            </div>
 
             <div
                 type="text"
@@ -372,7 +380,7 @@ const Services = ({ selected, setSelected }) => {
                 {selected ? (
                     <div className="flex gap-2 pt-1">
                         <div>{selected.icon}</div>
-                        <div>{selected.label}</div>
+                        <div>{selected.div}</div>
                     </div>
                 ) : (
                     <div className="text-lg font-bold text-gray-600">
@@ -389,7 +397,7 @@ const Services = ({ selected, setSelected }) => {
                             className="flex cursor-pointer gap-2 py-2 px-4"
                         >
                             <div>{parcel.icon}</div>
-                            <div>{parcel.label}</div>
+                            <div>{parcel.div}</div>
                         </div>
                     ))}
                 </div>
@@ -398,7 +406,7 @@ const Services = ({ selected, setSelected }) => {
     );
 };
 
-const WeightGetter = ({selected, setSelected}) => {
+const WeightGetter = ({ selected, setSelected }) => {
     const [expanded, setExpanded] = useState(false);
     const divRef = useRef(null);
     const inputRef = useRef(null);
@@ -412,7 +420,6 @@ const WeightGetter = ({selected, setSelected}) => {
             divRef.current.classList.remove("ring-1");
             divRef.current.classList.remove("ring-blue-700");
             inputRef.current.blur();
-
         }
     };
     useEffect(() => {
@@ -443,11 +450,11 @@ const WeightGetter = ({selected, setSelected}) => {
             onMouseDown={() => setExpanded(true)}
             className="relative w-full cursor-pointer"
         >
-            <label htmlFor="" className="pl-3 pt-2">
+            <div  className="pl-3 pt-2">
                 <span className="uppercase font-bold text-black text-xl">
                     Weight
                 </span>
-            </label>
+            </div>
 
             <div
                 type="text"
@@ -456,7 +463,7 @@ const WeightGetter = ({selected, setSelected}) => {
                 className="rounded-lg  text-lg border-0 w-full font-bold  focus:outline-none pl-3 pb-3 pt-1"
             >
                 <input
-                ref={inputRef}
+                    ref={inputRef}
                     type="number"
                     className="outine-none cursor-pointer border-none focus:border-none focus:outiline-none pl-3 font-bold"
                     value={selected}
@@ -467,47 +474,73 @@ const WeightGetter = ({selected, setSelected}) => {
     );
 };
 
-const QuoteModal = ({from, to, weight, service, open, setOpen, handleCreateOrder}) => {
+const QuoteModal = ({
+    from,
+    to,
+    weight,
+    service,
+    open,
+    setOpen,
+    price,
+    setPrice,
+    handleCreateOrder,
+    deliverNow,
+    setDeliverNow,
+    setPickNumber,
+    pickNumber,
+    pickDescription,
+    setPickDescription,
+    deliveryNumber,
+    setDeliveryNumber,
+    deliveryDescription,
+    setDeliveryDescription,
+    schedule,
+    setSchedule,
+}) => {
+    const deliveryCharges = 3.8;
+    const [distance, setDistance] = useState();
+    const [inProcess, setInProcess] = useState();
 
-  
-    const deliveryCharges = 3.80
-    const [distance, setDistance] = useState()
-    const [price, setPrice] = useState()
-    const [inProcess, setInProcess] = useState()
-
+    const handleDeliverNow = () => {
+        deliverNow ? setDeliverNow(false) : setDeliverNow(true);
+    };
 
     const assignDistance = () => {
-        const res = haversine_distance(from, to)
-        setDistance(res)
-     }
+        const res = haversine_distance(from, to);
+        setDistance(res);
+    };
 
-     const calculateTotalCharge = () => {
-        const brut = charges(distance,weight,service) + deliveryCharges
-        const result = Math.round(brut * 100) / 100
-       setPrice(result)
-    }
+    const calculateTotalCharge = () => {
+        const brut = charges(distance, weight, service) + deliveryCharges;
+        const result = Math.round(brut * 100) / 100;
+        setPrice(result);
+    };
 
-    const showPrice = () => {    
-        assignDistance()
-        calculateTotalCharge()
-    }
-    
+    const showPrice = () => {
+        assignDistance();
+        calculateTotalCharge();
+    };
 
     useEffect(() => {
-        showPrice()
-    },[from,to,weight,service])
-    
-    return(
-        <Modal open={open} onClose={() => setOpen(false)} closeButton preventClose>
+        showPrice();
+    }, [from, to, weight, service]);
+
+    return (
+        <Modal
+            open={open}
+            onClose={() => setOpen(false)}
+            closeButton
+            preventClose
+            width="70vw"
+            className="overflow-y-scroll"
+        >
             <Modal.Header>
                 <div className="text-lg text-appGreen font-bold">
-                    Order Total charges 
+                    Order Total charges
                 </div>
             </Modal.Header>
             <Modal.Body>
-            <div className="font-bold">
-                    Parcel Type : {service?.label}
-                </div>
+                <div className="font-bold">Parcel Type : {service?.label}</div>
                 <div className="font-bold">
                     Pick Point : {from?.formatted_address}
                 </div>
@@ -517,19 +550,201 @@ const QuoteModal = ({from, to, weight, service, open, setOpen, handleCreateOrder
                 </div>
 
                 <div className="font-bold">
-                    Weight : {weight? weight : null} kg
+                    Weight : {weight ? weight : null} kg
                 </div>
 
-                <div className="text-end text-lg font-bold text-orange-700">
-                   $  Total price = {price ? price : 'calculating...'}
+                <div className="text-end text-2xl font-bold text-orange-700">
+                    $ Total price = {price ? price : "calculating..."}
                 </div>
-                <div className="flex gap-4 justify-end">
+                <div className="text-lg">Additional informations</div>
+
+                <div>
+                    <Radio.Group
+                        defaultValue="now"
+                        orientation="horizontal"
+                        onChange={handleDeliverNow}
+                        color="success"
+                    >
+                        <Radio value="now">Deliver now</Radio>
+                        <Radio value="schedule">Schedule</Radio>
+                    </Radio.Group>
+                </div>
+                {!deliverNow && (
+                    <div className="grid gap-4 px-2 pt-4 md:grid-cols-2">
+                        <div className="p-2 bg-gray-100/25">
+                            <div className=" text-center font-bold mb-4 text-xl">Pick Time</div>
+                            <div className="grid ">
+                                <div className="grid gap-2 font-bold">
+                                    <div className="">Date</div>
+                                    <Input
+                                        status="secondary"
+                                        required
+                                        className="w-full"
+                                        type="date"
+                                        placeholder="from"
+                                        value={schedule.pickDate}
+                                        onChange={(e) =>
+                                            setSchedule({
+                                                ...schedule,
+                                                pickDate: e.target.value,
+                                            })
+                                        }
+                                    />
+                                </div>
+
+                                <div className="grid gap-2 font-bold">
+                                    <div >From</div>
+                                    <Input
+                                        required
+                                        className="w-full"
+                                        type="time"
+                                        status="secondary"
+                                        placeholder="from"
+                                        value={schedule.pickFrom}
+                                        onChange={(e) =>
+                                            setSchedule({
+                                                ...schedule,
+                                                pickFrom: e.target.value,
+                                            })
+                                        }
+                                    />
+                                </div>
+                                <div className="grid gap-2 font-bold">
+                                    <div >To</div>
+                                    <Input
+                                        required
+                                        className="w-full"
+                                        type="time"
+                                        status="secondary"
+                                        placeholder="to"
+                                        value={schedule.pickTo}
+                                        onChange={(e) =>
+                                            setSchedule({
+                                                ...schedule,
+                                                pickTo: e.target.value,
+                                            })
+                                        }
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="p-2 bg-gray-100/25">
+                            <div className="mb-4 text-center font-bold text-xl">Deliver Time</div>
+                            <div className="grid">
+                                <div className="grid gap-2 font-bold">
+                                    <div >Date</div>
+                                    <Input
+                                        status="secondary"
+                                        required
+                                        className="w-full"
+                                        type="date"
+                                        placeholder="from"
+                                        value={schedule.deliverDate}
+                                        onChange={(e) =>
+                                            setSchedule({
+                                                ...schedule,
+                                                deliverDate: e.target.value,
+                                            })
+                                        }
+                                    />
+                                </div>
+
+                                <div className="grid gap-2 font-bold">
+                                    <div >From</div>
+                                    <Input
+                                        required
+                                        className="w-full"
+                                        type="time"
+                                        status="secondary"
+                                        placeholder="from"
+                                        value={schedule.deliverFrom}
+                                        onChange={(e) =>
+                                            setSchedule({
+                                                ...schedule,
+                                                deliverFrom: e.target.value,
+                                            })
+                                        }
+                                    />
+                                </div>
+                                <div className="grid gap-2 font-bold">
+                                    <div >To</div>
+                                    <Input
+                                        required
+                                        className="w-full"
+                                        type="time"
+                                        status="secondary"
+                                        placeholder="to"
+                                        value={schedule.deliverTo}
+                                        onChange={(e) =>
+                                            setSchedule({
+                                                ...schedule,
+                                                deliverTo: e.target.value,
+                                            })
+                                        }
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                <div className="grid gap-4 md:grid-cols-2">
+                    <div className="form-group">
+                        <div >Pickup Contact Number</div>
+
+                        <PhoneInput
+                            value={pickNumber}
+                            inputProps={{
+                                required: true,
+                            }}
+                            country={"ca"}
+                            inputStyle={{}}
+                            onChange={(e) => setPickNumber(e)}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <div >Delivery Contact Number</div>
+                        <PhoneInput
+                            inputProps={{
+                                required: true,
+                            }}
+                            country={"ca"}
+                            value={deliveryNumber}
+                            onChange={(e) => setDeliveryNumber(e)}
+                        />
+                    </div>
+                    <div className="form-group">
+                        <div >Pickup description</div>
+                        <textarea
+                          
+                            rows="2"
+                            className="form-control w-full resize-none"
+                            value={pickDescription}
+                            onChange={(e) => setPickDescription(e.target.value)}
+                        ></textarea>
+                    </div>
+                    <div className="form-group">
+                        <div >Delivery description</div>
+                        <textarea
+                            
+                            rows="2"
+                            className="form-control w-full resize-none"
+                            value={deliveryDescription}
+                            onChange={(e) =>
+                                setDeliveryDescription(e.target.value)
+                            }
+                        ></textarea>
+                    </div>
                     
-                    <Button auto color={'success'} onPress={handleCreateOrder}>
+                </div>
+
+                <div className="flex gap-4 justify-end">
+                    <Button auto color={"success"} onPress={handleCreateOrder}>
                         Save order
                     </Button>
                 </div>
             </Modal.Body>
         </Modal>
-    )
-}
+    );
+};
