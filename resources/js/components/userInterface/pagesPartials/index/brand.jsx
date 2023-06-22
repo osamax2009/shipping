@@ -144,7 +144,7 @@ const Brand = () => {
                 total_weight: weight,
                 total_distance: distance,
                 payment_collect_from: receivePaymentFrom,
-                status: "draft",
+                status: "create",
                 payment_type: "",
                 payment_status: "",
                 fixed_charges: 3.8,

@@ -13,20 +13,18 @@ const Orders = () => {
     const navigate = useNavigate();
 
     const goOnorderPage = (e) => {
-        e.preventDefault()
-       if(orderId)
-       {
-        const url = "/admin/orderdetail/order_Id/" + orderId
-        navigate(url)
-       }
+        e.preventDefault();
+        if (orderId) {
+            const url = "/admin/orderdetail/order_Id/" + orderId;
+            navigate(url);
+        }
 
-       if(!orderId)
-       {
-            toast("Type an Order Id",{
-                type : 'error',
-                hideProgressBar : true
-            })
-       }
+        if (!orderId) {
+            toast("Type an Order Id", {
+                type: "error",
+                hideProgressBar: true,
+            });
+        }
     };
 
     const getOrders = async () => {
@@ -76,6 +74,7 @@ const Orders = () => {
                     <Table.Column>Delivery Address</Table.Column>
                     <Table.Column>Create Date</Table.Column>
                     <Table.Column>Status</Table.Column>
+                    <Table.Column>Assign</Table.Column>
                     <Table.Column>Actions</Table.Column>
                 </Table.Header>
                 <Table.Body>
@@ -96,6 +95,9 @@ const Orders = () => {
                             <Table.Cell>{order.date}</Table.Cell>
                             <Table.Cell>
                                 <Status order={order} />
+                            </Table.Cell>
+                            <Table.Cell>
+                                <Assign order={order} />
                             </Table.Cell>
 
                             <Table.Cell>
@@ -119,12 +121,7 @@ const Orders = () => {
 export default Orders;
 
 const OrderLine = ({ order }) => {
-    const [openUpdate, setOpenUpdate] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
-
-    const handleOpenUpdate = () => {
-        setOpenUpdate(true);
-    };
 
     const handleOpenDelete = () => {
         setOpenDelete(true);
@@ -135,23 +132,12 @@ const OrderLine = ({ order }) => {
             <div className="flex flex-wrap gap-2">
                 <Button
                     auto
-                    onPress={handleOpenUpdate}
-                    color={"success"}
-                    icon={<BsPencilFill />}
-                ></Button>
-                <Button
-                    auto
                     onPress={handleOpenDelete}
                     color={"error"}
                     icon={<BsTrash />}
                 ></Button>
             </div>
             <div>
-                <UpdateModal
-                    order={order}
-                    open={openUpdate}
-                    setOpen={setOpenUpdate}
-                />
                 <DeleteModal
                     order={order}
                     open={openDelete}
@@ -209,109 +195,51 @@ const Filter = () => {
                         </select>
                     </div>
                 </div>
-
-               
             </div>
 
             <div className="flex items-center gap-3">
-                    <div className="font-bold">Date</div>
-                    <div className="flex items-center gap-6">
-                        <DatePicker label={"from"} />
-                        <DatePicker  label={"to"} />
-                    </div>
-                    <Button auto color={'success'}>
-                        Apply
-                    </Button>
+                <div className="font-bold">Date</div>
+                <div className="flex items-center gap-6">
+                    <DatePicker label={"from"} />
+                    <DatePicker label={"to"} />
                 </div>
+                <Button auto color={"success"}>
+                    Apply
+                </Button>
+            </div>
         </div>
     );
 };
 
-const CreateModal = ({ open, setOpen }) => {
-    const [orderValue, setorderValue] = useState("");
-    const [orderLabel, setorderLabel] = useState("");
+const Assign = ({ order }) => {
+    const [openUpdate, setOpenUpdate] = useState(false);
 
-    const handleCreate = async () => {
-        const dataToSend = {
-            id: "",
-            type: "order_type",
-            label: orderLabel,
-            value: orderValue,
-        };
-
-        const res = await postWithAxios("/api/staticdata-save", dataToSend);
-
-        if (res.message == "Static Data has been save successfully") {
-            setOpen(false);
-            window.location.reload();
-            toast(res.message, {
-                type: "success",
-                hideProgressBar: true,
-            });
-        }
-
-        if (res.message !== "Static Data has been save successfully") {
-            toast(res.message, {
-                type: "error",
-                hideProgressBar: true,
-            });
-        }
+    const handleOpenUpdate = () => {
+        setOpenUpdate(true);
     };
+
     return (
-        <Modal
-            open={open}
-            closeButton
-            preventClose
-            onClose={() => setOpen(false)}
-        >
-            <Modal.Header>
-                <div className="text-lg font-bold text-appGreen">
-                    Create new order type{" "}
+        <div>
+            {order.status != "draft" && order.status != "cancelled" ? (
+                <Button auto onPress={handleOpenUpdate} color={"success"}>
+                    {order.status == "created" && "Assign"}
+                    {order.status == "assign" && "Transfer"}
+                </Button>
+            ) : (
+                <div className="text-green-500">
+                    {order.status == "draft" && "Draft order"}
+                    {order.status == "assign" && "Order cancelled"}
                 </div>
-            </Modal.Header>
-            <Modal.Body>
-                <div className="grid w-full h-72">
-                    <div className="form-group w-full ">
-                        <label htmlFor="order name">order Label</label>
-                        <input
-                            type="text"
-                            className="form-control w-full"
-                            value={orderLabel}
-                            onChange={(e) => setorderLabel(e.target.value)}
-                        />
-                    </div>
-                    <div className="form-group w-full">
-                        <label htmlFor=""> Value</label>
-                        <input
-                            type="text"
-                            className="form-control w-full"
-                            value={orderValue}
-                            onChange={(e) => setorderValue(e.target.value)}
-                        />
-                    </div>
+            )}
 
-                    <div className="flex flex-wrap  w-full gap-6 justify-between sm:justify-end">
-                        <Button
-                            auto
-                            css={{ backgroundColor: "Grey" }}
-                            className="text-black"
-                            onPress={() => setOpen(false)}
-                        >
-                            cancel
-                        </Button>
-
-                        <Button
-                            auto
-                            color={"success"}
-                            onPress={handleCreate}
-                            className="text-black"
-                        >
-                            Create
-                        </Button>
-                    </div>
-                </div>
-            </Modal.Body>
-        </Modal>
+            <div>
+                <UpdateModal
+                    order={order}
+                    open={openUpdate}
+                    setOpen={setOpenUpdate}
+                />
+            </div>
+        </div>
     );
 };
 

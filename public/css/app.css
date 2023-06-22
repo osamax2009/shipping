@@ -1218,6 +1218,12 @@ html {
     --tw-bg-opacity: 1;
     background-color: hsl(var(--b2) / var(--tw-bg-opacity));
   }
+
+  .table-zebra tr.hover:hover,
+  .table-zebra tr.hover:nth-child(even):hover {
+    --tw-bg-opacity: 1;
+    background-color: hsl(var(--b3) / var(--tw-bg-opacity));
+  }
 }
 .btn {
   display: inline-flex;
@@ -3519,6 +3525,10 @@ html {
 .bg-white\/75 {
   background-color: rgb(255 255 255 / 0.75);
 }
+.bg-green-500 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(34 197 94 / var(--tw-bg-opacity));
+}
 .bg-opacity-25 {
   --tw-bg-opacity: 0.25;
 }
@@ -3884,6 +3894,10 @@ html {
   --tw-text-opacity: 1;
   color: rgb(22 163 74 / var(--tw-text-opacity));
 }
+.text-green-700 {
+  --tw-text-opacity: 1;
+  color: rgb(21 128 61 / var(--tw-text-opacity));
+}
 .text-indigo-500 {
   --tw-text-opacity: 1;
   color: rgb(99 102 241 / var(--tw-text-opacity));
@@ -3930,6 +3944,9 @@ html {
 }
 .underline {
   text-decoration-line: underline;
+}
+.no-underline {
+  text-decoration-line: none;
 }
 .antialiased {
   -webkit-font-smoothing: antialiased;
@@ -4078,6 +4095,14 @@ html {
   --tw-bg-opacity: 1;
   background-color: rgb(220 38 38 / var(--tw-bg-opacity));
 }
+.hover\:bg-green-600:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(22 163 74 / var(--tw-bg-opacity));
+}
+.hover\:bg-green-400:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(74 222 128 / var(--tw-bg-opacity));
+}
 .hover\:text-gray-400:hover {
   --tw-text-opacity: 1;
   color: rgb(156 163 175 / var(--tw-text-opacity));
@@ -4176,6 +4201,9 @@ html {
 .focus\:text-indigo-800:focus {
   --tw-text-opacity: 1;
   color: rgb(55 48 163 / var(--tw-text-opacity));
+}
+.focus\:no-underline:focus {
+  text-decoration-line: none;
 }
 .focus\:outline-none:focus {
   outline: 2px solid transparent;
