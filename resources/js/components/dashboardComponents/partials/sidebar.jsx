@@ -12,13 +12,13 @@ const Sidebar = () => {
     const userRoutes = [
         {
             title: "Place new Order",
-            path: "/",
+            path: "/client/createorder",
             icon: <BsBagPlusFill />,
         },
 
         {
             title: "My orders",
-            path: "/account/dashboard/order-list",
+            path: "/client/order-list",
             icon: <BsBagPlusFill />,
         },
     ];
@@ -68,7 +68,7 @@ const Sidebar = () => {
 
         {
             title: "Create Order",
-            path: "/admin/new-orders",
+            path: "/admin/createorder",
             icon: <FaListAlt />,
         },
 
@@ -86,7 +86,7 @@ const Sidebar = () => {
 
         {
             title: "Delivery Person Document",
-            path: "/account/dashboard/countries-cities",
+            path: "/",
             icon: <BsFiles />,
         },
     ];

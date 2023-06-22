@@ -91,7 +91,7 @@ const PopularRoutes = () => {
                     </div>
                     <div class="styles_section__CZ5qB styles_show__G7nUX">
                         <Link
-                            to={"/account/dashboard/place-new-order"}
+                            to={"/"}
                             class="styles_card__gXa2X"
                         >
                             <div>
@@ -128,7 +128,7 @@ const PopularRoutes = () => {
                             </div>
                         </Link>
                         <Link
-                            to={"/account/dashboard/place-new-order"}
+                            to={"/"}
                             class="styles_card__gXa2X"
                         >
                             <div>
@@ -165,7 +165,7 @@ const PopularRoutes = () => {
                             </div>
                         </Link>
                         <Link
-                           to={"/account/dashboard/place-new-order"}
+                           to={"/"}
                             class="styles_card__gXa2X"
                         >
                             <div>
@@ -202,7 +202,7 @@ const PopularRoutes = () => {
                             </div>
                         </Link>
                         <Link
-                            to={"/account/dashboard/place-new-order"}
+                            to={"/"}
                             class="styles_card__gXa2X"
                         >
                             <div>

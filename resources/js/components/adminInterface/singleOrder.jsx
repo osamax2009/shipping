@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { getWithAxios } from "../api/axios";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useEffect } from "react";
 import {
     BsDownload,
@@ -11,12 +11,15 @@ import {
 } from "react-icons/bs";
 import { AiOutlineFileSearch } from "react-icons/ai";
 import { Button } from "@nextui-org/react";
+import { UserContext } from "../contexts/userContext";
 
 const SingleOrder = () => {
     const [order, setOrder] = useState();
     const [client, setClient] = useState();
     const [history, setHistory] = useState();
     const [active, setActive] = useState(true);
+
+    const {user, setUser} = useContext(UserContext)
 
     const params = useParams();
     const orderId = params.order_Id;
@@ -26,7 +29,7 @@ const SingleOrder = () => {
             id: orderId,
         };
         const res = await getWithAxios("/api/order-detail", dataToSend);
-        console.log(res);
+     
         setOrder(res.data);
         setHistory(res.order_history);
         const id = {
@@ -48,7 +51,7 @@ const SingleOrder = () => {
         <div>
             <div className="flex justify-end gap-6 py-4 ">
                 <Link
-                    to={"/admin/orders"}
+                    to={user?.user_type == "admin" ? "/admin/orders" : "/client/order-list"}
                     className="bg-green-500 text-white font-bold hover:bg-green-400 rounded-lg py-2 px-8 no-underline hover:no-underline"
                 >
                     Back
@@ -221,7 +224,9 @@ const SingleOrder = () => {
 
                 <div className="">
                     <div className="flex justify-between font-bold bg-green-300 p-4 rounded-t-lg">
-                        About user
+                       {
+                        user?.user_type == "admin" ? " About user" : "Ordered by"
+                       }
                     </div>
                     <div className="grid gap-4 font-bold bg-white text-black py-4 px-6 rounded-b-lg">
                         <div className="flex gap-4 items-center font-bold">
