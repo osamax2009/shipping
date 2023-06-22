@@ -17,6 +17,9 @@ import City from "./adminInterface/city";
 import Orders from "./adminInterface/orders";
 import ParcelTypes from "./adminInterface/parcelTypes";
 import MyOrders from "./userInterface/userDashboard/myOrders";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import SingleOrder from "./adminInterface/singleOrder";
 
 const router = createBrowserRouter([
     {
@@ -85,6 +88,11 @@ const router = createBrowserRouter([
                 path: "parcel-types",
                 element: <ParcelTypes />,
             },
+
+            {
+                path : "/admin/orderdetail/order_Id/:order_Id",
+                element : <SingleOrder />
+            }
         ],
     },
 ]);
@@ -92,10 +100,12 @@ const router = createBrowserRouter([
 if (document.getElementById("root")) {
     const Index = ReactDOM.createRoot(document.getElementById("root"));
     Index.render(
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
         <UserContextProvider>
             <React.StrictMode>
                 <RouterProvider router={router} />
             </React.StrictMode>
         </UserContextProvider>
+        </LocalizationProvider>
     );
 }

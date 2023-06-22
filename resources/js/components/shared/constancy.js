@@ -123,3 +123,55 @@ export const howItWorks = [{
     title : "The courier will collect it",
     description : "and  deliver exactly where you wish"
 }];
+
+export const OrderStatus = [
+    {
+        label : "Draft",
+        value : "draft"
+    },
+
+    {
+        label : "Departed",
+        value : "departed"
+    },
+
+    {
+        label : "Accepted",
+        value : "accepted"
+    },
+
+    {
+        label : "Cancelled",
+        value : "cancelled"
+    },
+
+    {
+        label : "Assigned",
+        value : "assigned"
+    },
+
+    {
+        label : "Arrived",
+        value : "arrived"
+    },
+
+    {
+        label : "Picked Up",
+        value : "picked_up"
+    },
+
+    {
+        label : "Delivered",
+        value : "delivered"
+    },
+
+    {
+        label : "Created",
+        value : "created"
+    },
+
+    {
+        label : "All",
+        value : "all"
+    }
+]
