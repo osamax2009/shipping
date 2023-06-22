@@ -2,8 +2,9 @@ import { useContext } from "react";
 import { UserContext } from "../../contexts/userContext";
 import { appName } from "../../shared/constancy";
 import { Link, useLocation } from "react-router-dom";
-import { BsBagPlusFill } from "react-icons/bs";
-import { FaMapMarkedAlt } from "react-icons/fa";
+import { BsBagPlusFill, BsBicycle, BsBox, BsBox2, BsBuilding, BsFile, BsFiles, BsFillBoxSeamFill, BsFillCreditCardFill, BsList, BsListCheck, BsPinMapFill } from "react-icons/bs";
+import { FaListAlt, FaMapMarkedAlt } from "react-icons/fa";
+import { RiDashboardFill, RiEBikeFill } from "react-icons/ri";
 const Sidebar = () => {
     const { user, setUser } = useContext(UserContext);
     const location = useLocation();
@@ -11,28 +12,82 @@ const Sidebar = () => {
     const userRoutes = [
         {
             title: "Place new Order",
-            path: "/account/dashboard/place-new-order",
+            path: "/",
             icon: <BsBagPlusFill />,
         },
 
         {
             title: "My orders",
-            path: "/account/dashboard/my-orders",
+            path: "/account/dashboard/order-list",
             icon: <BsBagPlusFill />,
         },
     ];
 
     const adminRoutes = [
         {
-            title: "Orders",
-            path: "/account/dashboard/orders",
-            icon: <BsBagPlusFill />,
+            title: "Dashboard",
+            path: "/admin/new-orders",
+            icon: <RiDashboardFill />,
         },
 
         {
-            title: "countries and cities",
+            title: "Country",
+            path: "/admin/country",
+            icon: <BsPinMapFill />,
+        },
+
+        {
+            title: "city",
+            path: "/admin/city",
+            icon: <BsBuilding />,
+        },
+
+        {
+            title: "vehicle",
+            path: "/admin/new-orders",
+            icon: <RiEBikeFill />,
+        },
+
+        {
+            title: "Extra Charges",
+            path: "/admin/new-orders",
+            icon: <RiDashboardFill />,
+        },
+
+        {
+            title: "Parcel Type",
+            path: "/admin/parcel-types",
+            icon: <BsFillBoxSeamFill />
+        },
+
+        {
+            title: "Payment gateway",
+            path: "/admin/new-orders",
+            icon: <BsFillCreditCardFill />,
+        },
+
+        {
+            title: "Create Order",
+            path: "/admin/new-orders",
+            icon: <FaListAlt />,
+        },
+
+        {
+            title: "All Orders",
+            path: "/admin/orders",
+            icon: <BsListCheck />,
+        },
+
+        {
+            title: "Document",
+            path: "/admin/new-orders",
+            icon: <BsFile />,
+        },
+
+        {
+            title: "Delivery Person Document",
             path: "/account/dashboard/countries-cities",
-            icon: <FaMapMarkedAlt />,
+            icon: <BsFiles />,
         },
     ];
 
@@ -73,7 +128,10 @@ const Sidebar = () => {
                                 }
                             >
                                 <div className="nav-link">
-                                    <span>{route.icon}</span>
+                                    <div className="!text-2xl">
+                                        {route.icon}
+                                    </div>
+
                                     <span>{route.title}</span>
                                 </div>
                             </li>
@@ -97,12 +155,17 @@ const Sidebar = () => {
                                 className={
                                     location.pathname == route.path
                                         ? " nav-item active"
-                                        : "nav-item"
+                                        : "nav-item "
                                 }
                             >
-                                <div className="nav-link">
-                                    <span>{route.icon}</span>
-                                    <span>{route.title}</span>
+                                <div className="nav-link ">
+                                    <div className=" flex gap-2">
+                                        <span className="text-xl items-center">
+                                        {route.icon}
+                                        </span>
+                                        <div className="text-sm">{route.title}</div>
+                                    </div>
+                                   
                                 </div>
                             </li>
                         </Link>

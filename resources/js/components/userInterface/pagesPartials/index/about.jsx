@@ -35,9 +35,9 @@ const About = () => {
         getEmployees()
     },[])
     return (
-       <div className="px-4 py-8 bg-blue-100 md:px-8">
+       <div className="px-4 py-8 bg-blue-100/50 md:px-8">
         <div className="grid md:grid-cols-4">
-        <div className="text-appGreen uppercase text-lg p-6">
+        <div className="text-appGreen uppercase text-xln font-bold p-6">
                 About us
             </div>
             <div className="col-span-3 w-full grid gap-6 md:grid-cols-3">

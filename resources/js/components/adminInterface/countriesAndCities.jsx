@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import DashboardLayout from "../dashboardComponents/dashbboardLayout";
+
 import { appName } from "../shared/constancy";
 import {
     useGlobalFilter,
@@ -9,6 +9,7 @@ import {
 } from "react-table";
 import { getWithAxios, postWithAxios } from "../api/axios";
 import Select from 'react-select'
+import AdminDashboardLayout from "./layout";
 
 const CountriesAndCities = () => {
     const [countries, setCountries] = useState();
@@ -35,7 +36,7 @@ const CountriesAndCities = () => {
         getCountries();
     }, []);
     return (
-        <DashboardLayout>
+        <AdminDashboardLayout>
             <div className="px-8">
                 <div className="flex flex-wrap gap-4">
                     <CreateContry />
@@ -277,7 +278,7 @@ const CountriesAndCities = () => {
                     </div>
                 </div>
             </div>
-        </DashboardLayout>
+        </AdminDashboardLayout>
     );
 };
 

@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
 import DashboardLayout from "../../dashboardComponents/dashbboardLayout";
-import Select from "react-select";
 import { getWithAxios } from "@/components/api/axios";
 import { Button, Dropdown, Input, Radio } from "@nextui-org/react";
 import { parcelTypes } from "../../shared/constancy";
-import { BsClock } from "react-icons/bs";
 import { useLocation, useNavigate } from "react-router-dom";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
@@ -12,7 +10,7 @@ import "react-phone-input-2/lib/style.css";
 const PlaceOrder = () => {
     const location = useLocation();
     const { state } = location;
-  
+
     const [weight, setWeight] = useState(state?.weight ? state.weight : 1);
     const [numberOfParcel, setNumberOfParcel] = useState(
         state?.numberOfParcel ? state.numberOfParcel : 1
@@ -48,8 +46,8 @@ const PlaceOrder = () => {
     const [deliverNow, setDeliverNow] = useState(true);
     const [locations, setLocations] = useState([]);
     const [deLlocations, setDelLocations] = useState([]);
-    const [pickId, setPickId] = useState();
-    const [deliveryId, setDeliveryId] = useState(0);
+    const [pickId, setPickId] = useState(state?.pickId);
+    const [deliveryId, setDeliveryId] = useState(state?.deliveryId);
 
     const navigate = useNavigate();
 
@@ -81,22 +79,15 @@ const PlaceOrder = () => {
         locationIdSetter(location.place_id);
     };
 
-    /*  const getCountries = async () => {
-        const data = await getWithAxios("/api/country-list");
-    
-
-        if (data.status == "success") {
-            setCountries(data.data.countries);
-        }
-    };
- */
-
     const handleDeliverNow = () => {
         deliverNow ? setDeliverNow(false) : setDeliverNow(true);
     };
+
+    
     const handleSubmit = (e) => {
         e.preventDefault();
         navigate("/account/dashboard/new-order-resume", {
+            
             state: {
                 weight: weight,
                 numberOfParcel: numberOfParcel,
@@ -114,10 +105,6 @@ const PlaceOrder = () => {
         });
     };
 
-    /* useEffect(() => {
-        getCountries();
-    }, []); */
-
     return (
         <DashboardLayout>
             <form onSubmit={handleSubmit}>
@@ -125,7 +112,7 @@ const PlaceOrder = () => {
                     {/* General informations */}
                     <div className="card shadow">
                         <div className="card-header bg-primary text-white">
-                            Delivery informations
+                            Order informations 
                         </div>
                         <div className="card-body">
                             <div>
@@ -140,10 +127,10 @@ const PlaceOrder = () => {
                                 </Radio.Group>
                             </div>
                             {!deliverNow && (
-                                <div className="grid gap-4 px-2 pt-4 md:grid-cols-2">
+                                <div className="grid gap-4 px-2 pt-4 ">
                                     <div className="p-2 bg-gray-100/25">
                                         <div className="mb-4">Pick Time</div>
-                                        <div className="grid md:grid-cols-3">
+                                        <div className="grid  lg:grid-cols-3">
                                             <div className="form-group">
                                                 <label htmlFor="">Date</label>
                                                 <Input
@@ -204,7 +191,7 @@ const PlaceOrder = () => {
 
                                     <div className="p-2 bg-gray-100/25">
                                         <div className="mb-4">Deliver Time</div>
-                                        <div className="grid md:grid-cols-3">
+                                        <div className="grid  lg:grid-cols-3">
                                             <div className="form-group">
                                                 <label htmlFor="">Date</label>
                                                 <Input
@@ -264,7 +251,7 @@ const PlaceOrder = () => {
                                     </div>
                                 </div>
                             )}
-                            <div className="grid mt-4 gap-8 md:grid-cols-3">
+                            <div className="grid mt-4 gap-8 lg:grid-cols-3">
                                 <div className="form-group">
                                     <label htmlFor="">Weight</label>
                                     <input
@@ -335,7 +322,7 @@ const PlaceOrder = () => {
                             Pick informations
                         </div>
                         <div className="card-body">
-                            <div className="grid gap-8 md:grid-cols-3">
+                            <div className="grid gap-8  lg:grid-cols-3">
                                 <div className="form-group">
                                     <label htmlFor="">Pick Up Location</label>
                                     <input
@@ -385,10 +372,11 @@ const PlaceOrder = () => {
 
                                     <PhoneInput
                                         value={pickNumber}
-                                        country={"ca"}
                                         inputProps={{
                                             required: true,
                                         }}
+                                        country={state?.pickCountry ? state.pickCountry : "ca"}
+                                        inputStyle={{}}
                                         onChange={(e) => setPickNumber(e)}
                                     />
                                 </div>
@@ -416,7 +404,7 @@ const PlaceOrder = () => {
                             Delivery informations
                         </div>
                         <div className="card-body">
-                            <div className="grid gap-8 md:grid-cols-3">
+                            <div className="grid gap-8  lg:grid-cols-3">
                                 <div className="form-group">
                                     <label htmlFor="">Delivery Location</label>
                                     <input
@@ -468,7 +456,8 @@ const PlaceOrder = () => {
                                         inputProps={{
                                             required: true,
                                         }}
-                                        country={"ca"}
+                                        country={state?.deliveryCountry ? state.deliveryCountry : "ca"}
+
                                         value={deliveryNumber}
                                         onChange={(e) => setDeliveryNumber(e)}
                                     />

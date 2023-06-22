@@ -16,3 +16,6 @@ import './bootstrap';
 
 import './components/app';
 import 'react-toastify/dist/ReactToastify.css';
+import 'bootstrap/dist/css/bootstrap.css';
+// import 'pure-react-carousel/dist/react-carousel.es.css';
+import "react-alice-carousel/lib/alice-carousel.css";

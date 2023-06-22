@@ -55,4 +55,27 @@ class CommonController extends Controller
 
         return $response->json();
     }
+
+    public function distanceBetwennTwoPlaces (Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'origin' => 'required',
+            'destination' => 'required',
+        ]);
+
+        if ( $validator->fails() ) {
+            $data = [
+                'status' => 'false',
+                'message' => $validator->errors()->first(),
+                'all_message' =>  $validator->errors()
+            ];
+
+            return json_custom_response($data,400);
+        }
+   
+        $google_map_api_key = env('GOOGLE_MAP_API_KEY');
+        $response = Http::get('https://maps.googleapis.com/maps/api/distancematrix/json?origins='.$request->origin.'&destinations'.$request->destination.'&units=imperial&&key='.$google_map_api_key);
+
+        return $response->json();
+    }
 }

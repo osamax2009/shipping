@@ -15,8 +15,9 @@ const DashboardLayout = ({children}) => {
     const checkUserStatus = async () => {
 
         const res = await getUserFromAPI()
+     
 
-        if(res == "false")
+        if(res == false)
         {
             navigate("/account/sign-in")
         }
@@ -33,7 +34,7 @@ const DashboardLayout = ({children}) => {
             <div id="content-wrapper" className="d-flex flex-column">
                 <div id="content">
                     <Topbar/>
-                    <div>
+                    <div className="px-6 py-4">
                         {children}
                     </div>
 

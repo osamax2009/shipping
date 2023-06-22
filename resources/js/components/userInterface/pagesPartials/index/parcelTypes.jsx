@@ -1,27 +1,18 @@
-import { Bs1Circle, BsEnvelope } from "react-icons/bs";
-import { FaPallet } from "react-icons/fa";
-import { LuPackage2 } from 'react-icons/lu';
-import { TbTruckDelivery } from "react-icons/tb"
 import { parcelTypes } from "../../../shared/constancy";
+import {
+    CarouselProvider,
+    Slider,
+    Slide,
+    ButtonBack,
+    ButtonNext,
+} from "pure-react-carousel";
+import AliceCarousel from "react-alice-carousel";
 
 const ParcelTypes = () => {
-   
     return (
-        <div className="flex flex-col gap-4 justify-center items-center  py-8 md:border-l md:border-r md:border-red-700">
-            <div className="uppercase text-xl font-semibold text-appGreen">
-                Our services
-            </div>
-            <div className="uppercase text-md font-semibold text-gray-700 mt-8">
-            Door-to-door shipping services
-            </div>
-            <div className="grid gap-4 px-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
-                {parcelTypes.map((parcel, index) => (
-                    <SingleParcel
-                        key={index}
-                        title={parcel.label}
-                        icon={parcel.icon}
-                    />
-                ))}
+        <div className="flex bg-white justify-center w-full">
+            <div className="flex w-3/5 bg-white px-8 py-2">
+                <SlideElement />
             </div>
         </div>
     );
@@ -31,9 +22,41 @@ export default ParcelTypes;
 
 const SingleParcel = ({ title, icon }) => {
     return (
-        <div className="p-6 bg-appGreen/25 rounded">
-            <div className="text-4xl">{icon}</div>
-            <div className="text-lg">{title}</div>
+        <div className="py-8 flex flex-col shadow-sm md:!w-[170px] bg-gray-100/50 text-black font-bold gap-2 items-center justify-center">
+            <div className="text-xl">{icon}</div>
+            <div className="text-md">{title}</div>
         </div>
     );
 };
+
+/* Install pure-react-carousel using -> npm i pure-react-carousel */
+
+function SlideElement() {
+    const responsive = {
+        0: {
+            items: 1,
+        },
+        600: {
+            items: 3,
+        },
+        1024: {
+            items: 4,
+        },
+    };
+    return (
+        <AliceCarousel
+            responsive={responsive}
+            fadeOutAnimation={true}
+            mouseDragEnabled={true}
+            
+        >
+            {parcelTypes.map((parcel, index) => (
+                <SingleParcel
+                    key={index}
+                    title={parcel.label}
+                    icon={parcel.icon}
+                />
+            ))}
+        </AliceCarousel>
+    );
+}

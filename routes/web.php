@@ -19,11 +19,7 @@ Route::post('login',[API\UserController::class,'login']);
 Route::get('logout', [ API\UserController::class, 'logout' ]);
 
 
-Route::fallback(function()
-{
-    return view("index");
 
-})->name("home") 
 
 /* Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -41,3 +37,9 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 Route::get('/storage-link-exist', function () {
     return config('filesystems.links');
 });
+
+Route::fallback(function()
+{
+    return view("index");
+
+})->name("home");

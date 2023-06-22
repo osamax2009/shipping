@@ -44,6 +44,12 @@ Route::get('extracharge-list', [ API\ExtraChargeController::class, 'getList' ] )
 Route::get('paymentgateway-list',[API\PaymentGatewayController::class,'getList']);
 Route::get('vehicle-list', [ API\VehicleController::class, 'getList' ] );
 
+Route::get('place-autocomplete-api', [ API\CommonController::class, 'placeAutoComplete' ] );
+Route::get('place-detail-api', [ API\CommonController::class, 'placeDetail' ] );
+Route::get('distance-between-places', [ API\CommonController::class, 'distanceBetwennTwoPlaces' ] );
+
+
+
 Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::get('dashboard-detail', [ API\UserController::class, 'dashboard' ]);
@@ -109,8 +115,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     
     Route::post('order-auto-assign', [ App\Http\Controllers\OrderController::class, 'AutoAssignCancelOrder' ] );
 
-    Route::get('place-autocomplete-api', [ API\CommonController::class, 'placeAutoComplete' ] );
-    Route::get('place-detail-api', [ API\CommonController::class, 'placeDetail' ] );
+   
     
     Route::get('logout', [ API\UserController::class, 'logout' ]);
     Route::get('wallet-detail', [ API\WalletController::class, 'getWallatDetail'] );
