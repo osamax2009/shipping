@@ -93,10 +93,10 @@ const Topbar = () => {
                                 <i className="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Profile
                             </Link>
-                            <a className="dropdown-item" href="#">
+                            <Link className="dropdown-item" to={"/client/bank-informations"} >
                                 <i className="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Bank informations
-                            </a>
+                            </Link>
                             <a className="dropdown-item" href="#">
                                 <i className="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Activity Log

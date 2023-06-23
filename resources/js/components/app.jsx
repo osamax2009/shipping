@@ -20,6 +20,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import SingleOrder from "./adminInterface/singleOrder";
 import AdminCreateOrder from "./adminInterface/createOrder";
 import UserDashboardLayout from "./userInterface/userDashboard/layout";
+import BankProfil from "./partials/updateBankProfil";
 
 const router = createBrowserRouter([
     /*   Common routes */
@@ -73,6 +74,11 @@ const router = createBrowserRouter([
                 path: "order-list",
                 element: <MyOrders />,
             },
+
+            {
+                path : "bank-informations",
+                element : <BankProfil />
+            }
         ],
     },
     /* Admin routes */
