@@ -6,9 +6,7 @@ import Login from "./userInterface/login";
 import Register from "./userInterface/register";
 import { UserContextProvider } from "./contexts/userContext";
 import PlaceOrder from "./userInterface/userDashboard/placeOrder";
-import CountriesAndCities from "./adminInterface/countriesAndCities";
 import Profile from "./userInterface/userDashboard/profile";
-import UpdatePassword from "./userInterface/userDashboard/changePassword";
 import AdminDashboardLayout from "./adminInterface/layout";
 import Country from "./adminInterface/country";
 import City from "./adminInterface/city";
@@ -63,11 +61,6 @@ const router = createBrowserRouter([
             {
                 path: "orderdetail/order_Id/:order_Id",
                 element: <SingleOrder />,
-            },
-
-            {
-                path: "countries-cities",
-                element: <CountriesAndCities />,
             },
 
             {
