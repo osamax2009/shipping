@@ -7,18 +7,23 @@ import Register from "./userInterface/register";
 import { UserContextProvider } from "./contexts/userContext";
 import PlaceOrder from "./userInterface/userDashboard/placeOrder";
 import CountriesAndCities from "./adminInterface/countriesAndCities";
-import OrderResume from "./userInterface/userDashboard/orderResume";
 import Profile from "./userInterface/userDashboard/profile";
 import UpdatePassword from "./userInterface/userDashboard/changePassword";
 import AdminDashboardLayout from "./adminInterface/layout";
-import { Loading } from "@nextui-org/react";
 import Country from "./adminInterface/country";
 import City from "./adminInterface/city";
 import Orders from "./adminInterface/orders";
 import ParcelTypes from "./adminInterface/parcelTypes";
 import MyOrders from "./userInterface/userDashboard/myOrders";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import SingleOrder from "./adminInterface/singleOrder";
+import AdminCreateOrder from "./adminInterface/createOrder";
+import UserDashboardLayout from "./userInterface/userDashboard/layout";
+import BankProfil from "./partials/updateBankProfil";
 
 const router = createBrowserRouter([
+    /*   Common routes */
     {
         path: "/",
         element: <Index />,
@@ -34,31 +39,48 @@ const router = createBrowserRouter([
         element: <Register />,
     },
 
-   /*  {
-        path: "/account/dashboard/place-new-order",
-        element: <PlaceOrder />,
-    }, */
+   
+
+    /*   Common routes */
+
+    /*  User routes */
 
     {
-        path: "/account/dashboard/new-order-resume",
-        element: <OrderResume />,
-    },
+        path: "/client",
+        element: <UserDashboardLayout />,
+        
+        children: [
 
-    {
-        path: "/account/dashboard/countries-cities",
-        element: <CountriesAndCities />,
-    },
+            {
+                path: "profile",
+                element: <Profile />,
+            },
 
-    {
-        path: "/account/dashboard/user-profile",
-        element: <Profile />,
-    },
+            {
+                path : "createorder",
+                element : <PlaceOrder />
+            },
+            {
+                path: "orderdetail/order_Id/:order_Id",
+                element: <SingleOrder />,
+            },
 
-    {
-        path: "/account/dashboard/order-list",
-        element : <MyOrders/>
-    },
+            {
+                path: "countries-cities",
+                element: <CountriesAndCities />,
+            },
 
+            {
+                path: "order-list",
+                element: <MyOrders />,
+            },
+
+            {
+                path : "bank-informations",
+                element : <BankProfil />
+            }
+        ],
+    },
     /* Admin routes */
 
     {
@@ -66,14 +88,25 @@ const router = createBrowserRouter([
         element: <AdminDashboardLayout />,
         //loader: <Loading />,
         children: [
+
             {
-                path : "country",
-                element : <Country />
+                path: "profile",
+                element: <Profile />,
             },
 
             {
-                path : "city",
-                element : <City />
+                path: "country",
+                element: <Country />,
+            },
+
+            {
+                path: "city",
+                element: <City />,
+            },
+
+            {
+                path: "/admin/createorder",
+                element: <AdminCreateOrder />,
             },
 
             {
@@ -85,17 +118,24 @@ const router = createBrowserRouter([
                 path: "parcel-types",
                 element: <ParcelTypes />,
             },
+
+            {
+                path: "/admin/orderdetail/order_Id/:order_Id",
+                element: <SingleOrder />,
+            },
         ],
     },
 ]);
 
-if (document.getElementById("root")) {
-    const Index = ReactDOM.createRoot(document.getElementById("root"));
+if (document.getElementById("page-top")) {
+    const Index = ReactDOM.createRoot(document.getElementById("page-top"));
     Index.render(
-        <UserContextProvider>
-            <React.StrictMode>
-                <RouterProvider router={router} />
-            </React.StrictMode>
-        </UserContextProvider>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <UserContextProvider>
+                <React.StrictMode>
+                    <RouterProvider router={router} />
+                </React.StrictMode>
+            </UserContextProvider>
+        </LocalizationProvider>
     );
 }

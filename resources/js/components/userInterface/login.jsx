@@ -50,7 +50,7 @@ const Login = () => {
 
             if (data.data.user_type == "client") {
                 
-                console.log(state)
+               
 
                 if (state?.delivery_point) {
                     const _user = data.data
@@ -71,7 +71,9 @@ const Login = () => {
                             hideProgressBar: true,
                         });
                     }
-                    navigate("/");
+                    const url = "/client/orderdetail/order_Id/" + res.order_id
+                    navigate(url);
+
                 } else {
                     toast("connected successfully", {
                         type: "success",
@@ -82,11 +84,38 @@ const Login = () => {
             }
 
             if (data.data.user_type == "admin") {
-                toast("connected successfully", {
-                    type: "success",
-                    hideProgressBar: true,
-                });
-                navigate("/admin/orders");
+                
+               
+
+                if (state?.delivery_point) {
+                    const _user = data.data
+                    const dataToSend = state;
+                    state.client_id = _user?.id
+                    state.country_id = _user?.country_id,
+                    state.city_id = _user?.city_id,
+                    state. save_user_address = _user?.id
+                    
+                    const res = await postWithAxios(
+                        "/api/order-save",
+                        dataToSend
+                    );
+
+                    if (res.order_id) {
+                        toast(res.message, {
+                            type: "success",
+                            hideProgressBar: true,
+                        });
+                    }
+                    const url = "/admin/orderdetail/order_Id/" + res.order_id
+                    navigate(url);
+
+                } else {
+                    toast("connected successfully", {
+                        type: "success",
+                        hideProgressBar: true,
+                    });
+                    navigate("/admin/orders");
+                }
             }
 
             if (data.data.user_type == "delivery_man") {

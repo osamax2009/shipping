@@ -2,6 +2,7 @@ const defaultTheme = require('tailwindcss/defaultTheme');
 const { withAnimations } = require('animated-tailwindcss')
 
 
+
 module.exports = withAnimations({
     content: [
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
@@ -14,7 +15,8 @@ module.exports = withAnimations({
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Nunito', ...defaultTheme.fontFamily.sans],
+                
+                'sans': ['Nunito', ...defaultTheme.fontFamily.sans],
             },
             colors : {
                 "appGreen" : "#4caf50",
@@ -22,5 +24,10 @@ module.exports = withAnimations({
         },
     },
 
-    plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography'), require("daisyui")],
+    plugins: [
+        require('@tailwindcss/forms'), 
+        require('@tailwindcss/typography'), 
+        require("daisyui"),
+      
+    ],
 });

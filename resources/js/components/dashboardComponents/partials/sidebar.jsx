@@ -2,9 +2,26 @@ import { useContext } from "react";
 import { UserContext } from "../../contexts/userContext";
 import { appName } from "../../shared/constancy";
 import { Link, useLocation } from "react-router-dom";
-import { BsBagPlusFill, BsBicycle, BsBox, BsBox2, BsBuilding, BsFile, BsFiles, BsFillBoxSeamFill, BsFillCreditCardFill, BsList, BsListCheck, BsPinMapFill } from "react-icons/bs";
+import {
+    BsBagPlusFill,
+    BsBicycle,
+    BsBox,
+    BsBox2,
+    BsBuilding,
+    BsCardChecklist,
+    BsFile,
+    BsFiles,
+    BsFillBoxSeamFill,
+    BsFillCreditCardFill,
+    
+    BsListCheck,
+    BsPinMapFill,
+} from "react-icons/bs";
 import { FaListAlt, FaMapMarkedAlt } from "react-icons/fa";
 import { RiDashboardFill, RiEBikeFill } from "react-icons/ri";
+import { BiListCheck} from 'react-icons/bi'
+import { margin } from "@mui/system";
+import { Image } from "@nextui-org/react";
 const Sidebar = () => {
     const { user, setUser } = useContext(UserContext);
     const location = useLocation();
@@ -12,14 +29,14 @@ const Sidebar = () => {
     const userRoutes = [
         {
             title: "Place new Order",
-            path: "/",
+            path: "/client/createorder",
             icon: <BsBagPlusFill />,
         },
 
         {
             title: "My orders",
-            path: "/account/dashboard/order-list",
-            icon: <BsBagPlusFill />,
+            path: "/client/order-list",
+            icon: <BsCardChecklist />,
         },
     ];
 
@@ -57,7 +74,7 @@ const Sidebar = () => {
         {
             title: "Parcel Type",
             path: "/admin/parcel-types",
-            icon: <BsFillBoxSeamFill />
+            icon: <BsFillBoxSeamFill />,
         },
 
         {
@@ -68,7 +85,7 @@ const Sidebar = () => {
 
         {
             title: "Create Order",
-            path: "/admin/new-orders",
+            path: "/admin/createorder",
             icon: <FaListAlt />,
         },
 
@@ -86,98 +103,90 @@ const Sidebar = () => {
 
         {
             title: "Delivery Person Document",
-            path: "/account/dashboard/countries-cities",
+            path: "/",
             icon: <BsFiles />,
         },
     ];
 
     return (
-        <ul
-            className="navbar-nav bg-appGreen sidebar sidebar-dark accordion"
+        <aside
+            className="main-sidebar elevation-0 sidebar-dark-teal bg-appGreen"
             id="accordionSidebar"
         >
             {/* Sidebar - Brand  */}
-            <a
-                className="sidebar-brand d-flex align-items-center justify-content-center"
-                href="index.html"
-            >
-                <div className="sidebar-brand-icon rotate-n-15">
-                    <i className="fas fa-laugh-wink"></i>
-                </div>
-                <div className="sidebar-brand-text mx-3">{appName}</div>
-            </a>
+            <Link to='/' className="flex flex-col py-2 justify-center items-center">
+                <Image src="/images/ic_app_logo_color.png" width={80} height={40} className="h-24" /> 
+                <div className="text-lg text-center pt-2 font-bold no-underline hover:no-underline text-white">
+                    {appName}    
+                </div> 
+            </Link>
             {/* Divider  */}
-            <hr className="sidebar-divider" />
+            <hr className="bg-white/50 " />
+            
 
-            {user?.user_type == "client" ? (
-                <>
-                    {/* Heading  */}
-                    <div className="sidebar-heading">Orders</div>
+            <div className="sidebar">
+                {user?.user_type == "client" ? (
+                    <>
+                        {/* Heading  */}
+                        <div className="py-2 text-center text-white/50">Menu</div>
 
-                    {userRoutes.map((route, index) => (
-                        <Link
-                            key={index}
-                            to={route.path}
-                            className="-mb-6 hover:no-underline"
-                        >
-                            <li
-                                className={
-                                    location.pathname == route.path
-                                        ? " nav-item active"
-                                        : "nav-item"
-                                }
+                        {userRoutes.map((route, index) => (
+                            <Link
+                                key={index}
+                                to={route.path}
+                                className="text-sm py-4 px-4 hover:no-underline"
                             >
-                                <div className="nav-link">
-                                    <div className="!text-2xl">
-                                        {route.icon}
-                                    </div>
-
-                                    <span>{route.title}</span>
+                                <div
+                                    className={
+                                        location.pathname == route.path
+                                            ? "flex gap-2 font-bold text-white"
+                                            : "flex gap-2 font-light"
+                                    }
+                                >
+                                    <span className="text-md">
+                                    {route.icon}
+                                    </span>
+                                    {route.title}
                                 </div>
-                            </li>
-                        </Link>
-                    ))}
-                </>
-            ) : null}
+                            </Link>
+                        ))}
+                    </>
+                ) : null}
 
-            {user?.user_type == "admin" ? (
-                <>
-                    {/* Heading  */}
-                    <div className="sidebar-heading">Orders</div>
+                {user?.user_type == "admin" ? (
+                    <>
+                        {/* Heading  */}
+                        <div className="py-2 text-center text-white/50">Menu</div>
 
-                    {adminRoutes.map((route, index) => (
-                        <Link
-                            key={index}
-                            to={route.path}
-                            className="-mb-6 hover:no-underline"
-                        >
-                            <li
-                                className={
-                                    location.pathname == route.path
-                                        ? " nav-item active"
-                                        : "nav-item "
-                                }
-                            >
-                                <div className="nav-link ">
-                                    <div className=" flex gap-2">
-                                        <span className="text-xl items-center">
-                                        {route.icon}
-                                        </span>
-                                        <div className="text-sm">{route.title}</div>
-                                    </div>
-                                   
-                                </div>
-                            </li>
-                        </Link>
-                    ))}
-                </>
-            ) : null}
+                        {adminRoutes.map((route, index) => (
+                             <Link
+                             key={index}
+                             to={route.path}
+                             className="text-sm py-4 px-4 hover:no-underline"
+                         >
+                             <div
+                                 className={
+                                     location.pathname == route.path
+                                         ? "flex gap-2 font-bold text-white"
+                                         : "flex gap-2 font-light"
+                                 }
+                             >
+                                 <span className="text-md">
+                                 {route.icon}
+                                 </span>
+                                 {route.title}
+                             </div>
+                         </Link>
+                        ))}
+                    </>
+                ) : null}
 
-            {/* Nav Item - Pages Collapse Menu  */}
+                {/* Nav Item - Pages Collapse Menu  */}
 
-            {/* Divider  */}
-            <hr className="sidebar-divider" />
-        </ul>
+                {/* Divider  */}
+                
+            </div>
+        </aside>
     );
 };
 

@@ -30,7 +30,6 @@ const Navbar = () => {
     };
 
     const handleLogout = async () => {
-    
         try {
             const data = await getWithAxios("/api/logout");
             console.log("logout response", data);
@@ -50,7 +49,6 @@ const Navbar = () => {
     return (
         <>
             <div className="fixed z-40 w-screen transition ease-in">
-               
                 <div
                     className={
                         !color
@@ -64,7 +62,7 @@ const Navbar = () => {
                                 <Image
                                     src={"/images/ic_app_logo_color.png"}
                                     className="h-8"
-                                   /*  width={80}
+                                    /*  width={80}
                                     height={50} */
                                     alt="Logo"
                                 />
@@ -120,7 +118,7 @@ const Navbar = () => {
                                         </div>
                                     </Dropdown.Trigger>
                                     <Dropdown.Menu color="success">
-                                        <Dropdown.Item key={"logout"} >
+                                        <Dropdown.Item key={"logout"}>
                                             <button
                                                 onClick={handleLogout}
                                                 className="w-full"
@@ -142,7 +140,13 @@ const Navbar = () => {
                                         !color ? "text-white" : "text-black"
                                     }
                                     auto
-                                    to={"/account/dashboard/order-list"}
+                                    to={
+                                        user?.user_type == "client"
+                                            ? "/client/createorder"
+                                            : user?.user_type == "admin"
+                                            ? "/admin/orders"
+                                            : "/"
+                                    }
                                 >
                                     Dashboard
                                 </Link>
@@ -239,7 +243,6 @@ const Navbar = () => {
                                         <button
                                             onClick={handleLogout}
                                             className="w-full"
-                                            
                                         >
                                             logout
                                         </button>
@@ -255,7 +258,13 @@ const Navbar = () => {
                                 css={{ background: "#ffffff" }}
                                 className={!color ? "text-black" : "text-black"}
                                 auto
-                                to={"/account/dashboard/order-list"}
+                                to={
+                                    user?.user_type == "client"
+                                        ? "/client/createorder"
+                                        : user?.user_type == "admin"
+                                        ? "/admin/orders"
+                                        : "/"
+                                }
                             >
                                 Dashboard
                             </Link>
