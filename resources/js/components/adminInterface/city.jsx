@@ -8,11 +8,20 @@ import { toast } from "react-toastify";
 
 const City = () => {
     const [cities, setCities] = useState();
+    const [countries, setCountries] = useState();
     const [openCreate, setOpenCreate] = useState(false);
+    const [openDelete, setOpenDelete] = useState(false);
+    const [openUpdate, setOpenUpdate] = useState(false);
+    const [selectedCity, setSelectedCity] = useState()
 
     const getCities = async () => {
         const res = await getWithAxios("/api/city-list");
         setCities(res.data);
+    };
+
+    const getCountries = async () => {
+        const res = await getWithAxios("/api/country-list");
+        setCountries(res.data);
     };
 
     const handleOpenCreate = () => {
@@ -20,7 +29,13 @@ const City = () => {
     };
 
     useEffect(() => {
-        getCities();
+        if (!openCreate && !openDelete && !openUpdate) {
+            getCities();
+        }
+    }, [openCreate, openDelete, openUpdate]);
+
+    useEffect(() => {
+        getCountries();
     }, []);
 
     return (
@@ -42,12 +57,12 @@ const City = () => {
                 <Table.Body>
                     {cities?.map((city, index) => (
                         <Table.Row key={index}>
-                            <Table.Cell> {city.id} </Table.Cell>
-                            <Table.Cell>{city.name}</Table.Cell>
-                            <Table.Cell> {city.country_name} </Table.Cell>
-                            <Table.Cell>{city.created_at}</Table.Cell>
+                            <Table.Cell> {city?.id} </Table.Cell>
+                            <Table.Cell>{city?.name}</Table.Cell>
+                            <Table.Cell> {city?.country_name} </Table.Cell>
+                            <Table.Cell>{city?.created_at}</Table.Cell>
                             <Table.Cell>
-                                {city.status == 1 ? (
+                                {city?.status == 1 ? (
                                     <span className="text-appGreen">
                                         Enabled
                                     </span>
@@ -59,7 +74,16 @@ const City = () => {
                             </Table.Cell>
 
                             <Table.Cell>
-                                <CityLine city={city} />
+                                <CityLine
+                                    city={city}
+
+                                    setSelectedCity={setSelectedCity}
+                                    
+                                    setOpenDelete={setOpenDelete}
+                                    
+                                    setOpenUpdate={setOpenUpdate}
+                                    
+                                />
                             </Table.Cell>
                         </Table.Row>
                     ))}
@@ -73,22 +97,50 @@ const City = () => {
                 />
             </Table>
 
-            <CreateModal open={openCreate} setOpen={setOpenCreate} />
+            <CreateModal
+                open={openCreate}
+                setOpen={setOpenCreate}
+                countries={countries}
+            />
+
+            <UpdateModal
+                city={selectedCity}
+                open={openUpdate}
+                setOpen={setOpenUpdate}
+                countries={countries}
+            />
+            <DeleteModal
+                city={selectedCity}
+                open={openDelete}
+                setOpen={setOpenDelete}
+            />
         </div>
     );
 };
 export default City;
 
-const CityLine = ({ city }) => {
-    const [openUpdate, setOpenUpdate] = useState(false);
-    const [openDelete, setOpenDelete] = useState(false);
+const CityLine = ({
+    city,   
+    setOpenDelete, 
+    setOpenUpdate,
+    setSelectedCity
+}) => {
+    const [openSee, setOpenSee] = useState(false);
 
     const handleOpenUpdate = () => {
+        const value = city
+        setSelectedCity(value)
+        
         setOpenUpdate(true);
     };
 
     const handleOpenDelete = () => {
+        setSelectedCity(city)
         setOpenDelete(true);
+    };
+
+    const handleOpenSee = () => {
+        setOpenSee(true);
     };
 
     return (
@@ -108,276 +160,31 @@ const CityLine = ({ city }) => {
                 ></Button>
                 <Button
                     auto
-                    onPress={handleOpenUpdate}
-                    color={"success"}
+                    onPress={handleOpenSee}
+                    color={"primary"}
                     icon={<BsEye />}
                 ></Button>
             </div>
             <div>
-                <UpdateModal
-                    city={city}
-                    open={openUpdate}
-                    setOpen={setOpenUpdate}
-                />
-                <DeleteModal
-                    city={city}
-                    open={openDelete}
-                    setOpen={setOpenDelete}
-                />
+                <SeeModal city={city} open={openSee} setOpen={setOpenSee} />
             </div>
         </div>
     );
 };
 
-const CreateModal = ({ open, setOpen }) => {
-    const [selected, setSelected] = useState();
-    const [city, setCity] = useState({});
+const CreateModal = ({ open, setOpen, countries }) => {
+    const [cityInfos, setCityInfos] = useState();
 
-    const [countries, setCountries] = useState();
-
-    const getCountries = async () => {
-        const res = await getWithAxios("/api/country-list");
-        setCountries(res.data);
-    };
-
-    const handleCreate = async () => {
-        const cityName = countriesList.getLabel(selected);
-        const dataToSend = {
-            name: cityName,
-            status: 1,
-            distance_type: distanceType,
-            weight_type: weightType,
-            links: {},
-        };
-
-        const res = await postWithAxios("/api/city-save", dataToSend);
-        if (res.message == "city has been save successfully.") {
+    const createCity = async () => {
+        const res = await postWithAxios("/api/city-save", cityInfos);
+        if (res.message) {
             setOpen(false);
-            window.location.reload();
             toast(res.message, {
                 type: "success",
                 hideProgressBar: true,
             });
         }
-
-        if (res.message !== "city has been save successfully.") {
-            toast(res.message, {
-                type: "error",
-                hideProgressBar: true,
-            });
-        }
     };
-
-    useEffect(() => {
-        getCountries();
-    }, []);
-
-    return (
-        <Modal
-            open={open}
-            closeButton
-            preventClose
-            onClose={() => setOpen(false)}
-        >
-            <Modal.Header>
-                <div className="text-lg font-bold text-appGreen">
-                    Create new contry{" "}
-                </div>
-            </Modal.Header>
-            <Modal.Body>
-                <div className="grid justify-between h-72">
-                    <div className="grid md:grid-cols-2">
-                        <div className="form-group">
-                            <label htmlFor=""> City Name</label>
-                            <input
-                                type="text"
-                                className="form-control w-full"
-                                value={city.name}
-                                onChange={(e) =>
-                                    setCity({ ...city, name: e.target.value })
-                                }
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="">Country</label>
-                            <select
-                                name=""
-                                id=""
-                                value={city.country}
-                                onChange={(e) =>
-                                    setCity({
-                                        ...city,
-                                        country: e.target.value,
-                                    })
-                                }
-                                className="form-control"
-                            >
-                                {countries?.map((country, index) => (
-                                    <option key={index} value={country.id}>
-                                        {" "}
-                                        {country.name}{" "}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                    </div>
-                    <div className="grid md:grid-cols-3">
-                        <div className="form-group">
-                            <label htmlFor=""> Fixed charges</label>
-                            <input
-                                type="text"
-                                className="form-control w-full"
-                                value={city.charges}
-                                onChange={(e) =>
-                                    setCity({
-                                        ...city,
-                                        charges: e.target.value,
-                                    })
-                                }
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor=""> Cancel charges</label>
-                            <input
-                                type="text"
-                                className="form-control w-full"
-                                value={city.cancelCharges}
-                                onChange={(e) =>
-                                    setCity({
-                                        ...city,
-                                        cancelCharges: e.target.value,
-                                    })
-                                }
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor=""> %inimum Distance</label>
-                            <input
-                                type="text"
-                                className="form-control w-full"
-                                value={city.distance}
-                                onChange={(e) =>
-                                    setCity({
-                                        ...city,
-                                        distance: e.target.value,
-                                    })
-                                }
-                            />
-                        </div>
-                    </div>
-
-                    <div className="grid md:grid-cols-3">
-                        <div className="form-group">
-                            <label htmlFor=""> Fixed charges</label>
-                            <input
-                                type="text"
-                                className="form-control w-full"
-                                value={city.charges}
-                                onChange={(e) =>
-                                    setCity({
-                                        ...city,
-                                        charges: e.target.value,
-                                    })
-                                }
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor=""> Cancel charges</label>
-                            <input
-                                type="text"
-                                className="form-control w-full"
-                                value={city.cancelCharges}
-                                onChange={(e) =>
-                                    setCity({
-                                        ...city,
-                                        cancelCharges: e.target.value,
-                                    })
-                                }
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor=""> %inimum Distance</label>
-                            <input
-                                type="text"
-                                className="form-control w-full"
-                                value={city.distance}
-                                onChange={(e) =>
-                                    setCity({
-                                        ...city,
-                                        distance: e.target.value,
-                                    })
-                                }
-                            />
-                        </div>
-                    </div>
-                    
-                    <div className="grid md:grid-cols-2">
-                        <div className="form-group">
-                            <label htmlFor=""> Distance type</label>
-                            <select
-                                name=""
-                                id=""
-                                value={distanceType}
-                                onChange={(e) =>
-                                    setDistanceType(e.target.value)
-                                }
-                                className="form-control w-full"
-                            >
-                                <option value={"km"}>km</option>
-                                <option value={"miles"}>miles</option>
-                            </select>
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor=""> Weight type</label>
-                            <select
-                                name=""
-                                id=""
-                                value={weightType}
-                                onChange={(e) => setWeightType(e.target.value)}
-                                className="from-control"
-                            >
-                                <option value={"km"}>kg</option>
-                                <option value={"pound"}>Pound</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div className="flex flex-wrap  w-full gap-6 justify-between sm:justify-end">
-                        <Button
-                            auto
-                            css={{ backgroundColor: "Grey" }}
-                            className="text-black"
-                            onPress={() => setOpen(false)}
-                        >
-                            cancel
-                        </Button>
-
-                        <Button
-                            auto
-                            color={"success"}
-                            onPress={handleCreate}
-                            className="text-black"
-                        >
-                            Create
-                        </Button>
-                    </div>
-                </div>
-            </Modal.Body>
-        </Modal>
-    );
-};
-
-const UpdateModal = ({ city, open, setOpen }) => {
-    const [selected, setSelected] = useState(city.code);
-    const [distanceType, setDistanceType] = useState(city.distance_type);
-    const [weightType, setWeightType] = useState(city.weight_type);
-
-    const handleUpdate = async () => {};
     return (
         <Modal
             open={open}
@@ -391,61 +198,403 @@ const UpdateModal = ({ city, open, setOpen }) => {
                 </div>
             </Modal.Header>
             <Modal.Body>
-                <div className="grid justify-between h-72">
+                <div className="grid gap-8 md:grid-cols-2">
                     <div className="form-group ">
                         <label htmlFor="city name">city Name</label>
 
-                        <ReactFlagsSelect
-                            selected={selected}
-                            searchable
-                            onSelect={(code) => setSelected(code)}
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={cityInfos?.name}
+                            onChange={(e) =>
+                                setCityInfos({
+                                    ...cityInfos,
+                                    name: e.target.value,
+                                })
+                            }
                         />
                     </div>
-                    <div className="grid md:grid-cols-2">
-                        <div className="form-group">
-                            <label htmlFor=""> Distance type</label>
-                            <select
-                                name=""
-                                id=""
-                                value={distanceType}
-                                onChange={(e) =>
-                                    setDistanceType(e.target.value)
-                                }
-                                className="from-control"
-                            >
-                                <option value={"km"}>km</option>
-                                <option value={"miles"}>miles</option>
-                            </select>
-                        </div>
+                    <div className="form-group ">
+                        <label htmlFor="city name">Select Country Name</label>
 
-                        <div className="form-group">
-                            <label htmlFor=""> Weight type</label>
-                            <select
-                                name=""
-                                id=""
-                                value={weightType}
-                                onChange={(e) => setWeightType(e.target.value)}
-                                className="from-control"
-                            >
-                                <option value={"km"}>kg</option>
-                                <option value={"pound"}>Pound</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div className="flex flex-wrap  w-full gap-6 justify-between sm:justify-end">
-                        <Button
-                            auto
-                            css={{ backgroundColor: "Grey" }}
-                            className="text-black"
-                            onPress={() => setOpen(false)}
+                        <select
+                            type="text"
+                            className="form-control"
+                            value={cityInfos?.country_id}
+                            onChange={(e) =>
+                                setCityInfos({
+                                    ...cityInfos,
+                                    country_id: e.target.value,
+                                })
+                            }
                         >
-                            cancel
-                        </Button>
-
-                        <Button auto color={"success"} className="text-black">
-                            update
-                        </Button>
+                            {countries?.map((country, index) => (
+                                <option key={index} value={country?.id}>
+                                    {country?.name}
+                                </option>
+                            ))}
+                        </select>
                     </div>
+
+                    <div className="form-group">
+                        <label htmlFor=""> Fixed charges</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={cityInfos?.ficed_charges}
+                            onChange={(e) =>
+                                setCityInfos({
+                                    ...cityInfos,
+                                    fixed_charges: e.target.value,
+                                })
+                            }
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor=""> Cancel charges</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={cityInfos?.cancel_charges}
+                            onChange={(e) =>
+                                setCityInfos({
+                                    ...cityInfos,
+                                    cancel_charges: e.target.value,
+                                })
+                            }
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor=""> Minimum Distance</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={cityInfos?.min_distance}
+                            onChange={(e) =>
+                                setCityInfos({
+                                    ...cityInfos,
+                                    min_distance: e.target.value,
+                                })
+                            }
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor=""> Minimum Distance</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={cityInfos?.min_weight}
+                            onChange={(e) =>
+                                setCityInfos({
+                                    ...cityInfos,
+                                    min_weight: e.target.value,
+                                })
+                            }
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor=""> Per Distance Charges</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={cityInfos?.per_distance_charges}
+                            onChange={(e) =>
+                                setCityInfos({
+                                    ...cityInfos,
+                                    per_distance_charges: e.target.value,
+                                })
+                            }
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor=""> Per Weight Charges</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={cityInfos?.per_weight_charges}
+                            onChange={(e) =>
+                                setCityInfos({
+                                    ...cityInfos,
+                                    per_weight_charges: e.target.value,
+                                })
+                            }
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor=""> Commision Type</label>
+                        <select
+                            type="text"
+                            className="form-control"
+                            value={cityInfos?.per_weight_charges}
+                            onChange={(e) =>
+                                setCityInfos({
+                                    ...cityInfos,
+                                    per_weight_charges: e.target.value,
+                                })
+                            }
+                        >
+                            <option value="percentage"> Percentage</option>
+                            <option value="fixed"> Fixed</option>
+                        </select>
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor=""> Admin Commission</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={cityInfos?.admin_commission}
+                            onChange={(e) =>
+                                setCityInfos({
+                                    ...cityInfos,
+                                    admin_commission: e.target.value,
+                                })
+                            }
+                        />
+                    </div>
+                </div>
+
+                <div className="flex flex-wrap  w-full gap-6 justify-between sm:justify-end">
+                    <Button
+                        auto
+                        css={{ backgroundColor: "Grey" }}
+                        className="text-black"
+                        onPress={() => setOpen(false)}
+                    >
+                        cancel
+                    </Button>
+
+                    <Button
+                        auto
+                        color={"success"}
+                        onPress={createCity}
+                        className="text-black"
+                    >
+                        Create
+                    </Button>
+                </div>
+            </Modal.Body>
+        </Modal>
+    );
+};
+
+const UpdateModal = ({ city, open, setOpen, countries }) => {
+  
+    const [cityInfos, setCityInfos] = useState(city);
+    console.log(city)
+    const updateCity = async () => {
+        const res = await postWithAxios("/api/city-save", cityInfos);
+        if (res.message) {
+            setOpen(false);
+            toast(res.message, {
+                type: "success",
+                hideProgressBar: true,
+            });
+        }
+    };
+
+    useEffect(() => {
+        setCityInfos(city)
+    }, [city])
+    return (
+        <Modal
+            open={open}
+            closeButton
+            preventClose
+            onClose={() => setOpen(false)}
+        >
+            <Modal.Header>
+                <div className="text-lg font-bold text-appGreen">
+                    Update city{" "}
+                </div>
+            </Modal.Header>
+            <Modal.Body>
+                <div className="grid gap-8 md:grid-cols-2">
+                    <div className="form-group ">
+                        <label htmlFor="city name">city Name</label>
+
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={cityInfos?.name}
+                            onChange={(e) =>
+                                setCityInfos({
+                                    ...cityInfos,
+                                    name: e.target.value,
+                                })
+                            }
+                        />
+                    </div>
+                    <div className="form-group ">
+                        <label htmlFor="city name">Select Country Name</label>
+
+                        <select
+                            type="text"
+                            className="form-control"
+                            value={cityInfos?.country_id}
+                            onChange={(e) =>
+                                setCityInfos({
+                                    ...cityInfos,
+                                    country_id: e.target.value,
+                                })
+                            }
+                        >
+                            {countries?.map((country, index) => (
+                                <option key={index} value={country?.id}>
+                                    {country?.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor=""> Fixed charges</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={cityInfos?.ficed_charges}
+                            onChange={(e) =>
+                                setCityInfos({
+                                    ...cityInfos,
+                                    fixed_charges: e.target.value,
+                                })
+                            }
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor=""> Cancel charges</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={cityInfos?.cancel_charges}
+                            onChange={(e) =>
+                                setCityInfos({
+                                    ...cityInfos,
+                                    cancel_charges: e.target.value,
+                                })
+                            }
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor=""> Minimum Distance</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={cityInfos?.min_distance}
+                            onChange={(e) =>
+                                setCityInfos({
+                                    ...cityInfos,
+                                    min_distance: e.target.value,
+                                })
+                            }
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor=""> Minimum Distance</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={cityInfos?.min_weight}
+                            onChange={(e) =>
+                                setCityInfos({
+                                    ...cityInfos,
+                                    min_weight: e.target.value,
+                                })
+                            }
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor=""> Per Distance Charges</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={cityInfos?.per_distance_charges}
+                            onChange={(e) =>
+                                setCityInfos({
+                                    ...cityInfos,
+                                    per_distance_charges: e.target.value,
+                                })
+                            }
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor=""> Per Weight Charges</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={cityInfos?.per_weight_charges}
+                            onChange={(e) =>
+                                setCityInfos({
+                                    ...cityInfos,
+                                    per_weight_charges: e.target.value,
+                                })
+                            }
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor=""> Commision Type</label>
+                        <select
+                            type="text"
+                            className="form-control"
+                            value={cityInfos?.per_weight_charges}
+                            onChange={(e) =>
+                                setCityInfos({
+                                    ...cityInfos,
+                                    per_weight_charges: e.target.value,
+                                })
+                            }
+                        >
+                            <option value="percentage"> Percentage</option>
+                            <option value="fixed"> Fixed</option>
+                        </select>
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor=""> Admin Commission</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            value={cityInfos?.admin_commission}
+                            onChange={(e) =>
+                                setCityInfos({
+                                    ...cityInfos,
+                                    admin_commission: e.target.value,
+                                })
+                            }
+                        />
+                    </div>
+                </div>
+
+                <div className="flex flex-wrap  w-full gap-6 justify-between sm:justify-end">
+                    <Button
+                        auto
+                        css={{ backgroundColor: "Grey" }}
+                        className="text-black"
+                        onPress={() => setOpen(false)}
+                    >
+                        cancel
+                    </Button>
+
+                    <Button
+                        auto
+                        color={"success"}
+                        onPress={updateCity}
+                        className="text-black"
+                    >
+                        update
+                    </Button>
                 </div>
             </Modal.Body>
         </Modal>
@@ -453,6 +602,21 @@ const UpdateModal = ({ city, open, setOpen }) => {
 };
 
 const DeleteModal = ({ city, open, setOpen }) => {
+    const [cityInfos, setCityInfos] = useState(city);
+
+    const deleteCity = async () => {
+        const url = "/api/city-delete/" + cityInfos.id;
+
+        const res = await postWithAxios(url);
+        setOpen(false);
+        toast(res.message, {
+            type: "success",
+            hideProgressBar: true,
+        });
+    };
+    useEffect(() => {
+        setCityInfos(city)
+    }, [city])
     return (
         <Modal open={open} closeButton onClose={() => setOpen(false)}>
             <Modal.Header>
@@ -464,10 +628,10 @@ const DeleteModal = ({ city, open, setOpen }) => {
             <Modal.Body>
                 <div className="font-bold text-black">
                     Confirm, you want to delete city{" "}
-                    <span className="text-red-300">
-                        {city.name} from list of countries .
+                    <span className="text-red-700">
+                        {cityInfos?.name} from list of cities .
                     </span>
-                    <div className="flex flex-wrap  w-full gap-6 justify-between sm:justify-end">
+                    <div className="flex flex-wrap pt-4 w-full gap-6 justify-between sm:justify-end">
                         <Button
                             auto
                             css={{ backgroundColor: "Grey" }}
@@ -477,9 +641,75 @@ const DeleteModal = ({ city, open, setOpen }) => {
                             Cancel
                         </Button>
 
-                        <Button auto color={"warning"} className="text-black">
+                        <Button
+                            auto
+                            onPress={deleteCity}
+                            color={"error"}
+                            className="text-black"
+                        >
                             Delete
                         </Button>
+                    </div>
+                </div>
+            </Modal.Body>
+        </Modal>
+    );
+};
+
+const SeeModal = ({ city, open, setOpen }) => {
+    return (
+        <Modal open={open} onClose={() => setOpen(true)} closeButton>
+            <Modal.Header>
+                <div className="text-lg">{city?.name}</div>
+            </Modal.Header>
+            <Modal.Body>
+                <div className="grid gap-2 pr-8 ">
+                    <div className="grid grid-cols-2 gap-4 text-start">
+                        <div className="font-bold">City Id</div>
+                        <div>{city?.id}</div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4 text-start">
+                        <div className="font-bold">Country Name</div>
+                        <div>{city?.country_name}</div>
+                    </div>
+                    <hr />
+                    <div className="grid grid-cols-2 gap-4 text-start">
+                        <div className="font-bold">Minimum Distance (km)</div>
+                        <div>{city?.min_distance}</div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4 text-start">
+                        <div className="font-bold">Minimum Weight (Kg)</div>
+                        <div>{city?.min_weight}</div>
+                    </div>
+                    <hr />
+                    <div className="grid grid-cols-2 gap-4 text-start">
+                        <div className="font-bold">Fixed Charge</div>
+                        <div>{city?.fixed_charges}</div>
+                    </div>{" "}
+                    <div className="grid grid-cols-2 gap-4 text-start">
+                        <div className="font-bold">Cancel Charge</div>
+                        <div>{city?.cancel_charges}</div>
+                    </div>{" "}
+                    <div className="grid grid-cols-2 gap-4 text-start">
+                        <div className="font-bold">Per Distance Charge</div>
+                        <div>{city?.per_distance_charges}</div>
+                    </div>{" "}
+                    <div className="grid grid-cols-2 gap-4 text-start">
+                        <div className="font-bold">Per weight Charge</div>
+                        <div>{city?.per_weight_charges}</div>
+                    </div>{" "}
+                    <div className="grid grid-cols-2 gap-4 text-start">
+                        <div className="font-bold">Admin Commission</div>
+                        <div>{city?.admin_commission}</div>
+                    </div>
+                    <hr />
+                    <div className="grid grid-cols-2 gap-4 text-start">
+                        <div className="font-bold">Created Date</div>
+                        <div>{city?.created_at}</div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4 text-start">
+                        <div className="font-bold">Updated Date</div>
+                        <div>{city?.updated_at}</div>
                     </div>
                 </div>
             </Modal.Body>

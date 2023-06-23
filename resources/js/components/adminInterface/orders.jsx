@@ -12,6 +12,7 @@ const Orders = () => {
     const [orders, setOrders] = useState();
     const [orderId, setOrderId] = useState();
     const [openUpdate, setOpenUpdate] = useState(false);
+    const [openDelete, setOpenDelete] = useState(false);
     const [filter, setFilter] = useState({
         client_id: null,
         city_id: null,
@@ -129,14 +130,23 @@ const Orders = () => {
                                     openUpdate={openUpdate}
                                 />
                                 <UpdateModal
-                    order={order}
-                    open={openUpdate}
-                    setOpen={setOpenUpdate}
-                />
+                                    order={order}
+                                    open={openUpdate}
+                                    setOpen={setOpenUpdate}
+                                />
                             </Table.Cell>
 
                             <Table.Cell>
-                                <OrderLine order={order} />
+                                <DeleteModal
+                                    order={order}
+                                    open={openDelete}
+                                    setOpen={setOpenDelete}
+                                />
+                                <OrderLine
+                                    order={order}
+                                    openDelete={openDelete}
+                                    setOpenDelete={setOpenUpdate}
+                                />
                             </Table.Cell>
                         </Table.Row>
                     ))}
@@ -155,9 +165,7 @@ const Orders = () => {
 
 export default Orders;
 
-const OrderLine = ({ order }) => {
-    const [openDelete, setOpenDelete] = useState(false);
-
+const OrderLine = ({ order, openDelete, setOpenDelete }) => {
     const handleOpenDelete = () => {
         setOpenDelete(true);
     };
@@ -172,13 +180,7 @@ const OrderLine = ({ order }) => {
                     icon={<BsTrash />}
                 ></Button>
             </div>
-            <div>
-                <DeleteModal
-                    order={order}
-                    open={openDelete}
-                    setOpen={setOpenDelete}
-                />
-            </div>
+            <div></div>
         </div>
     );
 };
@@ -262,7 +264,6 @@ const Filter = ({ filter, setFilter }) => {
 };
 
 const Assign = ({ order, openUpdate, setOpenUpdate }) => {
-
     const handleStatus = async () => {
         setOpenUpdate(true);
         if (order.status == "create") {
@@ -273,12 +274,11 @@ const Assign = ({ order, openUpdate, setOpenUpdate }) => {
             const res = await postWithAxios(
                 "/api/order-auto-assign",
                 dataToSend
-            )
-            console.log(res)
+            );
+            console.log(res);
 
-            if(res.message)
-            {
-                setOpenUpdate(false)
+            if (res.message) {
+                setOpenUpdate(false);
                 toast(res.message, {
                     type: "default",
                     hideProgressBar: true,
@@ -313,9 +313,7 @@ const Assign = ({ order, openUpdate, setOpenUpdate }) => {
                 </div>
             )}
 
-            <div>
-                
-            </div>
+            <div></div>
         </div>
     );
 };
@@ -363,44 +361,63 @@ const UpdateModal = ({ order, open, setOpen }) => {
                 </div>
             </Modal.Header>
             <Modal.Body>
-               <div className="">
-                {
-                    order.status == "create" && <div className="flex gap-3">
-                        Assigning order to a delivery man <Loading type="points" />
-                    </div>
-                }
-               </div>
+                <div className="">
+                    {order.status == "create" && (
+                        <div className="flex gap-3">
+                            Assigning order to a delivery man{" "}
+                            <Loading type="points" />
+                        </div>
+                    )}
+                </div>
             </Modal.Body>
         </Modal>
     );
 };
 
-const DeleteModal = ({ order, open, setOpen }) => {
+const DeleteModal = ({ order, openDlete, setOpenDelete }) => {
+
+    
+    const deleteOrder = async () => {
+        setOpenDelete(false);
+        const url = "/api/order-delete/" + order.id;
+        const res = await postWithAxios(url);
+
+        if (res.message) {
+            toast(res.message, {
+                type: "success",
+                hideProgressBar: true,
+            });
+        }
+    };
+
     return (
-        <Modal open={open} closeButton onClose={() => setOpen(false)}>
+        <Modal open={openDelete} closeButton onClose={() => setOpenDelete(false)}>
             <Modal.Header>
                 {" "}
-                <div className="text-lg font-bold text-appGreen">
+                <div className="text-lg font-bold text-red-800">
                     Delete order modal
                 </div>
             </Modal.Header>
             <Modal.Body>
                 <div className="font-bold text-black">
                     Confirm, you want to delete order{" "}
-                    <span className="text-red-300">
-                        {order.name} from list of orderTypes .
-                    </span>
+                    <span className="text-red-800">#{order.id} ?</span>
                     <div className="flex flex-wrap  w-full gap-6 justify-between sm:justify-end">
                         <Button
                             auto
                             css={{ backgroundColor: "Grey" }}
                             className="text-black"
-                            onPress={() => setOpen(false)}
+                            onPress={() => setOpenDelete(false)}
                         >
                             Cancel
                         </Button>
 
-                        <Button auto color={"warning"} className="text-black">
+                        <Button
+                            auto
+                            color={"error"}
+                            onPress={deleteOrder}
+                            className="text-black"
+                        >
                             Delete
                         </Button>
                     </div>

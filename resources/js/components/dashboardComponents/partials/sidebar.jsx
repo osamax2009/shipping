@@ -13,13 +13,12 @@ import {
     BsFiles,
     BsFillBoxSeamFill,
     BsFillCreditCardFill,
-    
     BsListCheck,
     BsPinMapFill,
 } from "react-icons/bs";
 import { FaListAlt, FaMapMarkedAlt } from "react-icons/fa";
 import { RiDashboardFill, RiEBikeFill } from "react-icons/ri";
-import { BiListCheck} from 'react-icons/bi'
+import { BiListCheck } from "react-icons/bi";
 import { margin } from "@mui/system";
 import { Image } from "@nextui-org/react";
 const Sidebar = () => {
@@ -43,7 +42,7 @@ const Sidebar = () => {
     const adminRoutes = [
         {
             title: "Dashboard",
-            path: "/admin/new-orders",
+            path: "#",
             icon: <RiDashboardFill />,
         },
 
@@ -61,13 +60,13 @@ const Sidebar = () => {
 
         {
             title: "vehicle",
-            path: "/admin/new-orders",
+            path: "#",
             icon: <RiEBikeFill />,
         },
 
         {
             title: "Extra Charges",
-            path: "/admin/new-orders",
+            path: "#",
             icon: <RiDashboardFill />,
         },
 
@@ -79,7 +78,7 @@ const Sidebar = () => {
 
         {
             title: "Payment gateway",
-            path: "/admin/new-orders",
+            path: "#",
             icon: <BsFillCreditCardFill />,
         },
 
@@ -97,7 +96,7 @@ const Sidebar = () => {
 
         {
             title: "Document",
-            path: "/admin/new-orders",
+            path: "#",
             icon: <BsFile />,
         },
 
@@ -114,21 +113,30 @@ const Sidebar = () => {
             id="accordionSidebar"
         >
             {/* Sidebar - Brand  */}
-            <Link to='/' className="flex flex-col py-2 justify-center items-center">
-                <Image src="/images/ic_app_logo_color.png" width={80} height={40} className="h-24" /> 
+            <Link
+                to="/"
+                className="flex flex-col py-2 justify-center items-center"
+            >
+                <Image
+                    src="/images/ic_app_logo_color.png"
+                    width={80}
+                    height={40}
+                    className="h-24"
+                />
                 <div className="text-lg text-center pt-2 font-bold no-underline hover:no-underline text-white">
-                    {appName}    
-                </div> 
+                    {appName}
+                </div>
             </Link>
             {/* Divider  */}
             <hr className="bg-white/50 " />
-            
 
             <div className="sidebar">
                 {user?.user_type == "client" ? (
                     <>
                         {/* Heading  */}
-                        <div className="py-2 text-center text-white/50">Menu</div>
+                        <div className="py-2 text-center text-white/50">
+                            Menu
+                        </div>
 
                         {userRoutes.map((route, index) => (
                             <Link
@@ -144,7 +152,7 @@ const Sidebar = () => {
                                     }
                                 >
                                     <span className="text-md">
-                                    {route.icon}
+                                        {route.icon}
                                     </span>
                                     {route.title}
                                 </div>
@@ -156,27 +164,28 @@ const Sidebar = () => {
                 {user?.user_type == "admin" ? (
                     <>
                         {/* Heading  */}
-                        <div className="py-2 text-center text-white/50">Menu</div>
+                        <div className="py-2 text-center text-white/50">
+                            Menu
+                        </div>
 
                         {adminRoutes.map((route, index) => (
-                             <Link
-                             key={index}
-                             to={route.path}
-                             className="text-sm py-4 px-4 hover:no-underline"
-                         >
-                             <div
-                                 className={
-                                     location.pathname == route.path
-                                         ? "flex gap-2 font-bold text-white"
-                                         : "flex gap-2 font-light"
-                                 }
-                             >
-                                 <span className="text-md">
-                                 {route.icon}
-                                 </span>
-                                 {route.title}
-                             </div>
-                         </Link>
+                            <div key={index}>
+                                <div className="text-sm w-full h-full  py-2 mt-2 px-4 hover:no-underline hover:bg-gray-200/25">
+                                    <Link
+                                        to={route.path}
+                                        className={
+                                            location.pathname == route.path
+                                                ? "flex gap-2 font-bold text-white"
+                                                : "flex gap-2 font-light"
+                                        }
+                                    >
+                                        <span className="text-md">
+                                            {route.icon}
+                                        </span>
+                                        {route.title}
+                                    </Link>
+                                </div>
+                            </div>
                         ))}
                     </>
                 ) : null}
@@ -184,7 +193,6 @@ const Sidebar = () => {
                 {/* Nav Item - Pages Collapse Menu  */}
 
                 {/* Divider  */}
-                
             </div>
         </aside>
     );
