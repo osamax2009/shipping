@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { getWithAxios } from "../api/axios";
 import { useContext, useState } from "react";
 import { useEffect } from "react";
@@ -12,6 +12,7 @@ import {
 import { AiOutlineFileSearch } from "react-icons/ai";
 import { Button } from "@nextui-org/react";
 import { UserContext } from "../contexts/userContext";
+import { toast } from "react-toastify";
 
 const SingleOrder = () => {
     const [order, setOrder] = useState();
@@ -19,7 +20,8 @@ const SingleOrder = () => {
     const [history, setHistory] = useState();
     const [active, setActive] = useState(true);
 
-    const {user, setUser} = useContext(UserContext)
+    const { user, setUser } = useContext(UserContext);
+    const navigate = useNavigate();
 
     const params = useParams();
     const orderId = params.order_Id;
@@ -28,15 +30,44 @@ const SingleOrder = () => {
         const dataToSend = {
             id: orderId,
         };
+
+      try {
         const res = await getWithAxios("/api/order-detail", dataToSend);
-     
-        setOrder(res.data);
-        setHistory(res.order_history);
-        const id = {
-            id: res.data.client_id,
-        };
-        const client = await getWithAxios("/api/user-detail", id);
-        setClient(client.data);
+
+        
+
+        if (res.data.id) {
+            setOrder(res.data);
+            setHistory(res.order_history);
+            const id = {
+                id: res.data.client_id,
+            };
+            const client = await getWithAxios("/api/user-detail", id);
+            setClient(client.data);
+        } 
+      } catch (error) {
+
+        toast("invalid order id", {
+            type: "error",
+            hideProgressBar: true,
+        });
+
+        if(user?.user_type == "client") 
+        {
+            const url = "/client/order-list"
+            navigate(url);
+        }
+
+        
+        if(user?.user_type == "admin") 
+        {
+            const url = "/admin/orders"
+            navigate(url);
+        }
+
+
+       
+      }
     };
 
     const handleTab = () => {
@@ -51,7 +82,11 @@ const SingleOrder = () => {
         <div>
             <div className="flex justify-end gap-6 py-4 ">
                 <Link
-                    to={user?.user_type == "admin" ? "/admin/orders" : "/client/order-list"}
+                    to={
+                        user?.user_type == "admin"
+                            ? "/admin/orders"
+                            : "/client/order-list"
+                    }
                     className="bg-green-500 text-white font-bold hover:bg-green-400 rounded-lg py-2 px-8 no-underline hover:no-underline"
                 >
                     Back
@@ -224,9 +259,9 @@ const SingleOrder = () => {
 
                 <div className="">
                     <div className="flex justify-between font-bold bg-green-300 p-4 rounded-t-lg">
-                       {
-                        user?.user_type == "admin" ? " About user" : "Ordered by"
-                       }
+                        {user?.user_type == "admin"
+                            ? " About user"
+                            : "Ordered by"}
                     </div>
                     <div className="grid gap-4 font-bold bg-white text-black py-4 px-6 rounded-b-lg">
                         <div className="flex gap-4 items-center font-bold">

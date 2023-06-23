@@ -126,6 +126,11 @@ export const howItWorks = [{
 
 export const OrderStatus = [
     {
+        label : "All",
+        value : ""
+    },
+
+    {
         label : "Draft",
         value : "draft"
     },
@@ -147,7 +152,7 @@ export const OrderStatus = [
 
     {
         label : "Assigned",
-        value : "assigned"
+        value : "courier_assigned"
     },
 
     {
@@ -157,7 +162,7 @@ export const OrderStatus = [
 
     {
         label : "Picked Up",
-        value : "picked_up"
+        value : "active"
     },
 
     {
@@ -167,11 +172,8 @@ export const OrderStatus = [
 
     {
         label : "Created",
-        value : "created"
+        value : "create"
     },
 
-    {
-        label : "All",
-        value : "all"
-    }
+   
 ]
