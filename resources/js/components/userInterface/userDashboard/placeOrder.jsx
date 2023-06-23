@@ -187,7 +187,7 @@ const PlaceOrder = () => {
                 shipping with {appName}
             </div>
 
-            <div className="grid bg-white mt-6  md:grid-cols-5">
+            <div className="grid bg-white mt-6  md:grid-cols-2 lg:grid-cols-5">
                 <CityGetter
                     title={"From"}
                     selected={from}
@@ -196,10 +196,10 @@ const PlaceOrder = () => {
                 <CityGetter title={"To"} selected={to} setSelected={setTo} />
                 <Services selected={service} setSelected={setServive} />
                 <WeightGetter selected={weight} setSelected={setWeight} />
-                <div>
+                <div className="md:col-span-2 lg:col-span-1">
                     <button
                         onClick={handleOpen}
-                        className="py-6 md:py-0 h-full w-full  text-white font-bold bg-blue-700 hover:bg-blue-600"
+                        className="py-6 md:py-3 lg:py-0 h-full w-full  text-white font-bold bg-blue-700 hover:bg-blue-600"
                     >
                         {processing ? <Loading /> : "Create Order"}
                     </button>
@@ -316,7 +316,7 @@ const CityGetter = ({ title, selected, setSelected }) => {
                 type="text"
                 onBlur={() => setExpanded(false)}
                 placeholder="tape to search"
-                className="rounded-lg text-lg border-0 w-full font-bold  focus:outline-none pl-3 pb-3 pt-1"
+                className="rounded-lg text-md border-0 w-full font-bold  focus:outline-none pl-3 pb-3 pt-1"
             >
                 {selected ? (
                     <div className="flex gap-2 pt-1 text-md">
@@ -413,7 +413,7 @@ const Services = ({ selected, setSelected }) => {
                 type="text"
                 onBlur={() => setExpanded(false)}
                 placeholder="tape to search"
-                className="rounded-lg  text-lg border-0 w-full font-bold  focus:outline-none pl-3 pb-3 pt-1"
+                className="rounded-lg  text-md border-0 w-full font-bold  focus:outline-none pl-3 pb-3 pt-1"
             >
                 {selected ? (
                     <div className="flex gap-2 pt-1">
@@ -421,7 +421,7 @@ const Services = ({ selected, setSelected }) => {
                         <div>{selected.label}</div>
                     </div>
                 ) : (
-                    <div className="text-lg font-bold text-gray-600">
+                    <div className="text-md font-bold text-gray-600">
                         select a service
                     </div>
                 )}
@@ -498,12 +498,12 @@ const WeightGetter = ({ selected, setSelected }) => {
                 type="text"
                 onBlur={() => setExpanded(false)}
                 placeholder="tape to search"
-                className="rounded-lg  text-lg border-0 w-full font-bold  focus:outline-none pl-3 pb-3 pt-1"
+                className="rounded-lg  text-md border-0 w-full font-bold  focus:outline-none pl-3 pb-3 pt-1"
             >
                 <input
                     ref={inputRef}
                     type="number"
-                    className="outine-none cursor-pointer border-none focus:border-none focus:outiline-none pl-3 font-bold"
+                    className="form-control"
                     value={selected}
                     onChange={(e) => setSelected(e.target.value)}
                 />
@@ -576,7 +576,7 @@ const QuoteModal = ({
             className="overflow-y-scroll"
         >
             <Modal.Header>
-                <div className="text-lg text-appGreen font-bold">
+                <div className="text-md text-appGreen font-bold">
                     Order Total charges
                 </div>
             </Modal.Header>
@@ -597,7 +597,7 @@ const QuoteModal = ({
                 <div className="text-end text-2xl font-bold text-orange-700">
                     $ Total price = {price ? price : "calculating..."}
                 </div>
-                <div className="text-lg">Additional informations</div>
+                <div className="text-md">Additional informations</div>
 
                 <div>
                     <Radio.Group

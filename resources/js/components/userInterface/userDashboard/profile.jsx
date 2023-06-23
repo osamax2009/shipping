@@ -6,11 +6,13 @@ import { Link } from "react-router-dom";
 import DashboardLayout from "../../dashboardComponents/dashbboardLayout";
 import { getWithAxios } from "../../api/axios";
 import UpdatePassword from "./changePassword";
+import UpdateProfil from "../../partials/updateProfil";
 
 const Profile = () => {
     const { user, setUser } = useContext(UserContext);
     const [address, setAddress] = useState();
     const [passModalOpen, setPassModalOpen] = useState(false);
+    const [profilModalOpen, setProfilModalOpen] = useState(false);
 
     const getCityAndCountry = async () => {
         const dataToSend = {
@@ -176,19 +178,18 @@ const Profile = () => {
                             <p className="font-bold">Change password</p>
                         </Button>
 
-                        <Link
-                            to={
-                                "/backoffice/mon_compte/mettre_mes_informations_a_jor"
-                            }
+                        <Button
+                            auto
+                            type={null}
+                            onClick={() => setProfilModalOpen(true)}
                         >
-                            <Button auto type={null}>
-                                <p className="font-bold">Update my profile</p>
-                            </Button>
-                        </Link>
+                            <p className="font-bold">Update my profil</p>
+                        </Button>
                     </div>
                 </div>
             </div>
             <UpdatePassword open={passModalOpen} setOpen={setPassModalOpen} />
+            <UpdateProfil open={profilModalOpen} setOpen={setProfilModalOpen} />
         </div>
     );
 };

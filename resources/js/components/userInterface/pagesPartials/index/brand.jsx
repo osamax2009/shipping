@@ -190,7 +190,7 @@ const Brand = () => {
             <div className="text-[4rem] text-white text-center mt-4 font-bold">
                 Save on wolrdwide
             </div>
-            <div className=" text-white text-3xl text-center">
+            <div className=" text-white text-lg text-center">
                 shipping with {appName}
             </div>
 
@@ -314,7 +314,7 @@ const CityGetter = ({ title, selected, setSelected }) => {
             className="relative w-full cursor-pointer"
         >
             <div className="pl-3 pt-2">
-                <span className="uppercase font-bold text-black text-xl">
+                <span className="uppercase font-bold text-black text-lg">
                     {title}
                 </span>
             </div>
@@ -411,7 +411,7 @@ const Services = ({ selected, setSelected }) => {
             className="relative w-full cursor-pointer"
         >
             <div className="pl-3 pt-2">
-                <span className="uppercase font-bold text-black text-xl">
+                <span className="uppercase font-bold text-black text-lg">
                     Service
                 </span>
             </div>
@@ -496,7 +496,7 @@ const WeightGetter = ({ selected, setSelected }) => {
             className="relative w-full cursor-pointer"
         >
             <div className="pl-3 pt-2">
-                <span className="uppercase font-bold text-black text-xl">
+                <span className="uppercase font-bold text-black text-lg">
                     Weight
                 </span>
             </div>
@@ -505,12 +505,12 @@ const WeightGetter = ({ selected, setSelected }) => {
                 type="text"
                 onBlur={() => setExpanded(false)}
                 placeholder="tape to search"
-                className="rounded-lg  text-lg border-0 w-full font-bold  focus:outline-none pl-3 pb-3 pt-1"
+                className="rounded-lg  text-lg border-0 w-fit font-bold  focus:outline-none pl-3 pb-3 pt-1"
             >
                 <input
                     ref={inputRef}
                     type="number"
-                    className="outine-none cursor-pointer border-none focus:border-none focus:outiline-none pl-3 font-bold"
+                    className="form-control"
                     value={selected}
                     onChange={(e) => setSelected(e.target.value)}
                 />
@@ -620,7 +620,7 @@ const QuoteModal = ({
                 {!deliverNow && (
                     <div className="grid gap-4 px-2 pt-4 md:grid-cols-2">
                         <div className="p-2 bg-gray-100/25">
-                            <div className=" text-center font-bold mb-4 text-xl">
+                            <div className=" text-center font-bold mb-4 text-lg">
                                 Pick Time
                             </div>
                             <div className="grid ">
@@ -680,7 +680,7 @@ const QuoteModal = ({
                         </div>
 
                         <div className="p-2 bg-gray-100/25">
-                            <div className="mb-4 text-center font-bold text-xl">
+                            <div className="mb-4 text-center font-bold text-lg">
                                 Deliver Time
                             </div>
                             <div className="grid">
@@ -788,7 +788,7 @@ const QuoteModal = ({
                     </div>
                 </div>
                 <div className="py-6">
-                    <div className="text-black text-xl font-bold">
+                    <div className="text-black text-lg font-bold">
                         Collect payment from
                     </div>
                     <select

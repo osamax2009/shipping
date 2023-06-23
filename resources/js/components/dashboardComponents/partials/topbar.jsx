@@ -1,121 +1,122 @@
-import { useContext } from "react"
-import { UserContext } from "../../contexts/userContext"
-import { getWithAxios, postWithAxios } from "../../api/axios"
-import { Link, useNavigate } from "react-router-dom"
-import {BsPersonCircle, BsSearch} from 'react-icons/bs'
+import { useContext } from "react";
+import { UserContext } from "../../contexts/userContext";
+import { getWithAxios, postWithAxios } from "../../api/axios";
+import { Link, useNavigate } from "react-router-dom";
+import { BsPersonCircle, BsPersonFill, BsSearch } from "react-icons/bs";
+import { FaBars } from "react-icons/fa";
+import { Avatar } from "@nextui-org/react";
 
 const Topbar = () => {
-    const {user,setUser} = useContext(UserContext)
-    const navigate = useNavigate()
+    const { user, setUser } = useContext(UserContext);
+    const navigate = useNavigate();
 
-    const handleLogout = async() => {
-
+    const handleLogout = async () => {
         try {
-            const data = await getWithAxios("/api/logout")
-           
-            if(data.message == "Logout successfully")
-            {
-                localStorage.removeItem("api_token")
-                navigate("/")
-                setUser(null)
+            const data = await getWithAxios("/api/logout");
+
+            if (data.message == "Logout successfully") {
+                localStorage.removeItem("api_token");
+                navigate("/");
+                setUser(null);
             }
-
         } catch (error) {
-            console.log(error.response)
+            console.log(error.response);
         }
-  
-       
+    };
 
-       
-        
-       
+    return (
+        <nav className=" bg-white w-full">
+            <div className="flex  w-full  pr-4 py-2 justify-between items-center">
+                {/* Sidebar Toggle (Topbar) */}
+                <ul className="">
+                    <li className="nav-item">
+                        <a
+                            className="nav-link"
+                            data-widget="pushmenu"
+                            href="#"
+                            role="button"
+                        >
+                            <i className="fas fa-bars text-appGreen"></i>
+                        </a>
+                    </li>
+                </ul>
 
-    }
+                {/* Topbar Search */}
+                {/* <form className="form-inline">
+                <div className="input-group input-group-sm">
+                    <input
+                        className="form-control form-control-navbar"
+                        type="search"
+                        placeholder="Search"
+                        aria-label="Search"
+                    />
+                    <div className="input-group-append">
+                        <button className="btn btn-navbar" type="submit">
+                            <i className="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </form> */}
 
+                {/* Topbar Navbar */}
+                <ul className="flex items-center">
+                    <div className="topbar-divider d-none d-sm-block"></div>
 
-    return(
-<nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-    
-    {/* Sidebar Toggle (Topbar) */}
-    <button id="sidebarToggleTop" className="btn btn-link d-md-none rounded-circle mr-3">
-        <i className="fa fa-bars"></i>
-    </button>
-
-    {/* Topbar Search */}
-    <form className="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-        <div className="input-group">
-            <input type="text" className="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2"/>
-            <div className="input-group-append">
-                <button className="btn btn-primary" type="button">
-                    <i className="fas fa-search fa-sm"></i>
-                </button>
-            </div>
-        </div>
-    </form>
-
-    {/* Topbar Navbar */}
-    <ul className="navbar-nav ml-auto">
-
-        {/* Nav Item - Search Dropdown (Visible Only XS) */}
-        <li className="nav-item dropdown no-arrow d-sm-none">
-            <a className="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <BsSearch className="text-white text-xl"/>
-            </a>
-           
-            <div className="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
-                <form className="form-inline mr-auto w-100 navbar-search">
-                    <div className="input-group">
-                        <input type="text" className="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2"/>
-                        <div className="input-group-append">
-                            <button className="btn btn-primary" type="button">
-                                <BsSearch className="!text-white text-xl"/>  
+                    {/* Nav Item - User Information */}
+                    <li className="flex items-center">
+                        <a
+                            href="#"
+                            className="flex items-center "
+                            data-toggle="dropdown"
+                            aria-expanded="false"
+                        >
+                            <div className="flex items-center gap-2 ">
+                                <span className="text-sm font-bold no-underline hover:no-underline">
+                                    {user?.name}{" "}
+                                </span>
+                                <Avatar
+                                    icon={
+                                        <BsPersonFill className="text-appGreen" />
+                                    }
+                                />
+                            </div>
+                        </a>
+                        {/* Dropdown - User Information */}
+                        <div
+                            className="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                            aria-labelledby="userDropdown"
+                        >
+                            <Link
+                                className="dropdown-item"
+                                to={"/" + user?.user_type + "/profile"}
+                            >
+                                <i className="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Profile
+                            </Link>
+                            <a className="dropdown-item" href="#">
+                                <i className="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Bank informations
+                            </a>
+                            <a className="dropdown-item" href="#">
+                                <i className="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Activity Log
+                            </a>
+                            <div className="dropdown-divider"></div>
+                            <button
+                                className="dropdown-item "
+                                onClick={handleLogout}
+                                data-toggle="modal"
+                                data-target="#logoutModal"
+                            >
+                                <i className="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Logout
                             </button>
                         </div>
-                    </div>
-                </form>
+                    </li>
+                </ul>
             </div>
-        </li>
+        </nav>
+    );
+};
 
-     
-
-        <div className="topbar-divider d-none d-sm-block">
-            
-        </div>
-
-     
-
-        {/* Nav Item - User Information */}
-        <li className="nav-item dropdown no-arrow">
-            <a className="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span className="mr-2 d-none d-lg-inline text-gray-600 small">{user?.name}</span>
-                <BsPersonCircle className="text-2xl" />
-            </a>
-            {/* Dropdown - User Information */}
-            <div className="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                <Link className="dropdown-item" to={"/" + user?.user_type + "/profile"} >
-                    <i className="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                    Profile
-                </Link>
-                <a className="dropdown-item" href="#">
-                    <i className="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                    Bank informations
-                </a>
-                <a className="dropdown-item" href="#">
-                    <i className="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                    Activity Log
-                </a>
-                <div className="dropdown-divider"></div>
-                <button className="dropdown-item " onClick={handleLogout} data-toggle="modal" data-target="#logoutModal">
-                    <i className="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                    Logout
-                </button>
-            </div>
-        </li>
-
-    </ul>
-
-</nav>
-    )
-}
-
-export default Topbar
+export default Topbar;

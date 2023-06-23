@@ -121,8 +121,8 @@ const router = createBrowserRouter([
     },
 ]);
 
-if (document.getElementById("root")) {
-    const Index = ReactDOM.createRoot(document.getElementById("root"));
+if (document.getElementById("page-top")) {
+    const Index = ReactDOM.createRoot(document.getElementById("page-top"));
     Index.render(
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <UserContextProvider>

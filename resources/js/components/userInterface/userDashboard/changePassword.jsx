@@ -70,7 +70,7 @@ const UpdatePassword = ({ open, setOpen }) => {
     return (
         <Modal open={open} onClose={() => setOpen(false)} closeButton preventClose >
             <Modal.Header>
-                <div className="text-xl">Update my account password</div>
+                <div className="text-md">Update my account password</div>
             </Modal.Header>
             <Modal.Body>
                 <div className="w-full ">

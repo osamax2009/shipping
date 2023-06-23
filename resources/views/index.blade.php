@@ -2,26 +2,30 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=0.8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>2pointDelivery</title>
 
     <!-- Fonts -->
+    <!-- Fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{{ asset('backoffice/fonts/fontawesome-free/css/all.min.css') }}">
 
     <link rel="shortcut icon" href="{{ asset('images/favicon.png') }}">
     <!-- Styles -->
     <link rel="stylesheet" href="{{ asset(mix('css/app.css')) }}">
-    <!-- Custom styles for this page -->
-    <link href="{{ asset("deps/datatables/dataTables.bootstrap4.min.css")}}" rel="stylesheet">
-
-
-    <link rel="stylesheet" href="{{ asset("deps/sb-admin-2.css") }}">
     
+
+
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{{ asset('backoffice/css/adminlte.min.css') }}">
+
     {{-- <link rel="stylesheet" href="{{ asset('css/825e4518863dd04c.css') }}"> --}}
     {{-- <link rel="stylesheet" href="{{ asset('css/825e4518863dd04c.css') }}"> --}}
     <link rel="stylesheet" href="{{ asset('css/0254f7c1f346d767.css') }}">
-   {{--  <link rel="stylesheet" href="{{ asset('css/9be2033fd17fdf2f.css') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('css/9be2033fd17fdf2f.css') }}">
     <link rel="stylesheet" href="{{ asset('css/fe699058e63f5db4.css') }}">
     <link rel="stylesheet" href="{{ asset('css/f32964b10281b9b2.css') }}">
     <link rel="stylesheet" href="{{ asset('css/d325.style-ef83e7318dd10ce571bf.css') }}">
@@ -38,21 +42,27 @@
 
     <script src="{{ asset('js/app.js') }}"></script>
 </head>
-<body class="font-sans antialiased">
-    <div id="root"></div>
+<body class="hold-transition font-sans font-nunito layout-fixed overflow-x-hidden">
+    <div  id="page-top">
+
+    </div>
 
     {{-- @env ('local')
             <script src="http://localhost:3000/browser-sync/browser-sync-client.js"></script>
         @endenv --}}
 
-    <!-- Bootstrap core JavaScript-->
-    <script src="{{ asset("deps/jquery/jquery.min.js")}}"></script>
-    <script src="{{ asset("deps/bootstrap/js/bootstrap.bundle.min.js")}}"></script>
 
-    <!-- Core plugin JavaScript-->
-    <script src="{{ asset("deps/jquery-easing/jquery.easing.min.js")}}"></script>
 
-    <!-- Custom scripts for all pages-->
-    <script src="{{ asset("deps/js/sb-admin-2.min.js")}}"></script>
+    <!-- jQuery -->
+    <script src="{{ asset('backoffice/js/jquery/jquery.min.js') }}"></script>
+    <!-- Bootstrap 4 -->
+    <script src="{{ asset('backoffice/js/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+    <!-- BS custom file input  -->
+    <script src="{{ asset('backoffice/js/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
+    <!-- AdminLTE App -->
+    <script src="{{ asset('backoffice/js/adminlte.min.js') }}"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="{{ asset('backoffice/js/demo.js') }}"></script>
 </body>
 </html>
