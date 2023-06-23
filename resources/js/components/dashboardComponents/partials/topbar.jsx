@@ -93,14 +93,11 @@ const Topbar = () => {
                                 <i className="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Profile
                             </Link>
-                            <Link className="dropdown-item" to={"/client/bank-informations"} >
+                            {user?.user_type == "client" && <Link className="dropdown-item" to={"/client/bank-informations"} >
                                 <i className="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Bank informations
-                            </Link>
-                            <a className="dropdown-item" href="#">
-                                <i className="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Activity Log
-                            </a>
+                            </Link>}
+                           
                             <div className="dropdown-divider"></div>
                             <button
                                 className="dropdown-item "
