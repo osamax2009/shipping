@@ -1,34 +1,27 @@
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
-
+import { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-import { appName, parcelTypes } from "../shared/constancy";
-import {
-    Button,
-    Dropdown,
-    Input,
-    Loading,
-    Modal,
-    Radio,
-} from "@nextui-org/react";
+import { parcelTypes } from "../shared/constancy";
+import { Button, Input, Loading, Modal, Radio } from "@nextui-org/react";
 import { toast } from "react-toastify";
-
+import { IoAlarmOutline } from "react-icons/io5";
 import { charges, haversine_distance } from "../shared/distanceCalculator";
-import {
-    getCsrfToken,
-    getUserFromAPI,
-    getWithAxios,
-    postWithAxios,
-} from "../api/axios";
+import { getWithAxios, postWithAxios } from "../api/axios";
 import PhoneInput from "react-phone-input-2";
 import { todaysDate, tomorrowsDate } from "../shared/date";
 import { UserContext } from "../contexts/userContext";
+import { FaMinus, FaPlus, FaRegCalendarAlt } from "react-icons/fa";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs, { Dayjs } from "dayjs";
+import { TimePicker } from "@mui/x-date-pickers";
+import { FormControl, MenuItem, Select } from "@mui/material";
+import { MuiTelInput } from "mui-tel-input";
 
 const AdminCreateOrder = () => {
     const [from, setFrom] = useState();
     const [to, setTo] = useState();
     const [service, setServive] = useState();
     const [weight, setWeight] = useState(1);
+    const [numberOfParcel, setNumberOfParcel] = useState(1);
     const [processing, setProcessing] = useState(false);
     const [open, setOpen] = useState(false);
     const [pickLocationDetails, setPickLocationDetails] = useState();
@@ -50,9 +43,16 @@ const AdminCreateOrder = () => {
     const [distance, setDistance] = useState();
     const [receivePaymentFrom, setReceivePaymentFrom] = useState("on_pickup");
     const [price, setPrice] = useState();
+    const [country, setCountry] = useState(user?.country_id);
+    const [city, setCity] = useState(user?.city_id);
+
     const { user, setUser } = useContext(UserContext);
 
     const navigate = useNavigate();
+
+    const handleDeliverNow = () => {
+        deliverNow ? setDeliverNow(false) : setDeliverNow(true);
+    };
 
     const handleOpen = () => {
         if (!from || !to || !service || !weight) {
@@ -79,8 +79,14 @@ const AdminCreateOrder = () => {
     const pickupDPoint = () => {
         if (schedule.pickDate) {
             return {
-                start_time: schedule.pickDate + " " + schedule.pickFrom,
-                end_time: schedule.pickDate + " " + schedule.pickTo,
+                start_time:
+                    dayjs(schedule.pickDate).format("YYYY-MM-DD") +
+                    " " +
+                    dayjs(schedule.pickFrom).format("HH:mm"),
+                end_time:
+                    dayjs(schedule.pickDate).format("YYYY-MM-DD") +
+                    " " +
+                    dayjs(schedule.pickTo).format("HH:mm"),
                 address: pickLocationDetails.formatted_address,
                 latitude: pickLocationDetails.geometry.location.lat,
                 longitude: pickLocationDetails.geometry.location.lng,
@@ -102,8 +108,14 @@ const AdminCreateOrder = () => {
     const deliveryPoint = () => {
         if (schedule.deliverDate) {
             return {
-                start_time: schedule.deliveryDate + " " + schedule.deliveryFrom,
-                end_time: schedule.deliveryDate + " " + schedule.deliveryTo,
+                start_time:
+                    dayjs(schedule.deliveryDate).format("YYYY-MM-DD") +
+                    " " +
+                    dayjs(schedule.deliveryFrom).format("HH:mm"),
+                end_time:
+                    dayjs(schedule.deliveryDate).format("YYYY-MM-DD") +
+                    " " +
+                    dayjs(schedule.deliveryTo).format("HH:mm"),
                 address: deliveryLocationDetails.formatted_address,
                 latitude: deliveryLocationDetails.geometry.location.lat,
                 longitude: deliveryLocationDetails.geometry.location.lng,
@@ -132,8 +144,8 @@ const AdminCreateOrder = () => {
             state: {
                 client_id: user?.id,
                 date: currentDate,
-                country_id: user?.country_id,
-                city_id: user?.city_id,
+                country_id: country,
+                city_id: city,
                 pickup_point: pickupDPoint(),
                 delivery_point: deliveryPoint(),
                 extra_charges: [],
@@ -161,7 +173,9 @@ const AdminCreateOrder = () => {
                 hideProgressBar: true,
             });
 
-            const url = "/admin/orderdetail/order_Id/" + res.order_id;
+            
+
+            const url = "/" + user?.user_type + "/orderdetail/order_Id/" + res.order_id;
             navigate(url);
         }
     };
@@ -177,32 +191,251 @@ const AdminCreateOrder = () => {
     }, [to]);
 
     return (
-        <div className="bg-gradient-to-b from-[#4caf50] to-[#388a3a] pb-24 px-24 pt-32 h-fit ">
-            <div className="text-[4rem] text-white text-center mt-4 font-bold">
-                Save on wolrdwide
+        <div className="">
+            <div className="text-appGreen text-lg mt-4 font-bold">
+                Create Order
             </div>
-            <div className=" text-white text-3xl text-center">
-                shipping with {appName}
-            </div>
-
-            <div className="grid bg-white mt-6  md:grid-cols-5">
-                <CityGetter
-                    title={"From"}
-                    selected={from}
-                    setSelected={setFrom}
-                />
-                <CityGetter title={"To"} selected={to} setSelected={setTo} />
-                <Services selected={service} setSelected={setServive} />
-                <WeightGetter selected={weight} setSelected={setWeight} />
-                <div>
-                    <button
-                        onClick={handleOpen}
-                        className="py-6 md:py-0 h-full w-full  text-white font-bold bg-blue-700 hover:bg-blue-600"
-                    >
-                        {processing ? <Loading /> : "Create Order"}
-                    </button>
+            <div>
+                <div className="flex flex-wrap items-center justify-end gap-12">
+                    <div className="flex h-full  gap-4 w-fit justify-between items-center font-bold text-lg text-orange-700  py-2 px-6 rounded-xl border-2 mt-4 border-gray-400">
+                        <span>Price</span> <span>${deliveryLocationDetails ? price : 0 }</span>
+                    </div>
+                    <div className="flex items-center h-full">
+                        <Button auto color={"success"} onPress={handleOrder} className="" >
+                            save
+                        </Button>
+                    </div>
                 </div>
             </div>
+            <div>
+                <div className="flex py-4 mt-2 flex-wrap gap-4">
+                    <button
+                        onClick={handleDeliverNow}
+                        className={
+                            deliverNow
+                                ? "py-3 px-6 border-2 border-appGreen rounded-lg"
+                                : "py-3 px-6 border-2 border-gray-400 rounded-lg"
+                        }
+                    >
+                        <div className="flex items-center justify-between px-2 gap-4">
+                            <IoAlarmOutline
+                                className={
+                                    deliverNow
+                                        ? "text-lg text-appGreen"
+                                        : "text-lg text-gray-400"
+                                }
+                            />
+                            <div className="font-bold text-lg text-gray-400">
+                                {" "}
+                                Deliver now
+                            </div>
+                        </div>
+                    </button>
+
+                    <button
+                        onClick={handleDeliverNow}
+                        className={
+                            !deliverNow
+                                ? "py-3 px-6 border-2 border-appGreen rounded-lg"
+                                : "py-3 px-6 border-2 border-gray-400 rounded-lg"
+                        }
+                    >
+                        <div className="flex items-center py-2 justify-between px-2  gap-4">
+                            <FaRegCalendarAlt
+                                className={
+                                    !deliverNow
+                                        ? "text-lg text-appGreen"
+                                        : "text-lg text-gray-400"
+                                }
+                            />
+                            <div className="font-bold text-lg text-gray-400">
+                                {" "}
+                                Schedule
+                            </div>
+                        </div>
+                    </button>
+                </div>
+                {!deliverNow && (
+                    <div className="grid gap-4 pt-2 md:grid-cols-2">
+                        <div className="p-2 bg-gray-100/25">
+                            <div className="font-bold mb-2 text-md">
+                                Pick Time
+                            </div>
+                            <div className="grid p-4 border-2 border-gray-300 rounded-xl ">
+                                <div className="grid gap-2 font-bold">
+                                    <div className="">Date</div>
+                                    <DatePicker
+                                        label="Date"
+                                        className="w-full"
+                                        value={schedule.pickDate}
+                                        onChange={(e) =>
+                                            setSchedule({
+                                                ...schedule,
+                                                pickDate: e,
+                                            })
+                                        }
+                                    />
+                                </div>
+
+                                <div className="grid gap-4  md:grid-cols-2 mt-3">
+                                    <div className="grid gap-2 font-bold">
+                                        <div>From</div>
+                                        <TimePicker
+                                            required
+                                            label="From"
+                                            className="w-full"
+                                            value={schedule.pickFrom}
+                                            onChange={(e) =>
+                                                setSchedule({
+                                                    ...schedule,
+                                                    pickFrom: e,
+                                                })
+                                            }
+                                        />
+                                    </div>
+                                    <div className="grid gap-2 font-bold">
+                                        <div>To</div>
+                                        <TimePicker
+                                            required
+                                            className="w-full"
+                                            label="To"
+                                            value={schedule.pickTo}
+                                            onChange={(e) =>
+                                                setSchedule({
+                                                    ...schedule,
+                                                    pickTo: e,
+                                                })
+                                            }
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="p-2 bg-gray-100/25">
+                            <div className="font-bold mb-2 text-md">
+                                Deliver Time
+                            </div>
+                            <div className="grid p-4 border-2 border-gray-300 rounded-xl ">
+                                <div className="grid gap-2 font-bold">
+                                    <div className="">Date</div>
+                                    <DatePicker
+                                        label="Date"
+                                        className="w-full"
+                                        value={schedule.deliverDate}
+                                        onChange={(e) =>
+                                            setSchedule({
+                                                ...schedule,
+                                                deliverDate: e,
+                                            })
+                                        }
+                                    />
+                                </div>
+
+                                <div className="grid gap-4  md:grid-cols-2 mt-3">
+                                    <div className="grid gap-2 font-bold">
+                                        <div>From</div>
+                                        <TimePicker
+                                            required
+                                            label="From"
+                                            className="w-full"
+                                            value={schedule.deliverFrom}
+                                            onChange={(e) =>
+                                                setSchedule({
+                                                    ...schedule,
+                                                    deliverFrom: e,
+                                                })
+                                            }
+                                        />
+                                    </div>
+                                    <div className="grid gap-2 font-bold">
+                                        <div>To</div>
+                                        <TimePicker
+                                            required
+                                            className="w-full"
+                                            label="To"
+                                            value={schedule.deliverTo}
+                                            onChange={(e) =>
+                                                setSchedule({
+                                                    ...schedule,
+                                                    deliverTo: e,
+                                                })
+                                            }
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            <div className="grid lg:grid-cols-3 gap-4">
+                <NumberInput
+                    title={"Weight"}
+                    value={weight}
+                    setValue={setWeight}
+                />
+                <NumberInput
+                    title={"Number of parcels"}
+                    value={numberOfParcel}
+                    setValue={setNumberOfParcel}
+                />
+            </div>
+
+            <ParcelType value={service} setValue={setServive} />
+
+            <CountryAndCity
+                country={country}
+                setCountry={setCountry}
+                city={city}
+                setCity={setCity}
+            />
+            <div className="grid mt-4 md:grid-cols-2 gap-4">
+                <PositionInformations
+                    title={"Pickup"}
+                    selected={from}
+                    setSelected={setFrom}
+                    phoneValue={pickNumber}
+                    setPhoneValue={setPickNumber}
+                    descriptionValue={pickDescription}
+                    setDescriptionValue={setPickDescription}
+                />
+                <PositionInformations
+                    title={"Delivery"}
+                    selected={to}
+                    setSelected={setTo}
+                    phoneValue={deliveryNumber}
+                    setPhoneValue={setDeliveryNumber}
+                    descriptionValue={deliveryDescription}
+                    setDescriptionValue={setDeliveryDescription}
+                />
+            </div>
+
+            <div>
+                <div>Payment collect from</div>
+                <div>
+                    <FormControl sx={{ m: 1 }} className="w-full">
+                        <Select
+                            inputProps={{ "aria-label": "Without label" }}
+                            value={receivePaymentFrom}
+                            label="Age"
+                            onChange={(e) =>
+                                setReceivePaymentFrom(e.target.value)
+                            }
+                        >
+                            <MenuItem defaultChecked value={"on_pickup"}>
+                                On Pickup
+                            </MenuItem>
+                            <MenuItem defaultChecked value={"on_delivery"}>
+                                On Delivery
+                            </MenuItem>
+                        </Select>
+                    </FormControl>
+                </div>
+            </div>
+
+            
             <QuoteModal
                 from={pickLocationDetails}
                 to={deliveryLocationDetails}
@@ -236,7 +469,7 @@ const AdminCreateOrder = () => {
 
 export default AdminCreateOrder;
 
-const CityGetter = ({ title, selected, setSelected }) => {
+const CityGetter = ({ selected, setSelected }) => {
     const [expanded, setExpanded] = useState(false);
     const [cities, setCities] = useState(null);
     const [p_cities, setP_cities] = useState();
@@ -246,20 +479,9 @@ const CityGetter = ({ title, selected, setSelected }) => {
 
     const divRef = useRef(null);
 
-    const handleFocus = () => {
-        if (expanded) {
-            divRef.current.classList.add("ring-1");
-            divRef.current.classList.add("ring-blue-700");
-        } else {
-            divRef.current.classList.remove("ring-1");
-            divRef.current.classList.remove("ring-blue-700");
-        }
-    };
-
-    const getPlaces = async (e, locationSetter, locationsSetter) => {
-        locationSetter(e.target.value);
+    const getPlaces = async () => {
         const dataToSend = {
-            search_text: e.target.value,
+            search_text: cityName,
             country_code: "ca",
             language: "en",
         };
@@ -269,74 +491,32 @@ const CityGetter = ({ title, selected, setSelected }) => {
         );
 
         if (res.status == "OK") {
-            locationsSetter(res.predictions);
+            setPlaces(res.predictions);
         }
     };
 
     useEffect(() => {
-        handleFocus();
-    }, [expanded]);
+        if (expanded) {
+            getPlaces();
+        }
+    }, [cityName]);
 
     useEffect(() => {
+        setCityName(selected?.description);
         setExpanded(false);
     }, [selected]);
 
-    useEffect(() => {
-        document.addEventListener("click", (evt) => {
-            const flyoutEl = divRef.current;
-            let targetEl = evt.target; // clicked element
-            do {
-                if (targetEl == flyoutEl) {
-                    // This is a click inside, does nothing, just return.
-
-                    return;
-                }
-                // Go up the DOM
-                targetEl = targetEl.parentNode;
-            } while (targetEl);
-            // This is a click outside.
-            setExpanded(false);
-        });
-    }, []);
     return (
-        <div
-            ref={divRef}
-            onMouseDown={() => setExpanded(true)}
-            className="relative w-full cursor-pointer"
-        >
-            <div className="pl-3 pt-2">
-                <span className="uppercase font-bold text-black text-xl">
-                    {title}
-                </span>
-            </div>
-
-            <div
+        <div ref={divRef} className="relative w-full cursor-pointer">
+            <input
                 type="text"
-                onBlur={() => setExpanded(false)}
-                placeholder="tape to search"
-                className="rounded-lg text-lg border-0 w-full font-bold  focus:outline-none pl-3 pb-3 pt-1"
-            >
-                {selected ? (
-                    <div className="flex gap-2 pt-1 text-md">
-                        <div>{selected.description}</div>
-                    </div>
-                ) : (
-                    <div className="text-md font-bold pt-1 text-gray-600">
-                        Type to search
-                    </div>
-                )}
-            </div>
-            {expanded && (
+                className="outline-none w-full bg-white/50 text-black font-bold focus:outile-none border py-2 rounded-lg border-gray-400 focus:border-appGreen"
+                value={cityName}
+                onChange={(e) => setCityName(e.target.value)}
+                onFocus={() => setExpanded(true)}
+            />
+            {expanded && places?.length > 0 ? (
                 <div className="bg-white max-h-[290px] z-10 shadow absolute top-24 left-0 right-0 border rounded-lg overflow-hidden overflow-y-scroll ">
-                    <div className="px-4 py-2">
-                        <input
-                            type="text"
-                            placeholder="type here"
-                            className="form-control"
-                            value={place}
-                            onChange={(e) => getPlaces(e, setPlace, setPlaces)}
-                        />
-                    </div>
                     {places?.map((place, index) => (
                         <div
                             key={index}
@@ -347,7 +527,7 @@ const CityGetter = ({ title, selected, setSelected }) => {
                         </div>
                     ))}
                 </div>
-            )}
+            ) : null}
         </div>
     );
 };
@@ -426,7 +606,7 @@ const Services = ({ selected, setSelected }) => {
             </div>
             {expanded && (
                 <div className="bg-white max-h-[290px] z-10 shadow absolute top-24 left-0 right-0 border rounded-lg overflow-hidden overflow-y-scroll ">
-                    {parcelTypes.map((parcel, index) => (
+                    {parcelTypes?.map((parcel, index) => (
                         <div
                             key={index}
                             onMouseDown={() => setSelected(parcel)}
@@ -611,10 +791,10 @@ const QuoteModal = ({
                 {!deliverNow && (
                     <div className="grid gap-4 px-2 pt-4 md:grid-cols-2">
                         <div className="p-2 bg-gray-100/25">
-                            <div className=" text-center font-bold mb-4 text-xl">
+                            <div className="font-bold mb-4 text-md">
                                 Pick Time
                             </div>
-                            <div className="grid ">
+                            <div className="grid p-4 border-2 border-gray-400 ">
                                 <div className="grid gap-2 font-bold">
                                     <div className="">Date</div>
                                     <Input
@@ -799,5 +979,205 @@ const QuoteModal = ({
                 </div>
             </Modal.Body>
         </Modal>
+    );
+};
+
+const NumberInput = ({ title, value, setValue }) => {
+    const minus = () => {
+        if (value > 1) {
+            setValue((v) => v - 1);
+        }
+    };
+
+    const add = () => {
+        setValue((v) => v + 1);
+    };
+    return (
+        <div className="grid grid-cols-7 divide-x-2 w-full divide-gray-400 rounded-xl  text-gray-500 font-bold border-2 border-gray-400">
+            <div className="col-span-4 text-md py-3 pl-4">{title}</div>
+            <div>
+                <button
+                    onClick={minus}
+                    className="flex justify-center items-center w-full h-full"
+                >
+                    <FaMinus className="text-center" />
+                </button>
+            </div>
+            <div className="relative h-full">
+                <input
+                    type="number"
+                    className=" absolute left-0 right-0 top-0 bottom-0 outline-none text-center border-0 bg-transparent focus:outline-none focus:border-b-2 focus:border-appGreen"
+                    color="success"
+                    value={value}
+                    onChange={(e) => setValue(e.target.value)}
+                    underlined
+                />
+            </div>
+            <div>
+                <button
+                    onClick={add}
+                    className="flex justify-center items-center w-full h-full"
+                >
+                    <FaPlus />
+                </button>
+            </div>
+        </div>
+    );
+};
+
+const ParcelType = ({ value, setValue }) => {
+    return (
+        <div className="py-4 w-full">
+            <div className="font-bold mb-2">Parcel Type</div>
+            <input
+                disabled
+                value={value?.label}
+                className="py-3 pl-8 md:w-2/3 rounded-xl"
+            />
+            <div className="flex flex-wrap gap-4 mt-3 ">
+                {parcelTypes?.map((parcel, index) => (
+                    <button
+                        key={index}
+                        className="border-2 font-bold rounded-xl border-gray-400 py-1 px-3"
+                        onClick={() => setValue(parcel)}
+                    >
+                        {parcel.label}
+                    </button>
+                ))}
+            </div>
+        </div>
+    );
+};
+
+const CountryAndCity = ({ country, setCountry, city, setCity }) => {
+    const [cities, setCities] = useState(null);
+    const [countries, setCountries] = useState(null);
+
+    const getCountries = async () => {
+        const res = await getWithAxios("/api/country-list");
+        setCountries(res.data);
+    };
+
+    const getCities = async () => {
+        if (country) {
+            const res = await getWithAxios("/api/city-list", {
+                country_id: country,
+            });
+            setCities(res.data);
+        } else {
+            const res = await getWithAxios("/api/city-list");
+            setCities(res.data);
+        }
+    };
+
+    useEffect(() => {
+        getCountries();
+    }, []);
+
+    useEffect(() => {
+        getCities();
+    }, [country]);
+
+    return (
+        <div className="grid gap-4 font-bold md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid">
+                <div>Country</div>
+                <div>
+                    <FormControl sx={{ m: 1 }} className="w-full">
+                        <Select
+                            inputProps={{ "aria-label": "Without label" }}
+                            value={country}
+                            label="Age"
+                            onChange={(e) => setCountry(e.target.value)}
+                        >
+                            {countries?.map((country, index) => (
+                                <MenuItem
+                                    key={index}
+                                    defaultChecked={
+                                        country.id == 2 ? true : false
+                                    }
+                                    value={country.id}
+                                >
+                                    {" "}
+                                    {country.name}{" "}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </div>
+            </div>
+
+            <div className="grid">
+                <div>City</div>
+                <div>
+                    <FormControl sx={{ m: 1 }} className="w-full">
+                        <Select
+                            inputProps={{ "aria-label": "Without label" }}
+                            value={city}
+                            label="Age"
+                            onChange={(e) => setCity(e.target.value)}
+                        >
+                            {cities?.map((city, index) => (
+                                <MenuItem
+                                    key={index}
+                                    defaultChecked={city.id == 1 ? true : false}
+                                    value={city.id}
+                                >
+                                    {" "}
+                                    {city.name}{" "}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const PositionInformations = ({
+    title,
+    selected,
+    setSelected,
+    phoneValue,
+    setPhoneValue,
+    descriptionValue,
+    setDescriptionValue,
+}) => {
+    return (
+        <div>
+            <div className="font-bold">{title} Information</div>
+            <div className="grid gap-4 mt-2 p-4 border-2 rounded-xl">
+                <div>{title} Location</div>
+                <CityGetter
+                    title={title}
+                    selected={selected}
+                    setSelected={setSelected}
+                />
+                <div>
+                    <div>{title} Contact Number</div>
+                    <PhoneInput
+                        value={phoneValue}
+                        inputProps={{
+                            required: true,
+                        }}
+                        country={"ca"}
+                        onChange={(e) => setPhoneValue(e)}
+                    />
+                </div>
+                <div>
+                    <div>{title} Description</div>
+                    <textarea
+                        name=""
+                        value={descriptionValue}
+                        onChange={(e) => setDescriptionValue(e.target.value)}
+                        className="w-full border resize-none border-gray-400 rounded-xl"
+                        id=""
+                        rows="2"
+                    ></textarea>
+                </div>
+                <div></div>
+            </div>
+        </div>
     );
 };

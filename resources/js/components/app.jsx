@@ -19,6 +19,8 @@ import SingleOrder from "./adminInterface/singleOrder";
 import AdminCreateOrder from "./adminInterface/createOrder";
 import UserDashboardLayout from "./userInterface/userDashboard/layout";
 import BankProfil from "./partials/updateBankProfil";
+import DeliveryManDashboard from "./deliveryManInterface/deliveryManDashboardLayout";
+import Brand from "./userInterface/pagesPartials/index/brand";
 
 const router = createBrowserRouter([
     /*   Common routes */
@@ -37,8 +39,6 @@ const router = createBrowserRouter([
         element: <Register />,
     },
 
-   
-
     /*   Common routes */
 
     /*  User routes */
@@ -46,17 +46,16 @@ const router = createBrowserRouter([
     {
         path: "/client",
         element: <UserDashboardLayout />,
-        
-        children: [
 
+        children: [
             {
                 path: "profile",
                 element: <Profile />,
             },
 
             {
-                path : "createorder",
-                element : <PlaceOrder />
+                path: "createorder",
+                element: <AdminCreateOrder />,
             },
             {
                 path: "orderdetail/order_Id/:order_Id",
@@ -69,9 +68,32 @@ const router = createBrowserRouter([
             },
 
             {
-                path : "bank-informations",
-                element : <BankProfil />
-            }
+                path: "bank-informations",
+                element: <BankProfil />,
+            },
+        ],
+    },
+
+    /*  Delivery Man routes */
+
+    {
+        path: "/delivery_man",
+        element: <DeliveryManDashboard />,
+        children: [
+            {
+                path: "orders",
+                element: <Orders />,
+            },
+
+            {
+                path : "createorder",
+                element : <AdminCreateOrder />
+            },
+
+            {
+                path: "orderdetail/order_Id/:order_Id",
+                element: <SingleOrder />,
+            },
         ],
     },
     /* Admin routes */
@@ -81,7 +103,6 @@ const router = createBrowserRouter([
         element: <AdminDashboardLayout />,
         //loader: <Loading />,
         children: [
-
             {
                 path: "profile",
                 element: <Profile />,
@@ -98,7 +119,7 @@ const router = createBrowserRouter([
             },
 
             {
-                path: "/admin/createorder",
+                path: "createorder",
                 element: <AdminCreateOrder />,
             },
 
@@ -113,7 +134,7 @@ const router = createBrowserRouter([
             },
 
             {
-                path: "/admin/orderdetail/order_Id/:order_Id",
+                path: "orderdetail/order_Id/:order_Id",
                 element: <SingleOrder />,
             },
         ],

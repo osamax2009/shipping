@@ -31,43 +31,54 @@ const SingleOrder = () => {
             id: orderId,
         };
 
-      try {
-        const res = await getWithAxios("/api/order-detail", dataToSend);
+        if (orderId) {
 
-        
+            let res;
+             try {
+                res  = await getWithAxios("/api/order-detail", dataToSend);
+             } catch (error) {
+                res = "error"
+             }
 
-        if (res.data.id) {
-            setOrder(res.data);
-            setHistory(res.order_history);
-            const id = {
-                id: res.data.client_id,
-            };
-            const client = await getWithAxios("/api/user-detail", id);
-            setClient(client.data);
-        } 
-      } catch (error) {
+           
 
-        toast("invalid order id", {
-            type: "error",
-            hideProgressBar: true,
-        });
+            if (res == "error") {
+               
+                toast("invalid order id", {
+                    type: "error",
+                    hideProgressBar: true,
+                });
+    
+                if (user?.user_type == "client") {
+                    const url = "/client/order-list";
+                    navigate(url);
+                }
+    
+                if (user?.user_type == "admin") {
+                    const url = "/admin/orders";
+                    navigate(url);
+                }
 
-        if(user?.user_type == "client") 
-        {
-            const url = "/client/order-list"
-            navigate(url);
+                if (user?.user_type == "delivery_man") {
+                    const url = "/delivery_man/orders";
+                    navigate(url);
+                }
+            }
+
+            if (res.data.id) {
+                setOrder(res.data);
+                setHistory(res.order_history);
+                const id = {
+                    id: res.data.client_id,
+                };
+                const client = await getWithAxios("/api/user-detail", id);
+                setClient(client.data);
+            }
+
+           
         }
-
-        
-        if(user?.user_type == "admin") 
-        {
-            const url = "/admin/orders"
-            navigate(url);
-        }
-
 
        
-      }
     };
 
     const handleTab = () => {

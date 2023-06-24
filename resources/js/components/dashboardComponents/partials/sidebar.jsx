@@ -107,6 +107,20 @@ const Sidebar = () => {
         },
     ];
 
+    const deliveryManRoutes = [
+        {
+            title: "Create Order",
+            path: "/delivery_man/createorder",
+            icon: <BsBagPlusFill />,
+        },
+
+        {
+            title: "My orders",
+            path: "/client/order-list",
+            icon: <BsCardChecklist />,
+        },
+    ];
+
     return (
         <aside
             className="main-sidebar elevation-0 sidebar-dark-teal bg-appGreen"
@@ -139,24 +153,23 @@ const Sidebar = () => {
                         </div>
 
                         {userRoutes.map((route, index) => (
-                            <Link
-                                key={index}
-                                to={route.path}
-                                className="text-sm py-4 px-4 hover:no-underline"
-                            >
-                                <div
-                                    className={
-                                        location.pathname == route.path
-                                            ? "flex gap-2 font-bold text-white"
-                                            : "flex gap-2 font-light"
-                                    }
-                                >
-                                    <span className="text-md">
-                                        {route.icon}
-                                    </span>
-                                    {route.title}
+                            <div key={index}>
+                                <div className="text-sm w-full h-full  py-2 mt-2 px-4 hover:no-underline hover:bg-gray-200/25">
+                                    <Link
+                                        to={route.path}
+                                        className={
+                                            location.pathname == route.path
+                                                ? "flex gap-2 font-bold text-white"
+                                                : "flex gap-2 font-light"
+                                        }
+                                    >
+                                        <span className="text-md">
+                                            {route.icon}
+                                        </span>
+                                        {route.title}
+                                    </Link>
                                 </div>
-                            </Link>
+                            </div>
                         ))}
                     </>
                 ) : null}
