@@ -171,6 +171,9 @@ const Brand = () => {
                     type: "success",
                     hideProgressBar: true,
                 });
+
+                const url = "/" + user.user_type + "orderdetail/order_Id/" + res.order_Id
+                navigate(url)
             }
         }
     };

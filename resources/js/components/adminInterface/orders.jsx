@@ -11,7 +11,9 @@ import dayjs, { Dayjs } from "dayjs";
 const Orders = () => {
     const [orders, setOrders] = useState();
     const [orderId, setOrderId] = useState();
+    const [selectedOrder, setSelectedOrder] = useState();
     const [openUpdate, setOpenUpdate] = useState(false);
+    const [openDelete, setOpenDelete] = useState(false);
     const [filter, setFilter] = useState({
         client_id: null,
         city_id: null,
@@ -52,15 +54,15 @@ const Orders = () => {
         };
 
         const res = await getWithAxios("/api/order-list", params);
-        console.log(res.data);
+
         setOrders(res.data);
     };
 
     useEffect(() => {
-        if (!openUpdate) {
+        if (!openUpdate && !openDelete) {
             getOrders();
         }
-    }, [filter, openUpdate]);
+    }, [filter, openUpdate, openDelete]);
     return (
         <div>
             <div className="flex justify-between">
@@ -106,19 +108,19 @@ const Orders = () => {
                 <Table.Body>
                     {orders?.map((order, index) => (
                         <Table.Row key={index}>
-                            <Table.Cell>{order.id}</Table.Cell>
-                            <Table.Cell>{order.client_name}</Table.Cell>
-                            <Table.Cell>{order.delivery_man_name}</Table.Cell>
+                            <Table.Cell>{order?.id}</Table.Cell>
+                            <Table.Cell>{order?.client_name}</Table.Cell>
+                            <Table.Cell>{order?.delivery_man_name}</Table.Cell>
                             <Table.Cell>
-                                {order.pickup_point.start_time}
+                                {order?.pickup_point.start_time}
                             </Table.Cell>
                             <Table.Cell>
-                                {order.pickup_point.address}
+                                {order?.pickup_point.address}
                             </Table.Cell>
                             <Table.Cell>
-                                {order.delivery_point.address}
+                                {order?.delivery_point.address}
                             </Table.Cell>
-                            <Table.Cell>{order.date}</Table.Cell>
+                            <Table.Cell>{order?.date}</Table.Cell>
                             <Table.Cell>
                                 <Status order={order} />
                             </Table.Cell>
@@ -128,15 +130,14 @@ const Orders = () => {
                                     setOpenUpdate={setOpenUpdate}
                                     openUpdate={openUpdate}
                                 />
-                                <UpdateModal
-                    order={order}
-                    open={openUpdate}
-                    setOpen={setOpenUpdate}
-                />
                             </Table.Cell>
 
                             <Table.Cell>
-                                <OrderLine order={order} />
+                                <OrderLine
+                                    order={order}
+                                    setSelectedOrder={setSelectedOrder}
+                                    setOpenDelete={setOpenDelete}
+                                />
                             </Table.Cell>
                         </Table.Row>
                     ))}
@@ -149,63 +150,63 @@ const Orders = () => {
                     onPageChange={(page) => console.log({ page })}
                 />
             </Table>
+
+            <UpdateModal
+                order={selectedOrder}
+                open={openUpdate}
+                setOpen={setOpenUpdate}
+            />
+
+            <DeleteModal
+                order={selectedOrder}
+                openDelete={openDelete}
+                setOpenDelete={setOpenDelete}
+            />
         </div>
     );
 };
 
 export default Orders;
 
-const OrderLine = ({ order }) => {
-    const [openDelete, setOpenDelete] = useState(false);
-
+const OrderLine = ({ order, setOpenDelete, setSelectedOrder }) => {
     const handleOpenDelete = () => {
+        setSelectedOrder(order);
         setOpenDelete(true);
     };
 
     return (
-        <div>
-            <div className="flex flex-wrap gap-2">
-                <Button
-                    auto
-                    onPress={handleOpenDelete}
-                    color={"error"}
-                    icon={<BsTrash />}
-                ></Button>
-            </div>
-            <div>
-                <DeleteModal
-                    order={order}
-                    open={openDelete}
-                    setOpen={setOpenDelete}
-                />
-            </div>
-        </div>
+        <Button
+            auto
+            onPress={handleOpenDelete}
+            color={"error"}
+            icon={<BsTrash />}
+        ></Button>
     );
 };
 
 const Status = ({ order }) => {
     return (
         <div className="text-center  font-bold text-sm ">
-            {order.status == "draft" && (
-                <div className="text-gray-600 px-4 py-2 rounded-lg bg-gray-300">
+            {order?.status == "draft" && (
+                <div className="text-gray-600 px-3 py-2 rounded-lg bg-gray-300">
                     Draft
                 </div>
             )}
 
-            {order.status == "create" && (
-                <div className="text-green-600 px-4 py-2 rounded-lg bg-green-300">
+            {order?.status == "create" && (
+                <div className="text-green-600 px-3 py-2 rounded-lg bg-green-300">
                     Created
                 </div>
             )}
 
-            {order.status == "accepted" && (
-                <div className="text-green-600 px-4 py-2 rounded-lg bg-green-300">
+            {order?.status == "accepted" && (
+                <div className="text-green-600 px-3 py-2 rounded-lg bg-green-300">
                     Accepted*
                 </div>
             )}
 
-            {order.status == "cancelled" && (
-                <div className="text-red-600 px-4 py-2 rounded-lg bg-red-300">
+            {order?.status == "cancelled" && (
+                <div className="text-red-600 px-3 py-2 rounded-lg bg-red-300">
                     Cancelled
                 </div>
             )}
@@ -262,23 +263,21 @@ const Filter = ({ filter, setFilter }) => {
 };
 
 const Assign = ({ order, openUpdate, setOpenUpdate }) => {
-
     const handleStatus = async () => {
         setOpenUpdate(true);
-        if (order.status == "create") {
+        if (order?.status == "create") {
             const dataToSend = {
-                id: order.id,
-                cancelled_delivery_man_ids: order.cancelled_delivery_man_ids,
+                id: order?.id,
+                cancelled_delivery_man_ids: order?.cancelled_delivery_man_ids,
             };
             const res = await postWithAxios(
                 "/api/order-auto-assign",
                 dataToSend
-            )
-            console.log(res)
+            );
+            console.log(res);
 
-            if(res.message)
-            {
-                setOpenUpdate(false)
+            if (res.message) {
+                setOpenUpdate(false);
                 toast(res.message, {
                     type: "default",
                     hideProgressBar: true,
@@ -293,10 +292,15 @@ const Assign = ({ order, openUpdate, setOpenUpdate }) => {
 
     return (
         <div>
-            {order.status != "draft" && order.status != "cancelled" ? (
-                <Button auto onPress={handleStatus} color={"success"}>
+            {order?.status != "draft" && order?.status != "cancelled" ? (
+                <Button
+                    auto
+                    onPress={handleStatus}
+                    color={"success"}
+                    className="mx-6"
+                >
                     {OrderStatus.map((orderStatus) => {
-                        if (orderStatus.value == order.status) {
+                        if (orderStatus.value == order?.status) {
                             return orderStatus.value == "create"
                                 ? "Assign"
                                 : "Transfer";
@@ -306,27 +310,25 @@ const Assign = ({ order, openUpdate, setOpenUpdate }) => {
             ) : (
                 <div className="text-green-500">
                     {OrderStatus.map((orderStatus) => {
-                        if (orderStatus.value == order.status) {
+                        if (orderStatus.value == order?.status) {
                             return orderStatus.value;
                         }
                     })}
                 </div>
             )}
 
-            <div>
-                
-            </div>
+            <div></div>
         </div>
     );
 };
 
 const UpdateModal = ({ order, open, setOpen }) => {
-    const [orderValue, setorderValue] = useState(order.value);
-    const [orderLabel, setorderLabel] = useState(order.label);
+    const [orderValue, setorderValue] = useState(order?.value);
+    const [orderLabel, setorderLabel] = useState(order?.label);
 
     const handleCreate = async () => {
         const dataToSend = {
-            id: order.id,
+            id: order?.id,
             type: "order_type",
             label: orderLabel,
             value: orderValue,
@@ -350,6 +352,10 @@ const UpdateModal = ({ order, open, setOpen }) => {
             });
         }
     };
+    useEffect(() => {
+        setorderValue(order?.value);
+        setorderLabel(order?.label);
+    }, [order]);
     return (
         <Modal
             open={open}
@@ -363,44 +369,71 @@ const UpdateModal = ({ order, open, setOpen }) => {
                 </div>
             </Modal.Header>
             <Modal.Body>
-               <div className="">
-                {
-                    order.status == "create" && <div className="flex gap-3">
-                        Assigning order to a delivery man <Loading type="points" />
-                    </div>
-                }
-               </div>
+                <div className="">
+                    {order?.status == "create" && (
+                        <div className="flex gap-3">
+                            Assigning order to a delivery man{" "}
+                            <Loading type="points" />
+                        </div>
+                    )}
+                </div>
             </Modal.Body>
         </Modal>
     );
 };
 
-const DeleteModal = ({ order, open, setOpen }) => {
+const DeleteModal = ({ order, openDelete, setOpenDelete }) => {
+    const [selected, setSelected] = useState(order);
+
+    const deleteOrder = async () => {
+        setOpenDelete(false);
+        const url = "/api/order-delete/" + selected.id;
+        const res = await postWithAxios(url);
+
+        if (res.message) {
+            toast(res.message, {
+                type: "success",
+                hideProgressBar: true,
+            });
+        }
+    };
+
+    useEffect(() => {
+        setSelected(order);
+    }, [order]);
+
     return (
-        <Modal open={open} closeButton onClose={() => setOpen(false)}>
+        <Modal
+            open={openDelete}
+            closeButton
+            onClose={() => setOpenDelete(false)}
+        >
             <Modal.Header>
                 {" "}
-                <div className="text-lg font-bold text-appGreen">
+                <div className="text-lg font-bold text-red-800">
                     Delete order modal
                 </div>
             </Modal.Header>
             <Modal.Body>
                 <div className="font-bold text-black">
                     Confirm, you want to delete order{" "}
-                    <span className="text-red-300">
-                        {order.name} from list of orderTypes .
-                    </span>
-                    <div className="flex flex-wrap  w-full gap-6 justify-between sm:justify-end">
+                    <span className="text-red-800">#{selected?.id} ?</span>
+                    <div className="flex flex-wrap mt-4 w-full gap-6 justify-between sm:justify-end">
                         <Button
                             auto
                             css={{ backgroundColor: "Grey" }}
                             className="text-black"
-                            onPress={() => setOpen(false)}
+                            onPress={() => setOpenDelete(false)}
                         >
                             Cancel
                         </Button>
 
-                        <Button auto color={"warning"} className="text-black">
+                        <Button
+                            auto
+                            color={"error"}
+                            onPress={deleteOrder}
+                            className="text-black"
+                        >
                             Delete
                         </Button>
                     </div>

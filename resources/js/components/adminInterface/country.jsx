@@ -9,6 +9,9 @@ import { toast } from "react-toastify";
 const Country = () => {
     const [countries, setCountries] = useState();
     const [openCreate, setOpenCreate] = useState(false);
+    const [openUpdate, setOpenUpdate] = useState(false);
+    const [openDelete, setOpenDelete] = useState(false);
+    const [selectedCountry, setSelectedCountry] = useState();
 
     const getCountries = async () => {
         const res = await getWithAxios("/api/country-list");
@@ -20,8 +23,10 @@ const Country = () => {
     };
 
     useEffect(() => {
-        getCountries();
-    }, []);
+        if (!openCreate && !openDelete && !openUpdate) {
+            getCountries();
+        }
+    }, [openCreate, openUpdate, openDelete]);
 
     return (
         <div>
@@ -43,13 +48,13 @@ const Country = () => {
                 <Table.Body>
                     {countries?.map((country, index) => (
                         <Table.Row key={index}>
-                            <Table.Cell> {country.id} </Table.Cell>
-                            <Table.Cell>{country.name}</Table.Cell>
-                            <Table.Cell> {country.distance_type} </Table.Cell>
-                            <Table.Cell>{country.weight_type}</Table.Cell>
-                            <Table.Cell>{country.created_at}</Table.Cell>
+                            <Table.Cell> {country?.id} </Table.Cell>
+                            <Table.Cell>{country?.name}</Table.Cell>
+                            <Table.Cell> {country?.distance_type} </Table.Cell>
+                            <Table.Cell>{country?.weight_type}</Table.Cell>
+                            <Table.Cell>{country?.created_at}</Table.Cell>
                             <Table.Cell>
-                                {country.status == 1 ? (
+                                {country?.status == 1 ? (
                                     <span className="text-appGreen">
                                         Enabled
                                     </span>
@@ -59,9 +64,16 @@ const Country = () => {
                                     </span>
                                 )}
                             </Table.Cell>
-                           
+
                             <Table.Cell>
-                                <CountryLine country={country} />
+                                <CountryLine
+                                    country={country}
+                                    setSelectedCountry={setSelectedCountry}
+                                    openDelete={openDelete}
+                                    setOpenDelete={setOpenDelete}
+                                    openUpdate={openUpdate}
+                                    setOpenUpdate={setOpenUpdate}
+                                />
                             </Table.Cell>
                         </Table.Row>
                     ))}
@@ -76,20 +88,36 @@ const Country = () => {
             </Table>
 
             <CreateModal open={openCreate} setOpen={setOpenCreate} />
+            <UpdateModal
+                    country={selectedCountry}
+                    open={openUpdate}
+                    setOpen={setOpenUpdate}
+                />
+                <DeleteModal
+                    country={selectedCountry}
+                    open={openDelete}
+                    setOpen={setOpenDelete}
+                />
         </div>
     );
 };
 export default Country;
 
-const CountryLine = ({ country }) => {
-    const [openUpdate, setOpenUpdate] = useState(false);
-    const [openDelete, setOpenDelete] = useState(false);
-
+const CountryLine = ({
+    country,
+    
+    setOpenUpdate,
+    setSelectedCountry,
+    setOpenDelete,
+}) => {
     const handleOpenUpdate = () => {
+        setSelectedCountry(country)
         setOpenUpdate(true);
     };
 
+
     const handleOpenDelete = () => {
+        setSelectedCountry(country)
         setOpenDelete(true);
     };
 
@@ -110,16 +138,7 @@ const CountryLine = ({ country }) => {
                 ></Button>
             </div>
             <div>
-                <UpdateModal
-                    country={country}
-                    open={openUpdate}
-                    setOpen={setOpenUpdate}
-                />
-                <DeleteModal
-                    country={country}
-                    open={openDelete}
-                    setOpen={setOpenDelete}
-                />
+                
             </div>
         </div>
     );
@@ -133,9 +152,10 @@ const CreateModal = ({ open, setOpen }) => {
     const countriesList = countryList();
 
     const handleCreate = async () => {
-        const countryName = countriesList.getLabel(selected)
+        const countryName = countriesList.getLabel(selected);
         const dataToSend = {
             name: countryName,
+            code: selected,
             status: 1,
             distance_type: distanceType,
             weight_type: weightType,
@@ -143,24 +163,21 @@ const CreateModal = ({ open, setOpen }) => {
         };
 
         const res = await postWithAxios("/api/country-save", dataToSend);
-        if(res.message == "Country has been save successfully.")
-        {
-            setOpen(false)
-            window.location.reload()
+        if (res.message == "Country has been save successfully.") {
+            setOpen(false);
             toast(res.message, {
-                type : "success",
-                hideProgressBar : true
-            })
+                type: "success",
+                hideProgressBar: true,
+            });
         }
 
-        if(res.message !== "Country has been save successfully.")
-        {
+        if (res.message !== "Country has been save successfully.") {
+            setOpen(false);
             toast(res.message, {
-                type : "error",
-                hideProgressBar : true
-            })
+                type: "error",
+                hideProgressBar: true,
+            });
         }
-        
     };
     return (
         <Modal
@@ -226,8 +243,13 @@ const CreateModal = ({ open, setOpen }) => {
                             cancel
                         </Button>
 
-                        <Button auto color={"success"} onPress={handleCreate} className="text-black">
-                          Create
+                        <Button
+                            auto
+                            color={"success"}
+                            onPress={handleCreate}
+                            className="text-black"
+                        >
+                            Create
                         </Button>
                     </div>
                 </div>
@@ -237,11 +259,46 @@ const CreateModal = ({ open, setOpen }) => {
 };
 
 const UpdateModal = ({ country, open, setOpen }) => {
-    const [selected, setSelected] = useState(country.code);
-    const [distanceType, setDistanceType] = useState(country.distance_type);
-    const [weightType, setWeightType] = useState(country.weight_type);
+    const [selected, setSelected] = useState(country?.code);
+    const [distanceType, setDistanceType] = useState(country?.distance_type);
+    const [weightType, setWeightType] = useState(country?.weight_type);
+   
+    const countriesList = countryList();
 
-    const handleUpdate = async () => {};
+    const handleUpdate = async () => {
+        const countryName = countriesList.getLabel(selected);
+        const dataToSend = {
+            id : country?.id,
+            name: countryName,
+            code: selected,
+            status: 1,
+            distance_type: distanceType,
+            weight_type: weightType,
+            links: {},
+        };
+
+        const res = await postWithAxios("/api/country-save", dataToSend);
+        if (res.message == "Country has been updated successfully.") {
+            setOpen(false);
+            toast(res.message, {
+                type: "success",
+                hideProgressBar: true,
+            });
+        }
+
+        if (res.message !== "Country has been updated successfully.") {
+            setOpen(false);
+            toast(res.message, {
+                type: "error",
+                hideProgressBar: true,
+            });
+        }
+    };
+    useEffect(() => {
+        setDistanceType(country?.distance_type)
+        setWeightType(country?.weight_type)
+        setSelected(country?.code)
+    },[country])
     return (
         <Modal
             open={open}
@@ -306,7 +363,7 @@ const UpdateModal = ({ country, open, setOpen }) => {
                             cancel
                         </Button>
 
-                        <Button auto color={"success"} className="text-black">
+                        <Button auto color={"success"} onPress={handleUpdate} className="text-black">
                             update
                         </Button>
                     </div>
@@ -317,6 +374,30 @@ const UpdateModal = ({ country, open, setOpen }) => {
 };
 
 const DeleteModal = ({ country, open, setOpen }) => {
+
+    const deleteContry = async () => {
+        const url = "/api/country-delete/" + country?.id
+
+        const res = await postWithAxios(url)
+
+        if (res.message == "Country has been deleted successfully.") {
+            setOpen(false);
+            toast(res.message, {
+                type: "success",
+                hideProgressBar: true,
+            });
+        }
+
+        if (res.message !== "Country has been deleted successfully.") {
+            setOpen(false);
+            toast(res.message, {
+                type: "error",
+                hideProgressBar: true,
+            });
+        }
+
+        
+    }
     return (
         <Modal open={open} closeButton onClose={() => setOpen(false)}>
             <Modal.Header>
@@ -329,7 +410,7 @@ const DeleteModal = ({ country, open, setOpen }) => {
                 <div className="font-bold text-black">
                     Confirm, you want to delete country{" "}
                     <span className="text-red-300">
-                        {country.name} from list of countries .
+                        {country?.name} from list of countries .
                     </span>
                     <div className="flex flex-wrap  w-full gap-6 justify-between sm:justify-end">
                         <Button
@@ -341,7 +422,7 @@ const DeleteModal = ({ country, open, setOpen }) => {
                             Cancel
                         </Button>
 
-                        <Button auto color={"warning"} className="text-black">
+                        <Button auto color={"warning"} onPress={deleteContry} className="text-black">
                             Delete
                         </Button>
                     </div>
