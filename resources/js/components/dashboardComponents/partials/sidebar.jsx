@@ -37,6 +37,12 @@ const Sidebar = () => {
             path: "/client/order-list",
             icon: <BsCardChecklist />,
         },
+
+        {
+            title: "My orders",
+            path: "/client/order-list",
+            icon: <BsCardChecklist />,
+        },
     ];
 
     const adminRoutes = [
