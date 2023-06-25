@@ -173,9 +173,8 @@ const AdminCreateOrder = () => {
                 hideProgressBar: true,
             });
 
-            
-
-            const url = "/" + user?.user_type + "/orderdetail/order_Id/" + res.order_id;
+            const url =
+                "/" + user?.user_type + "/orderdetail/order_Id/" + res.order_id;
             navigate(url);
         }
     };
@@ -198,10 +197,16 @@ const AdminCreateOrder = () => {
             <div>
                 <div className="flex flex-wrap items-center justify-end gap-12">
                     <div className="flex h-full  gap-4 w-fit justify-between items-center font-bold text-lg text-orange-700  py-2 px-6 rounded-xl border-2 mt-4 border-gray-400">
-                        <span>Price</span> <span>${deliveryLocationDetails ? price : 0 }</span>
+                        <span>Price</span>{" "}
+                        <span>${deliveryLocationDetails ? price : 0}</span>
                     </div>
                     <div className="flex items-center h-full">
-                        <Button auto color={"success"} onPress={handleOrder} className="" >
+                        <Button
+                            auto
+                            color={"success"}
+                            onPress={handleOrder}
+                            className=""
+                        >
                             save
                         </Button>
                     </div>
@@ -435,7 +440,6 @@ const AdminCreateOrder = () => {
                 </div>
             </div>
 
-            
             <QuoteModal
                 from={pickLocationDetails}
                 to={deliveryLocationDetails}
@@ -1029,22 +1033,27 @@ const ParcelType = ({ value, setValue }) => {
     return (
         <div className="py-4 w-full">
             <div className="font-bold mb-2">Parcel Type</div>
-            <input
-                disabled
-                value={value?.label}
-                className="py-3 pl-8 md:w-2/3 rounded-xl"
-            />
-            <div className="flex flex-wrap gap-4 mt-3 ">
-                {parcelTypes?.map((parcel, index) => (
-                    <button
-                        key={index}
-                        className="border-2 font-bold rounded-xl border-gray-400 py-1 px-3"
-                        onClick={() => setValue(parcel)}
-                    >
-                        {parcel.label}
-                    </button>
-                ))}
-            </div>
+
+            <FormControl sx={{ m: 1 }} className="w-full">
+                <Select
+                    inputProps={{ "aria-label": "Without label" }}
+                    value={value?.label}
+                    label="Age"
+                    onChange={(e) => setValue(e.target.value)}
+                >
+                    {parcelTypes?.map((parcel, index) => (
+                        <MenuItem
+                            key={index}
+                            defaultChecked={index == 0 ? true : false}
+                            value={parcel}
+                        >
+                            {" "}
+                            {parcel.label}{" "}
+                        </MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
+           
         </div>
     );
 };

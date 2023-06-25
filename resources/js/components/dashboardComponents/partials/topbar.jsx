@@ -96,6 +96,14 @@ const Topbar = () => {
                         {user?.user_type == "client" && (
                             <UserMenu handleLogout={handleLogout} />
                         )}
+
+                        {user?.user_type == "admin" && (
+                            <AdminMenu handleLogout={handleLogout} />
+                        )}
+
+                        {user?.user_type == "delivery_man" && (
+                            <DeliveryMan handleLogout={handleLogout} />
+                        )}
                     </li>
                 </ul>
             </div>
@@ -141,12 +149,12 @@ const UserMenu = ({ handleLogout }) => {
                 Change Location
             </button>
 
-            <Link className="dropdown-item" to={"/client/bank-informations"}>
+            <Link className="dropdown-item" to={"#"}>
                 <i className="fas fa-globe fa-sm fa-fw mr-2 text-gray-400"></i>
                 Language
             </Link>
 
-            <Link className="dropdown-item" to={"/client/bank-informations"}>
+            <Link className="dropdown-item" to={"#"}>
                 <i className="fas fa-sun fa-sm fa-fw mr-2 text-gray-400"></i>
                 Theme
             </Link>
@@ -156,7 +164,190 @@ const UserMenu = ({ handleLogout }) => {
                 Privacy Policy
             </Link>
 
-            <Link className="dropdown-item" to={"/client/bank-informations"}>
+            <Link className="dropdown-item" to={"/contactus"}>
+                <i className="fa fa-question fa-sm fa-fw mr-2 text-gray-400"></i>
+                Help & Support
+            </Link>
+
+            <Link className="dropdown-item" to={"/privacypolicy"}>
+                <i className="fas fa-file-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                Term & Condition
+            </Link>
+
+            <Link className="dropdown-item" to={"/aboutus"}>
+                <i className="fa fa-info-circle fa-sm fa-fw mr-2 text-gray-400"></i>
+                About Us
+            </Link>
+
+            <button
+                className="dropdown-item"
+                onClick={() => setDeleteAccount(true)}
+            >
+                <i className="fas fa-trash fa-sm fa-fw mr-2 text-gray-400"></i>
+                Delete Account
+            </button>
+
+            <div className="dropdown-divider"></div>
+            <button
+                className="dropdown-item "
+                onClick={handleLogout}
+                data-toggle="modal"
+                data-target="#logoutModal"
+            >
+                <i className="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                Logout
+            </button>
+            <UpdatePassword open={passModalOpen} setOpen={setPassModalOpen} />
+            <UpdateLocation
+                open={openLocationModal}
+                setOpen={setOpenLocationModal}
+            />
+            <DeleteAccount
+                open={openDeleteAccount}
+                setOpen={setDeleteAccount}
+            />
+        </div>
+    );
+};
+
+const AdminMenu = ({ handleLogout }) => {
+    const [passModalOpen, setPassModalOpen] = useState(false);
+    const [openLocationModal, setOpenLocationModal] = useState(false);
+    const [openDeleteAccount, setDeleteAccount] = useState(false);
+
+    const handlePassModal = () => {
+        passModalOpen ? setPassModalOpen(false) : setPassModalOpen(true);
+    };
+    return (
+        <div
+            className="dropdown-menu gap-4 dropdown-menu-right shadow animated--grow-in"
+            aria-labelledby="userDropdown"
+        >
+            <Link className="dropdown-item" to={"/admin/profile"}>
+                <i className="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                Profile
+            </Link>
+
+            <button className="dropdown-item" onClick={handlePassModal}>
+                <i className="fas fa-lock fa-sm fa-fw mr-2 text-gray-400"></i>
+                Change Password
+            </button>
+
+            <Link className="dropdown-item" to={"#"}>
+                <i className="fas fa-globe fa-sm fa-fw mr-2 text-gray-400"></i>
+                Language
+            </Link>
+
+            <Link className="dropdown-item" to={"#"}>
+                <i className="fas fa-sun fa-sm fa-fw mr-2 text-gray-400"></i>
+                Theme
+            </Link>
+
+            <Link className="dropdown-item" to={"/privacypolicy"}>
+                <i className="fas fa-file-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                Privacy Policy
+            </Link>
+
+            <Link className="dropdown-item" to={"/contactus"}>
+                <i className="fa fa-question fa-sm fa-fw mr-2 text-gray-400"></i>
+                Help & Support
+            </Link>
+
+            <Link className="dropdown-item" to={"/privacypolicy"}>
+                <i className="fas fa-file-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                Term & Condition
+            </Link>
+
+            <Link className="dropdown-item" to={"/aboutus"}>
+                <i className="fa fa-info-circle fa-sm fa-fw mr-2 text-gray-400"></i>
+                About Us
+            </Link>
+
+            <button
+                className="dropdown-item"
+                onClick={() => setDeleteAccount(true)}
+            >
+                <i className="fas fa-trash fa-sm fa-fw mr-2 text-gray-400"></i>
+                Delete Account
+            </button>
+
+            <div className="dropdown-divider"></div>
+            <button
+                className="dropdown-item "
+                onClick={handleLogout}
+                data-toggle="modal"
+                data-target="#logoutModal"
+            >
+                <i className="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                Logout
+            </button>
+            <UpdatePassword open={passModalOpen} setOpen={setPassModalOpen} />
+            <UpdateLocation
+                open={openLocationModal}
+                setOpen={setOpenLocationModal}
+            />
+            <DeleteAccount
+                open={openDeleteAccount}
+                setOpen={setDeleteAccount}
+            />
+        </div>
+    );
+};
+
+const DeliveryMan = ({ handleLogout }) => {
+    const [passModalOpen, setPassModalOpen] = useState(false);
+    const [openLocationModal, setOpenLocationModal] = useState(false);
+    const [openDeleteAccount, setDeleteAccount] = useState(false);
+
+    const handlePassModal = () => {
+        passModalOpen ? setPassModalOpen(false) : setPassModalOpen(true);
+    };
+    return (
+        <div
+            className="dropdown-menu gap-4 dropdown-menu-right shadow animated--grow-in"
+            aria-labelledby="userDropdown"
+        >
+            <Link className="dropdown-item" to={"/admin/profile"}>
+                <i className="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                Profile
+            </Link>
+
+            <Link className="dropdown-item" to={"/delivery_man/verify-document"}>
+                <i className="fas fa-file fa-sm fa-fw mr-2 text-gray-400"></i>
+               Verify Document
+            </Link>
+
+            <Link className="dropdown-item" to={"/admin/profile"}>
+                <i className="fas fa-wallet fa-sm fa-fw mr-2 text-gray-400"></i>
+                Earning History
+            </Link>
+
+            <Link className="dropdown-item" to={"/delivery_man/wallet"}>
+                <i className="fas fa-wallet fa-sm fa-fw mr-2 text-gray-400"></i>
+                Wallet
+            </Link>
+
+            <button className="dropdown-item" onClick={handlePassModal}>
+                <i className="fas fa-lock fa-sm fa-fw mr-2 text-gray-400"></i>
+                Change Password
+            </button>
+
+            <Link className="dropdown-item" to={"#"}>
+                <i className="fas fa-globe fa-sm fa-fw mr-2 text-gray-400"></i>
+                Language
+            </Link>
+
+            <Link className="dropdown-item" to={"#"}>
+                <i className="fas fa-sun fa-sm fa-fw mr-2 text-gray-400"></i>
+                Theme
+            </Link>
+
+            <Link className="dropdown-item" to={"/privacypolicy"}>
+                <i className="fas fa-file-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                Privacy Policy
+            </Link>
+
+            <Link className="dropdown-item" to={"/contactus"}>
                 <i className="fa fa-question fa-sm fa-fw mr-2 text-gray-400"></i>
                 Help & Support
             </Link>

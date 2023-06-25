@@ -52,8 +52,10 @@ const Orders = () => {
                 ? dayjs(filter.to_date).format("YYYY-MM-DD")
                 : null,
         };
+        console.log("params", params)
 
         const res = await getWithAxios("/api/order-list", params);
+        console.log("order list",res)
 
         setOrders(res.data);
     };
@@ -63,6 +65,8 @@ const Orders = () => {
             getOrders();
         }
     }, [filter, openUpdate, openDelete]);
+
+    
     return (
         <div>
             <div className="flex justify-between">

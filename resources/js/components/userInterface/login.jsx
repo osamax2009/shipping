@@ -149,7 +149,7 @@ const Login = () => {
                             type: "success",
                             hideProgressBar: true,
                         });
-                        navigate("/admin/orders");
+                        navigate("/delivery_man/order-list");
                     }
                 }
             }

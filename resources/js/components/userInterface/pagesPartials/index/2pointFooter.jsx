@@ -55,7 +55,7 @@ const PointFooter = ( ) => {
                         </Link>
                     </div>
                     <div>
-                        <Link className="text-white ">
+                        <Link className="text-white " to={"/contactus"} >
                             Contact us
                         </Link>
                     </div>
