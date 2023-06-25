@@ -2,12 +2,19 @@ import { useContext } from "react";
 import { UserContext } from "../../contexts/userContext";
 import { getWithAxios, postWithAxios } from "../../api/axios";
 import { Link, useNavigate } from "react-router-dom";
-import { BsPersonCircle, BsPersonFill, BsSearch } from "react-icons/bs";
+import {
+    BsCaretDown,
+    BsCaretDownFill,
+    BsPersonCircle,
+    BsPersonFill,
+    BsSearch,
+} from "react-icons/bs";
 import { FaBars } from "react-icons/fa";
 import { Avatar } from "@nextui-org/react";
 import UpdatePassword from "../../partials/changePassword";
 import { useState } from "react";
 import UpdateLocation from "../../partials/changeLocation";
+import DeleteAccount from "../../partials/deleteAccount";
 
 const Topbar = () => {
     const { user, setUser } = useContext(UserContext);
@@ -66,27 +73,29 @@ const Topbar = () => {
                     <div className="topbar-divider d-none d-sm-block"></div>
 
                     {/* Nav Item - User Information */}
-                    <li className="flex items-center">
+                    <li className="flex items-center cursor-pointer">
                         <a
-                            href="#"
                             className="flex items-center "
                             data-toggle="dropdown"
                             aria-expanded="false"
                         >
                             <div className="flex items-center gap-2 ">
+                                <Avatar
+                                    icon={
+                                        <BsPersonFill className="text-appGreen " />
+                                    }
+                                />
                                 <span className="text-sm font-bold no-underline hover:no-underline">
                                     {user?.name}{" "}
                                 </span>
-                                <Avatar
-                                    icon={
-                                        <BsPersonFill className="text-appGreen" />
-                                    }
-                                />
+                                <BsCaretDownFill className="text-appGreen" />
                             </div>
                         </a>
                         {/* Dropdown - User Information */}
 
-                        {user?.user_type == "client" && <UserMenu handleLogout={handleLogout} />}
+                        {user?.user_type == "client" && (
+                            <UserMenu handleLogout={handleLogout} />
+                        )}
                     </li>
                 </ul>
             </div>
@@ -96,9 +105,10 @@ const Topbar = () => {
 
 export default Topbar;
 
-const UserMenu = ({handleLogout}) => {
+const UserMenu = ({ handleLogout }) => {
     const [passModalOpen, setPassModalOpen] = useState(false);
     const [openLocationModal, setOpenLocationModal] = useState(false);
+    const [openDeleteAccount, setDeleteAccount] = useState(false);
 
     const handlePassModal = () => {
         passModalOpen ? setPassModalOpen(false) : setPassModalOpen(true);
@@ -123,7 +133,10 @@ const UserMenu = ({handleLogout}) => {
                 Change Password
             </button>
 
-            <button className="dropdown-item" onClick={() => setOpenLocationModal(true)}>
+            <button
+                className="dropdown-item"
+                onClick={() => setOpenLocationModal(true)}
+            >
                 <i className="fas fa-map-marker-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                 Change Location
             </button>
@@ -138,7 +151,7 @@ const UserMenu = ({handleLogout}) => {
                 Theme
             </Link>
 
-            <Link className="dropdown-item" to={"/client/bank-informations"}>
+            <Link className="dropdown-item" to={"/privacypolicy"}>
                 <i className="fas fa-file-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                 Privacy Policy
             </Link>
@@ -148,20 +161,23 @@ const UserMenu = ({handleLogout}) => {
                 Help & Support
             </Link>
 
-            <Link className="dropdown-item" to={"/client/bank-informations"}>
+            <Link className="dropdown-item" to={"/privacypolicy"}>
                 <i className="fas fa-file-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                 Term & Condition
             </Link>
 
-            <Link className="dropdown-item" to={"/client/bank-informations"}>
+            <Link className="dropdown-item" to={"/aboutus"}>
                 <i className="fa fa-info-circle fa-sm fa-fw mr-2 text-gray-400"></i>
                 About Us
             </Link>
 
-            <Link className="dropdown-item" to={"/client/bank-informations"}>
+            <button
+                className="dropdown-item"
+                onClick={() => setDeleteAccount(true)}
+            >
                 <i className="fas fa-trash fa-sm fa-fw mr-2 text-gray-400"></i>
                 Delete Account
-            </Link>
+            </button>
 
             <div className="dropdown-divider"></div>
             <button
@@ -174,8 +190,14 @@ const UserMenu = ({handleLogout}) => {
                 Logout
             </button>
             <UpdatePassword open={passModalOpen} setOpen={setPassModalOpen} />
-            <UpdateLocation open={openLocationModal} setOpen={setOpenLocationModal} />
-
+            <UpdateLocation
+                open={openLocationModal}
+                setOpen={setOpenLocationModal}
+            />
+            <DeleteAccount
+                open={openDeleteAccount}
+                setOpen={setDeleteAccount}
+            />
         </div>
     );
 };

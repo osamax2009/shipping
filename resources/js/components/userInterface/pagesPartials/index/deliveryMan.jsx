@@ -96,11 +96,11 @@ const DeliverDetail = ({ title, description }) => {
 
 const SingleCity = ({ title }) => {
     return (
-        <div className="py-8 flex flex-col shadow-sm md:!w-[170px] bg-gray-100/50 text-black font-bold gap-2 items-center justify-center">
+        <div className="py-8 flex flex-col shadow-sm h-[140px] md:!w-[170px] bg-gray-100/50 text-black font-bold gap-2 items-center justify-center">
             <div className="text-center text-appGreen text-2xl">
                 <BsFillPinMapFill />
             </div>
-            <div className="text-md">{title}</div>
+            <div className="text-md text-center">{title}</div>
         </div>
     );
 };

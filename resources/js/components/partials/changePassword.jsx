@@ -43,7 +43,6 @@ const UpdatePassword = ({ open, setOpen }) => {
         
         const res = await postWithAxios("/api/change-password", data);
 
-        console.log(res)
 
         if (res.message == "Your password has been changed successfully!") {
             setOpen(false)

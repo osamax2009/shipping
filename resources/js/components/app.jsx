@@ -21,6 +21,8 @@ import UserDashboardLayout from "./userInterface/userDashboard/layout";
 import BankProfil from "./partials/updateBankProfil";
 import DeliveryManDashboard from "./deliveryManInterface/deliveryManDashboardLayout";
 import Brand from "./userInterface/pagesPartials/index/brand";
+import PrivacyAndPolicy from "./partials/privacyAndPolicy";
+import AboutUs from "./partials/aboutUs";
 
 const router = createBrowserRouter([
     /*   Common routes */
@@ -37,6 +39,16 @@ const router = createBrowserRouter([
     {
         path: "/account/register",
         element: <Register />,
+    },
+
+    {
+        path : "/privacypolicy",
+        element : <PrivacyAndPolicy />
+    },
+
+    {
+        path : "/aboutus",
+        element : <AboutUs />
     },
 
     /*   Common routes */
@@ -71,6 +83,8 @@ const router = createBrowserRouter([
                 path: "bank-informations",
                 element: <BankProfil />,
             },
+
+            
         ],
     },
 
