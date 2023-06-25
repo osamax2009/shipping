@@ -5,7 +5,7 @@ import { BsPerson } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import DashboardLayout from "../../dashboardComponents/dashbboardLayout";
 import { getWithAxios } from "../../api/axios";
-import UpdatePassword from "./changePassword";
+import UpdatePassword from "../../partials/changePassword";
 import UpdateProfil from "../../partials/updateProfil";
 
 const Profile = () => {

@@ -10,8 +10,8 @@ import AliceCarousel from "react-alice-carousel";
 
 const ParcelTypes = () => {
     return (
-        <div className="flex bg-white justify-center w-full">
-            <div className="flex w-3/5 bg-white px-8 py-2">
+        <div className="flex bg-white justify-center w-full mt-6">
+            <div className="flex justify-center w-screen bg-white px-8 py-2">
                 <SlideElement />
             </div>
         </div>
@@ -22,7 +22,7 @@ export default ParcelTypes;
 
 const SingleParcel = ({ title, icon }) => {
     return (
-        <div className="py-8 flex flex-col shadow-sm md:!w-[170px] bg-gray-100/50 text-black font-bold gap-2 items-center justify-center">
+        <div className="p-8 flex flex-col h-[140px] shadow-sm w-[120px] md:!w-[170px] bg-gray-100/50 text-black font-bold gap-2 items-center justify-center">
             <div className="text-xl">{icon}</div>
             <div className="text-md">{title}</div>
         </div>

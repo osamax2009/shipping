@@ -48,108 +48,109 @@ const Login = () => {
 
             setUser(data.data);
 
-            if (data.data.user_type == "client") {
-                
-               
+            if (state?.orderToGet) {
+                const url =
+                    "/" +
+                    data.data.user_type +
+                    "/orderdetail/order_Id/" +
+                    state.orderToGet;
+                navigate(url);
+            } else {
+                if (data.data.user_type == "client") {
+                    if (state?.delivery_point) {
+                        const _user = data.data;
+                        const dataToSend = state;
+                        state.client_id = _user?.id;
+                        (state.country_id = _user?.country_id),
+                            (state.city_id = _user?.city_id),
+                            (state.save_user_address = _user?.id);
 
-                if (state?.delivery_point) {
-                    const _user = data.data
-                    const dataToSend = state;
-                    state.client_id = _user?.id
-                    state.country_id = _user?.country_id,
-                    state.city_id = _user?.city_id,
-                    state. save_user_address = _user?.id
-                    
-                    const res = await postWithAxios(
-                        "/api/order-save",
-                        dataToSend
-                    );
+                        const res = await postWithAxios(
+                            "/api/order-save",
+                            dataToSend
+                        );
 
-                    if (res.order_id) {
-                        toast(res.message, {
+                        if (res.order_id) {
+                            toast(res.message, {
+                                type: "success",
+                                hideProgressBar: true,
+                            });
+                        }
+                        const url =
+                            "/client/orderdetail/order_Id/" + res.order_id;
+                        navigate(url);
+                    } else {
+                        toast("connected successfully", {
                             type: "success",
                             hideProgressBar: true,
                         });
+                        navigate("/");
                     }
-                    const url = "/client/orderdetail/order_Id/" + res.order_id
-                    navigate(url);
-
-                } else {
-                    toast("connected successfully", {
-                        type: "success",
-                        hideProgressBar: true,
-                    });
-                    navigate("/");
                 }
-            }
 
-            if (data.data.user_type == "admin") {
-                
-               
+                if (data.data.user_type == "admin") {
+                    if (state?.delivery_point) {
+                        const _user = data.data;
+                        const dataToSend = state;
+                        state.client_id = _user?.id;
+                        (state.country_id = _user?.country_id),
+                            (state.city_id = _user?.city_id),
+                            (state.save_user_address = _user?.id);
 
-                if (state?.delivery_point) {
-                    const _user = data.data
-                    const dataToSend = state;
-                    state.client_id = _user?.id
-                    state.country_id = _user?.country_id,
-                    state.city_id = _user?.city_id,
-                    state. save_user_address = _user?.id
-                    
-                    const res = await postWithAxios(
-                        "/api/order-save",
-                        dataToSend
-                    );
+                        const res = await postWithAxios(
+                            "/api/order-save",
+                            dataToSend
+                        );
 
-                    if (res.order_id) {
-                        toast(res.message, {
+                        if (res.order_id) {
+                            toast(res.message, {
+                                type: "success",
+                                hideProgressBar: true,
+                            });
+                        }
+                        const url =
+                            "/admin/orderdetail/order_Id/" + res.order_id;
+                        navigate(url);
+                    } else {
+                        toast("connected successfully", {
                             type: "success",
                             hideProgressBar: true,
                         });
+                        navigate("/admin/orders");
                     }
-                    const url = "/admin/orderdetail/order_Id/" + res.order_id
-                    navigate(url);
-
-                } else {
-                    toast("connected successfully", {
-                        type: "success",
-                        hideProgressBar: true,
-                    });
-                    navigate("/admin/orders");
                 }
-            }
 
-            if (data.data.user_type == "delivery_man") {
-                
-               
+                if (data.data.user_type == "delivery_man") {
+                    if (state?.delivery_point) {
+                        const _user = data.data;
+                        const dataToSend = state;
+                        state.client_id = _user?.id;
+                        (state.country_id = _user?.country_id),
+                            (state.city_id = _user?.city_id),
+                            (state.save_user_address = _user?.id);
 
-                if (state?.delivery_point) {
-                    const _user = data.data
-                    const dataToSend = state;
-                    state.client_id = _user?.id
-                    state.country_id = _user?.country_id,
-                    state.city_id = _user?.city_id,
-                    state. save_user_address = _user?.id
-                    
-                    const res = await postWithAxios(
-                        "/api/order-save",
-                        dataToSend
-                    );
+                        const res = await postWithAxios(
+                            "/api/order-save",
+                            dataToSend
+                        );
 
-                    if (res.order_id) {
-                        toast(res.message, {
+                        if (res.order_id) {
+                            toast(res.message, {
+                                type: "success",
+                                hideProgressBar: true,
+                            });
+                        }
+                        const url =
+                            "/delivery_man/orderdetail/order_Id/" +
+                            res.order_id;
+                        navigate(url);
+                    } else {
+                        toast("connected successfully", {
                             type: "success",
                             hideProgressBar: true,
                         });
+                        navigate("/admin/orders");
                     }
-                    const url = "/delivery_man/orderdetail/order_Id/" + res.order_id
-                    navigate(url);
-
-                } else {
-                    toast("connected successfully", {
-                        type: "success",
-                        hideProgressBar: true,
-                    });
-                    navigate("/admin/orders");
                 }
             }
         }
@@ -240,10 +241,9 @@ const Login = () => {
                             <input
                                 value={email}
                                 ref={emailInput}
-                                onChange={e => setEmail(e.target.value)}
+                                onChange={(e) => setEmail(e.target.value)}
                                 required
                                 aria-label="enter email adress"
-                                
                                 type="email"
                                 className="bg-gray-200 border rounded focus:outline-none text-xs font-medium leading-none text-gray-800 py-3 w-full pl-3 mt-2"
                             />
@@ -261,7 +261,6 @@ const Login = () => {
                                     }
                                     required
                                     aria-label="enter Password"
-                                  
                                     type={passType}
                                     className="bg-gray-200 border rounded focus:outline-none text-xs font-medium leading-none text-gray-800 py-3 w-full pl-3 mt-2"
                                 />

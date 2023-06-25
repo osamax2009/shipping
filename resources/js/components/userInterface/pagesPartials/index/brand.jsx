@@ -197,7 +197,7 @@ const Brand = () => {
                 shipping with {appName}
             </div>
 
-            <div className="grid bg-white mt-6  md:grid-cols-5">
+            <div className="grid bg-white mt-6  md:grid-cols-2 lg:grid-cols-5">
                 <CityGetter
                     title={"From"}
                     selected={from}
@@ -206,10 +206,10 @@ const Brand = () => {
                 <CityGetter title={"To"} selected={to} setSelected={setTo} />
                 <Services selected={service} setSelected={setServive} />
                 <WeightGetter selected={weight} setSelected={setWeight} />
-                <div>
+                <div className="md:col-span-2 lg:col-span-1">
                     <button
                         onClick={handleOpen}
-                        className="py-6 md:py-0 h-full w-full  text-white font-bold bg-blue-700 hover:bg-blue-600"
+                        className="py-6  lg:py-0 h-full w-full  text-white font-bold bg-blue-700 hover:bg-blue-600"
                     >
                         {processing ? <Loading /> : "Create Order"}
                     </button>

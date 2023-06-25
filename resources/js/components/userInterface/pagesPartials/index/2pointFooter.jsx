@@ -50,7 +50,7 @@ const PointFooter = ( ) => {
                         {appName}
                     </div>
                     <div>
-                        <Link className="text-white ">
+                        <Link className="text-white " to={"/aboutus"}>
                             About us
                         </Link>
                     </div>
@@ -61,7 +61,7 @@ const PointFooter = ( ) => {
                     </div>
 
                     <div>
-                        <Link className="text-white ">
+                        <Link className="text-white " to={"/privacypolicy"}>
                             Privacy policy
                         </Link>
                     </div>

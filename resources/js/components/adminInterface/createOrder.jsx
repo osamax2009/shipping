@@ -412,7 +412,7 @@ const AdminCreateOrder = () => {
                 />
             </div>
 
-            <div>
+            <div className="py-4 font-bold">
                 <div>Payment collect from</div>
                 <div>
                     <FormControl sx={{ m: 1 }} className="w-full">

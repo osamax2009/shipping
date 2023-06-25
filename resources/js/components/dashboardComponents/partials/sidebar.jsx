@@ -32,6 +32,7 @@ const Sidebar = () => {
             icon: <BsBagPlusFill />,
         },
 
+
         {
             title: "My orders",
             path: "/client/order-list",
