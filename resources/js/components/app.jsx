@@ -16,13 +16,14 @@ import MyOrders from "./userInterface/userDashboard/myOrders";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import SingleOrder from "./adminInterface/singleOrder";
-import AdminCreateOrder from "./adminInterface/createOrder";
+import AdminCreateOrder from "./partials/createOrder";
 import UserDashboardLayout from "./userInterface/userDashboard/layout";
 import BankProfil from "./partials/updateBankProfil";
 import DeliveryManDashboard from "./deliveryManInterface/deliveryManDashboardLayout";
 import Brand from "./userInterface/pagesPartials/index/brand";
 import PrivacyAndPolicy from "./partials/privacyAndPolicy";
 import AboutUs from "./partials/aboutUs";
+import Wallet from "./userInterface/userDashboard/wallet";
 
 const router = createBrowserRouter([
     /*   Common routes */
@@ -63,6 +64,11 @@ const router = createBrowserRouter([
             {
                 path: "profile",
                 element: <Profile />,
+            },
+
+            {
+                path: "wallet",
+                element: <Wallet />,
             },
 
             {

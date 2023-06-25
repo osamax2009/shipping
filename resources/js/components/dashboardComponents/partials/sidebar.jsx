@@ -32,7 +32,6 @@ const Sidebar = () => {
             icon: <BsBagPlusFill />,
         },
 
-
         {
             title: "My orders",
             path: "/client/order-list",
@@ -183,6 +182,35 @@ const Sidebar = () => {
                         </div>
 
                         {adminRoutes.map((route, index) => (
+                            <div key={index}>
+                                <div className="text-sm w-full h-full  py-2 mt-2 px-4 hover:no-underline hover:bg-gray-200/25">
+                                    <Link
+                                        to={route.path}
+                                        className={
+                                            location.pathname == route.path
+                                                ? "flex gap-2 font-bold text-white"
+                                                : "flex gap-2 font-light"
+                                        }
+                                    >
+                                        <span className="text-md">
+                                            {route.icon}
+                                        </span>
+                                        {route.title}
+                                    </Link>
+                                </div>
+                            </div>
+                        ))}
+                    </>
+                ) : null}
+
+                {user?.user_type == "delivery_man" ? (
+                    <>
+                        {/* Heading  */}
+                        <div className="py-2 text-center text-white/50">
+                            Menu
+                        </div>
+
+                        {deliveryManRoutes.map((route, index) => (
                             <div key={index}>
                                 <div className="text-sm w-full h-full  py-2 mt-2 px-4 hover:no-underline hover:bg-gray-200/25">
                                     <Link
