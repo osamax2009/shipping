@@ -1052,7 +1052,7 @@ const ParcelType = ({ value, setValue }) => {
                         </MenuItem>
                     ))}
                 </Select>
-            </FormControl>--*
+            </FormControl>
            
         </div>
     );

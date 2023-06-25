@@ -24,6 +24,7 @@ import Brand from "./userInterface/pagesPartials/index/brand";
 import PrivacyAndPolicy from "./partials/privacyAndPolicy";
 import AboutUs from "./partials/aboutUs";
 import Wallet from "./userInterface/userDashboard/wallet";
+import ContactUs from "./partials/contactUs";
 
 const router = createBrowserRouter([
     /*   Common routes */
@@ -50,6 +51,11 @@ const router = createBrowserRouter([
     {
         path : "/aboutus",
         element : <AboutUs />
+    },
+
+    {
+        path : "/contactus",
+        element : <ContactUs />
     },
 
     /*   Common routes */
@@ -101,7 +107,7 @@ const router = createBrowserRouter([
         element: <DeliveryManDashboard />,
         children: [
             {
-                path: "orders",
+                path: "order-list",
                 element: <Orders />,
             },
 

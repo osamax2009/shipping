@@ -116,7 +116,7 @@ const Sidebar = () => {
 
         {
             title: "My orders",
-            path: "/client/order-list",
+            path: "/delivery_man/order-list",
             icon: <BsCardChecklist />,
         },
     ];

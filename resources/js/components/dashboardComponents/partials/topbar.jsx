@@ -131,12 +131,6 @@ const UserMenu = ({ handleLogout }) => {
                 Profile
             </Link>
 
-            <Link className="dropdown-item" to={"/client/wallet"}>
-                <i className="fas fa-wallet fa-sm fa-fw mr-2 text-gray-400"></i>
-                Wallet
-            </Link>
-
-
             <Link className="dropdown-item" to={"/client/bank-informations"}>
                 <i className="fas fa-credit-card fa-sm fa-fw mr-2 text-gray-400"></i>
                 Bank Details
@@ -170,7 +164,7 @@ const UserMenu = ({ handleLogout }) => {
                 Privacy Policy
             </Link>
 
-            <Link className="dropdown-item" to={"#"}>
+            <Link className="dropdown-item" to={"/contactus"}>
                 <i className="fa fa-question fa-sm fa-fw mr-2 text-gray-400"></i>
                 Help & Support
             </Link>
@@ -254,7 +248,7 @@ const AdminMenu = ({ handleLogout }) => {
                 Privacy Policy
             </Link>
 
-            <Link className="dropdown-item" to={"#"}>
+            <Link className="dropdown-item" to={"/contactus"}>
                 <i className="fa fa-question fa-sm fa-fw mr-2 text-gray-400"></i>
                 Help & Support
             </Link>
@@ -318,7 +312,17 @@ const DeliveryMan = ({ handleLogout }) => {
                 Profile
             </Link>
 
+            <Link className="dropdown-item" to={"/delivery_man/verify-document"}>
+                <i className="fas fa-file fa-sm fa-fw mr-2 text-gray-400"></i>
+               Verify Document
+            </Link>
+
             <Link className="dropdown-item" to={"/admin/profile"}>
+                <i className="fas fa-wallet fa-sm fa-fw mr-2 text-gray-400"></i>
+                Earning History
+            </Link>
+
+            <Link className="dropdown-item" to={"/delivery_man/wallet"}>
                 <i className="fas fa-wallet fa-sm fa-fw mr-2 text-gray-400"></i>
                 Wallet
             </Link>
@@ -343,7 +347,7 @@ const DeliveryMan = ({ handleLogout }) => {
                 Privacy Policy
             </Link>
 
-            <Link className="dropdown-item" to={"#"}>
+            <Link className="dropdown-item" to={"/contactus"}>
                 <i className="fa fa-question fa-sm fa-fw mr-2 text-gray-400"></i>
                 Help & Support
             </Link>
