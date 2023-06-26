@@ -9,12 +9,14 @@ import {
     BsBox2,
     BsBuilding,
     BsCardChecklist,
+    BsEnvelopeOpen,
     BsFile,
     BsFiles,
     BsFillBoxSeamFill,
     BsFillCreditCardFill,
     BsListCheck,
     BsPinMapFill,
+    BsWalletFill,
 } from "react-icons/bs";
 import { FaListAlt, FaMapMarkedAlt } from "react-icons/fa";
 import { RiDashboardFill, RiEBikeFill } from "react-icons/ri";
@@ -115,10 +117,24 @@ const Sidebar = () => {
         },
 
         {
+            title: "Drafts",
+            path: "/delivery_man/drafts",
+            icon: <BsEnvelopeOpen />,
+        },
+
+        {
+            title: "Wallet",
+            path: "/delivery_man/wallet",
+            icon: <BsWalletFill />,
+        },
+
+       
+
+       /*  {
             title: "My orders",
             path: "/delivery_man/order-list",
             icon: <BsCardChecklist />,
-        },
+        }, */
     ];
 
     return (

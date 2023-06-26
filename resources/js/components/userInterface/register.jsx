@@ -11,6 +11,7 @@ import PhoneInput from "react-phone-input-2";
 import { appName } from "../shared/constancy";
 import { forEach } from "lodash";
 import { ToastContainer, toast } from "react-toastify";
+import LocationSetter from "../partials/locationSetter";
 
 const Register = () => {
     const [countries, setCountries] = useState(null);
@@ -23,6 +24,7 @@ const Register = () => {
     const [username, setUsername] = useState("");
     const [country, setCountry] = useState("");
     const [city, setCity] = useState("");
+    const [userType, setUserType] = useState("");
     const [contact, setContact] = useState("");
     const [errors, setErrors] = useState({});
 
@@ -64,8 +66,8 @@ const Register = () => {
             username: username,
             email: email,
             password: password,
-            user_type: "client",
-            contact_number: "4564552664",
+            user_type: userType,
+            contact_number: contact,
             country_id: country,
             city: city,
             address: address,
@@ -132,6 +134,26 @@ const Register = () => {
                     </div>
                     <form onSubmit={handleRegister} className="grid gap-4">
                         <div className="grid gap-4 md:grid-cols-2">
+                            <div className="form-group">
+                                <select
+                                    name=""
+                                    id=""
+                                    required
+                                    className="form-control"
+                                    value={userType}
+                                    onChange={(e) =>
+                                        setUserType(e.target.value)
+                                    }
+                                >
+                                    <option value="">
+                                        choose account type
+                                    </option>
+                                    <option value="client">Client</option>
+                                    <option value="delivery_man">
+                                        Delivery Man
+                                    </option>
+                                </select>
+                            </div>
                             <div className=" form-group">
                                 <input
                                     required
@@ -156,19 +178,20 @@ const Register = () => {
                                     placeholder="username"
                                 />
                             </div>
+
+                            <div className="form-group">
+                                <input
+                                    required
+                                    type="text"
+                                    value={email}
+                                    ref={emailInput}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    className="form-control"
+                                    placeholder="Email"
+                                />
+                            </div>
                         </div>
 
-                        <div className="form-group">
-                            <input
-                                required
-                                type="text"
-                                value={email}
-                                ref={emailInput}
-                                onChange={(e) => setEmail(e.target.value)}
-                                className="form-control"
-                                placeholder="Email Address"
-                            />
-                        </div>
                         <div className="grid gap-4 md:grid-cols-2">
                             <div className=" form-group">
                                 <PhoneInput
@@ -182,7 +205,7 @@ const Register = () => {
                                 />
                             </div>
                             <div className="form-group">
-                                <input
+                                {/*  <input
                                     required
                                     type="text"
                                     ref={addressInput}
@@ -191,6 +214,11 @@ const Register = () => {
                                     className="form-control"
                                     id="exampleRepeatPassword"
                                     placeholder="address"
+                                /> */}
+                                <label htmlFor="">{" "}</label>
+                                <LocationSetter
+                                    cityName={address}
+                                    setCityName={setAddress}
                                 />
                             </div>
                         </div>
@@ -206,7 +234,7 @@ const Register = () => {
                                     placeholder="country"
                                 >
                                     {countries?.map((country, index) => (
-                                        <option key={index} value={country.id}>
+                                        <option key={index} selected={country.id == 2 ? true : false} value={country.id}>
                                             {country.name}
                                         </option>
                                     ))}
@@ -246,7 +274,6 @@ const Register = () => {
                         <button className="btn btn-primary btn-block">
                             Register Account
                         </button>
-                        
                     </form>
                     <hr />
                     <div className="text-center">

@@ -14,17 +14,17 @@ const PointFooter = ( ) => {
         }
       };
     return(
-        <div className="bg-appGreen px-24 text-white pt-8 pb-4">
+        <div className="bg-appGreen px-4 md:px-24 text-white pt-8 pb-4">
             <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4">
                 <div>
                     <div className="flex gap-2 items-center justify-start h-8 mb-4">
-                        <img src="/images/ic_app_logo_color.png" className="h-8 " />
+                        <img src="/images/ic_app_logo_color.png" className="h-8" />
                         <div className="text-xl">
                             {appName}
                         </div>
                     </div>
                     <div>
-                        Download the app by clicking the link below
+                        Download the app <br /> by clicking the link below
                     </div>
                     <div className="flex gap-2 flex-wrap mt-4">
                         <div>

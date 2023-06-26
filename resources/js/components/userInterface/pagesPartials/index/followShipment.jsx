@@ -42,26 +42,26 @@ const FollowShipment = () => {
 
     return (
         <form onSubmit={goOnorderPage}>
-            <div className="flex justify-center py-4 px-12 bg-white">
+            <div className="flex justify-center py-4 px-4 md:px-12 bg-white">
                 <div className="flex flex-col w-fit py-4 px-12 md:px-24 shadow-sm items-center justify-center bg-gray-100/75">
                     <div className="styles_trackingHeader__7olso">
                         <span className="uppercase text-lg font-semibold text-appGreen text-center">
                             TRACK &amp; TRACE
                         </span>
-                        <h2 className="text-xl uppercase font-bold">
+                        <h2 className="text-md md:text-lg pt-2 uppercase font-bold">
                             Follow your {appName} parcel
                         </h2>
                     </div>
                     <div className="relative w-full">
                         <div className="flex items-center relative  w-full ">
                             <div className="absolute right-3 flex items-center  cursor-pointer">
-                                <button className="bg-appGreen  hover:bg-appGreen/75 focus:bg-appGreen/75 w-fit h-fit text-white font-bold py-2 px-4 rounded">
+                                <button className=" text-sm md:text-md bg-appGreen  hover:bg-appGreen/75 focus:bg-appGreen/75 w-fit h-fit text-white font-bold py-2 px-2 md:px-4 rounded">
                                     Track
                                 </button>
                             </div>
                             <input
-                                id="email1"
-                                className="text-gray-600  focus:outline-none focus:border focus:border-slate-700  bg-white font-normal w-full h-16 flex items-center pl-12 text-sm border-gray-300 rounded shadow"
+                              
+                                className="text-gray-600  focus:outline-none focus:border focus:border-slate-700  bg-white font-normal w-full h-16 flex items-center pl-4 md:pl-12 text-sm border-gray-300 rounded shadow"
                                 placeholder="order number here"
                                 required
                                 value={orderId}

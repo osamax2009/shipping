@@ -10,8 +10,8 @@ import AliceCarousel from "react-alice-carousel";
 
 const ParcelTypes = () => {
     return (
-        <div className="flex bg-white justify-center w-full mt-6">
-            <div className="flex justify-center w-screen bg-white px-8 py-2">
+        <div className="flex bg-white justify-center !w-10/12 mt-6 overflow-x-hidden">
+            <div className="flex justify-center w-full bg-white md:px-8 py-2 overflow-x-hidden">
                 <SlideElement />
             </div>
         </div>

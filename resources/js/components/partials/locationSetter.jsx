@@ -56,6 +56,8 @@ const LocationSetter = ({ cityName, setCityName}) => {
                 value={cityName}
                 onChange={(e) => setCityName(e.target.value)}
                 onFocus={() => setExpanded(true)}
+                required
+                placeholder="Address"
             />
             {expanded && places?.length > 0 ? (
                 <div className="bg-white max-h-[290px] z-50 shadow absolute top-12 left-0 right-0 border rounded-lg overflow-hidden overflow-y-scroll ">
