@@ -23,8 +23,11 @@ import DeliveryManDashboard from "./deliveryManInterface/deliveryManDashboardLay
 import Brand from "./userInterface/pagesPartials/index/brand";
 import PrivacyAndPolicy from "./partials/privacyAndPolicy";
 import AboutUs from "./partials/aboutUs";
-import Wallet from "./userInterface/userDashboard/wallet";
+import Wallet from "./partials/wallet";
 import ContactUs from "./partials/contactUs";
+import EarnHistory from "./deliveryManInterface/earnHistory";
+import Drafts from "./deliveryManInterface/drafts";
+import VerifyDocument from "./deliveryManInterface/verifyDocument";
 
 const router = createBrowserRouter([
     /*   Common routes */
@@ -110,6 +113,26 @@ const router = createBrowserRouter([
                 path: "order-list",
                 element: <Orders />,
             }, */
+
+            {
+                path: "wallet",
+                element: <Wallet />,
+            }, 
+
+            {
+                path: "earning-history",
+                element: <EarnHistory />,
+            }, 
+
+            {
+                path: "drafts",
+                element: <Drafts />,
+            }, 
+
+            {
+                path: "verify-document",
+                element: <VerifyDocument />,
+            }, 
 
             {
                 path : "createorder",

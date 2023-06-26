@@ -706,6 +706,13 @@ html {
   --b3: 213 18% 10%;
   --bc: 220 13% 69%;
 }
+    input[type='number']::-webkit-outer-spin-button,
+    input[type='number']::-webkit-inner-spin-button,
+    input[type='number'] {
+      -webkit-appearance: none;
+      margin: 0;
+      -moz-appearance: textfield !important;
+    }
 
 *, ::before, ::after {
   --tw-border-spacing-x: 0;
@@ -2974,6 +2981,12 @@ html {
 .min-h-screen {
   min-height: 100vh;
 }
+.\!w-10\/12 {
+  width: 83.333333% !important;
+}
+.\!w-screen {
+  width: 100vw !important;
+}
 .w-0 {
   width: 0px;
 }
@@ -3040,15 +3053,6 @@ html {
 }
 .w-screen {
   width: 100vw;
-}
-.w-10\/12 {
-  width: 83.333333%;
-}
-.\!w-10\/12 {
-  width: 83.333333% !important;
-}
-.\!w-screen {
-  width: 100vw !important;
 }
 .min-w-0 {
   min-width: 0px;
@@ -3683,9 +3687,6 @@ html {
 }
 .pb-6 {
   padding-bottom: 1.5rem;
-}
-.pl-12 {
-  padding-left: 3rem;
 }
 .pl-3 {
   padding-left: 0.75rem;
@@ -4602,9 +4603,19 @@ html {
     border-color: rgb(185 28 28 / var(--tw-border-opacity));
   }
 
+  .md\:px-12 {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
+
   .md\:px-24 {
     padding-left: 6rem;
     padding-right: 6rem;
+  }
+
+  .md\:px-4 {
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 
   .md\:px-8 {
@@ -4617,16 +4628,6 @@ html {
     padding-bottom: 0.75rem;
   }
 
-  .md\:px-4 {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-
-  .md\:px-12 {
-    padding-left: 3rem;
-    padding-right: 3rem;
-  }
-
   .md\:pl-12 {
     padding-left: 3rem;
   }
@@ -4635,9 +4636,9 @@ html {
     text-align: center;
   }
 
-  .md\:text-xl {
-    font-size: 1.25rem;
-    line-height: 1.75rem;
+  .md\:text-2xl {
+    font-size: 1.5rem;
+    line-height: 2rem;
   }
 
   .md\:text-lg {
@@ -4645,9 +4646,9 @@ html {
     line-height: 1.75rem;
   }
 
-  .md\:text-2xl {
-    font-size: 1.5rem;
-    line-height: 2rem;
+  .md\:text-xl {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
   }
 }
 @media (min-width: 1024px) {

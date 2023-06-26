@@ -14,6 +14,7 @@ import {
     BsFiles,
     BsFillBoxSeamFill,
     BsFillCreditCardFill,
+    BsFillWalletFill,
     BsListCheck,
     BsPinMapFill,
     BsWalletFill,
@@ -23,6 +24,7 @@ import { RiDashboardFill, RiEBikeFill } from "react-icons/ri";
 import { BiListCheck } from "react-icons/bi";
 import { margin } from "@mui/system";
 import { Image } from "@nextui-org/react";
+import { HiWallet } from "react-icons/hi2";
 const Sidebar = () => {
     const { user, setUser } = useContext(UserContext);
     const location = useLocation();
@@ -126,6 +128,18 @@ const Sidebar = () => {
             title: "Wallet",
             path: "/delivery_man/wallet",
             icon: <BsWalletFill />,
+        },
+
+        {
+            title: "Earning history",
+            path: "/delivery_man/earning-history",
+            icon: <HiWallet />,
+        },
+
+        {
+            title: "Verify Document",
+            path: "/delivery_man/verify-document",
+            icon: <BsFiles />,
         },
 
        
