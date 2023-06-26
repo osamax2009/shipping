@@ -30,6 +30,8 @@ import Drafts from "./deliveryManInterface/drafts";
 import VerifyDocument from "./deliveryManInterface/verifyDocument";
 import Payment from "./partials/payment";
 import ExtraCharges from "./adminInterface/extarCharges";
+import Vehicle from "./adminInterface/vehicle";
+import PaymentGateway from "./adminInterface/paymentGateway";
 
 const router = createBrowserRouter([
     /*   Common routes */
@@ -193,6 +195,17 @@ const router = createBrowserRouter([
                 path: "extracharges",
                 element: <ExtraCharges />,
             },
+
+            {
+                path: "vehicle",
+                element: <Vehicle />,
+            },
+
+            {
+                path: "paymentgateway",
+                element: <PaymentGateway />,
+            },
+
 
             {
                 path: "orderdetail/order_Id/:order_Id",

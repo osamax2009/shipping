@@ -66,7 +66,7 @@ const Sidebar = () => {
 
         {
             title: "vehicle",
-            path: "#",
+            path: "/admin/vehicle",
             icon: <RiEBikeFill />,
         },
 
@@ -84,7 +84,7 @@ const Sidebar = () => {
 
         {
             title: "Payment gateway",
-            path: "#",
+            path: "/admin/paymentgateway",
             icon: <BsFillCreditCardFill />,
         },
 

@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import { getWithAxios, postWithAxios } from "../api/axios";
-import { Button, Modal, Table } from "@nextui-org/react";
-import { BsEye, BsPencilFill, BsTrash } from "react-icons/bs";
+import { Button, Image, Modal, Radio, Table } from "@nextui-org/react";
+import { BsPencilFill, BsTrash } from "react-icons/bs";
 import { toast } from "react-toastify";
 
-const City = () => {
-    const [cities, setCities] = useState();
+const Vehicle = () => {
+    const [vehicles, setVehicles] = useState();
     const [openCreate, setOpenCreate] = useState(false);
 
-    const getCities = async () => {
-        const res = await getWithAxios("/api/city-list");
-        setCities(res.data);
+    const getVehicles = async () => {
+        const res = await getWithAxios("/api/vehicle-list");
+        setVehicles(res.data);
     };
 
     const handleOpenCreate = () => {
@@ -18,46 +18,59 @@ const City = () => {
     };
 
     useEffect(() => {
-        getCities();
-    }, []);
+        if (!openCreate) {
+            getVehicles();
+        }
+    }, [openCreate]);
 
     return (
         <div>
             <div className="flex justify-end py-4">
                 <Button color={"success"} onPress={handleOpenCreate}>
-                    new city
+                    add vehicle
                 </Button>
             </div>
             <Table>
                 <Table.Header>
                     <Table.Column>Id</Table.Column>
-                    <Table.Column>city Name</Table.Column>
-                    <Table.Column>Distance type</Table.Column>
-                    <Table.Column>Created Date</Table.Column>
+                    <Table.Column>Vehicle Name</Table.Column>
+                    <Table.Column>Vehicle Size</Table.Column>
+                    <Table.Column>Vehicle Capacity</Table.Column>
+                    <Table.Column>Description</Table.Column>
                     <Table.Column>Status</Table.Column>
+                    <Table.Column>Vehicle Image</Table.Column>
                     <Table.Column>Actions</Table.Column>
                 </Table.Header>
                 <Table.Body>
-                    {cities?.map((city, index) => (
+                    {vehicles?.map((vehicle, index) => (
                         <Table.Row key={index}>
-                            <Table.Cell> {city.id} </Table.Cell>
-                            <Table.Cell>{city.name}</Table.Cell>
-                            <Table.Cell> {city.country_name} </Table.Cell>
-                            <Table.Cell>{city.created_at}</Table.Cell>
+                            <Table.Cell> {vehicle.id} </Table.Cell>
+                            <Table.Cell>{vehicle.title}</Table.Cell>
+                            <Table.Cell> {vehicle.size} </Table.Cell>
+                            <Table.Cell> {vehicle.capacity} </Table.Cell>
+
+                            <Table.Cell>{vehicle.description}</Table.Cell>
                             <Table.Cell>
-                                {city.status == 1 ? (
-                                    <span className="text-appGreen">
+                                {vehicle.status == 1 ? (
+                                    <span className="text-green-700">
                                         Enabled
                                     </span>
                                 ) : (
-                                    <span className="text-red-200">
+                                    <span className="text-red-700">
                                         Disabled
                                     </span>
                                 )}
                             </Table.Cell>
+                            <Table.Cell>
+                                <Image
+                                    src={vehicle.image}
+                                    width={80}
+                                    height={60}
+                                />
+                            </Table.Cell>
 
                             <Table.Cell>
-                                <cityLine city={city} />
+                                <VehicleLine vehicle={vehicle} />
                             </Table.Cell>
                         </Table.Row>
                     ))}
@@ -66,7 +79,7 @@ const City = () => {
                     shadow
                     noMargin
                     align="center"
-                    rowsPerPage={10}
+                    rowsPerPage={6}
                     onPageChange={(page) => console.log({ page })}
                 />
             </Table>
@@ -75,9 +88,9 @@ const City = () => {
         </div>
     );
 };
-export default City;
+export default Vehicle;
 
-const cityLine = ({ city }) => {
+const VehicleLine = ({ vehicle }) => {
     const [openUpdate, setOpenUpdate] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
 
@@ -104,21 +117,15 @@ const cityLine = ({ city }) => {
                     color={"error"}
                     icon={<BsTrash />}
                 ></Button>
-                <Button
-                    auto
-                    onPress={handleOpenUpdate}
-                    color={"success"}
-                    icon={<BsEye />}
-                ></Button>
             </div>
             <div>
                 <UpdateModal
-                    city={city}
+                    oldVehicle={vehicle}
                     open={openUpdate}
                     setOpen={setOpenUpdate}
                 />
                 <DeleteModal
-                    city={city}
+                    vehicle={vehicle}
                     open={openDelete}
                     setOpen={setOpenDelete}
                 />
@@ -127,34 +134,132 @@ const cityLine = ({ city }) => {
     );
 };
 
-const CreateModal = ({ open, setOpen }) => {
-    const [selected, setSelected] = useState();
-    const [distanceType, setDistanceType] = useState("km");
-    const [weightType, setWeightType] = useState("kg");
+const CountryAndCity = ({ country, setCountry, city, setCity }) => {
+    const [cities, setCities] = useState(null);
+    const [countries, setCountries] = useState(null);
 
-    const countriesList = countryList();
+    const getCountries = async () => {
+        const res = await getWithAxios("/api/country-list");
+        setCountries(res.data);
+    };
+
+    const getCities = async () => {
+        if (country) {
+            const res = await getWithAxios("/api/city-list", {
+                country_id: country,
+            });
+            setCities(res.data);
+        } else {
+            const res = await getWithAxios("/api/city-list");
+            setCities(res.data);
+        }
+    };
+
+    useEffect(() => {
+        getCountries();
+    }, []);
+
+    useEffect(() => {
+        getCities();
+    }, [country]);
+
+    return (
+        <div className="grid gap-4 w-full z-40 font-bold md:grid-cols-2">
+            <div className="grid">
+                <div>Country</div>
+                <div>
+                    <div className="w-full">
+                        <select
+                            required
+                            className="form-control"
+                            value={country}
+                            label="Age"
+                            onChange={(e) => setCountry(e.target.value)}
+                        >
+                            {countries?.map((country, index) => (
+                                <option
+                                    key={index}
+                                    defaultChecked={
+                                        country.id == 2 ? true : false
+                                    }
+                                    value={country.id}
+                                >
+                                    {" "}
+                                    {country.name}{" "}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div className="grid">
+                <div>City</div>
+                <div>
+                    <div className="w-full">
+                        <select
+                            required
+                            className="form-control"
+                            value={city}
+                            label="Age"
+                            onChange={(e) => setCity(e.target.value)}
+                        >
+                            {cities?.map((city, index) => (
+                                <option
+                                    key={index}
+                                    defaultChecked={city.id == 1 ? true : false}
+                                    value={city.id}
+                                >
+                                    {" "}
+                                    {city.name}{" "}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const CreateModal = ({ open, setOpen }) => {
+    const [vehicle, setVehicle] = useState({
+        title: "",
+        type: "",
+        city_ids: "",
+        size: "",
+        capacity: "",
+        description: "",
+        status: "",
+        vehicle_image: "",
+    });
+    const [checked, setChecked] = useState("percentage");
+
+    const [city, setCity] = useState();
+    const [country, setCountry] = useState();
 
     const handleCreate = async () => {
-        const cityName = countriesList.getLabel(selected);
         const dataToSend = {
-            name: cityName,
-            status: 1,
-            distance_type: distanceType,
-            weight_type: weightType,
-            links: {},
+            title: "",
+            type: "",
+            city_ids: "",
+            size: "",
+            capacity: "",
+            description: "",
+            status: "1",
+            vehicle_image: "",
         };
+        const res = await postWithAxios("/api/vehicle-save", dataToSend);
 
-        const res = await postWithAxios("/api/city-save", dataToSend);
-        if (res.message == "city has been save successfully.") {
+        if (res.message == "Vehicle has been save successfully.") {
             setOpen(false);
-            window.location.reload();
             toast(res.message, {
                 type: "success",
                 hideProgressBar: true,
             });
         }
 
-        if (res.message !== "city has been save successfully.") {
+        if (res.message != "Vehicle has been save successfully.") {
             toast(res.message, {
                 type: "error",
                 hideProgressBar: true,
@@ -170,51 +275,107 @@ const CreateModal = ({ open, setOpen }) => {
         >
             <Modal.Header>
                 <div className="text-lg font-bold text-appGreen">
-                    Create new contry{" "}
+                    Add vehicle
                 </div>
             </Modal.Header>
             <Modal.Body>
-                <div className="grid justify-between h-72">
-                    <div className="form-group ">
-                        <label htmlFor="city name">city Name</label>
-
-                        <ReactFlagsSelect
-                            selected={selected}
-                            searchable
-                            onSelect={(code) => setSelected(code)}
+                <div className="grid w-full">
+                    <div className="form-group">
+                        <label htmlFor=""> Vehicle Name</label>
+                        <input
+                            type="text"
+                            value={vehicle?.title}
+                            onChange={(e) =>
+                                setVehicle({
+                                    ...vehicle,
+                                    title: e.target.value,
+                                })
+                            }
+                            className="form-control"
                         />
                     </div>
-                    <div className="grid  justify-center md:grid-cols-2">
+
+                    <div className="grid md:grid-cols-2">
                         <div className="form-group">
-                            <label htmlFor=""> Distance type</label>
+                            <label htmlFor=""> Type</label>
                             <select
-                                name=""
-                                id=""
-                                value={distanceType}
+                                type="text"
+                                value={vehicle?.type}
                                 onChange={(e) =>
-                                    setDistanceType(e.target.value)
+                                    setVehicle({
+                                        ...vehicle,
+                                        type: e.target.value,
+                                    })
                                 }
-                                className="from-control"
+                                className="form-control"
                             >
-                                <option value={"km"}>km</option>
-                                <option value={"miles"}>miles</option>
+                                <option value={"all"}>All</option>
+                                <option value={"city_wise"}>City wise</option>
                             </select>
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor=""> Weight type</label>
-                            <select
-                                name=""
-                                id=""
-                                value={weightType}
-                                onChange={(e) => setWeightType(e.target.value)}
-                                className="from-control"
-                            >
-                                <option value={"km"}>kg</option>
-                                <option value={"pound"}>Pound</option>
-                            </select>
+                            <label htmlFor=""> Vehicle Capacity</label>
+                            <input
+                                type="text"
+                                value={vehicle?.capacity}
+                                onChange={(e) =>
+                                    setVehicle({
+                                        ...vehicle,
+                                        capacity: e.target.value,
+                                    })
+                                }
+                                className="form-control"
+                            />
                         </div>
                     </div>
+
+                    <div className="form-group w-full ">
+                        <label htmlFor="oldVehicle name">Vehicle Size</label>
+                        <input
+                            required
+                            type="text"
+                            className="form-control w-full"
+                            value={vehicle.size}
+                            onChange={(e) =>
+                                setVehicle({
+                                    ...vehicle,
+                                    size: e.target.value,
+                                })
+                            }
+                        />
+                    </div>
+                    <div className="form-group w-full ">
+                        <label htmlFor="oldVehicle name">Description</label>
+                        <input
+                            required
+                            type="text"
+                            className="form-control w-full"
+                            value={vehicle.description}
+                            onChange={(e) =>
+                                setVehicle({
+                                    ...vehicle,
+                                    description: e.target.value,
+                                })
+                            }
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor=""> Vehicle Image</label>
+                        <input
+                            type="file"
+                           
+                            onChange={(e) =>
+                                setVehicle({
+                                    ...vehicle,
+                                    image: e.target.value,
+                                })
+                            }
+                            className="form-control"
+                        />
+                    </div>
+
                     <div className="flex flex-wrap  w-full gap-6 justify-between sm:justify-end">
                         <Button
                             auto
@@ -240,12 +401,41 @@ const CreateModal = ({ open, setOpen }) => {
     );
 };
 
-const UpdateModal = ({ city, open, setOpen }) => {
-    const [selected, setSelected] = useState(city.code);
-    const [distanceType, setDistanceType] = useState(city.distance_type);
-    const [weightType, setWeightType] = useState(city.weight_type);
+const UpdateModal = ({ oldVehicle, open, setOpen }) => {
+    const [vehicle, setVehicle] = useState(oldVehicle);
+    const [checked, setChecked] = useState("percentage");
 
-    const handleUpdate = async () => {};
+    const [city, setCity] = useState();
+    const [country, setCountry] = useState();
+
+    const handleCreate = async () => {
+        const dataToSend = {
+            title: "",
+            type: "",
+            city_ids: "",
+            size: "",
+            capacity: "",
+            description: "",
+            status: "1",
+            vehicle_image: "",
+        };
+        const res = await postWithAxios("/api/vehicle-save", dataToSend);
+
+        if (res.message == "Vehicle has been save successfully.") {
+            setOpen(false);
+            toast(res.message, {
+                type: "success",
+                hideProgressBar: true,
+            });
+        }
+
+        if (res.message != "Vehicle has been save successfully.") {
+            toast(res.message, {
+                type: "error",
+                hideProgressBar: true,
+            });
+        }
+    };
     return (
         <Modal
             open={open}
@@ -255,51 +445,107 @@ const UpdateModal = ({ city, open, setOpen }) => {
         >
             <Modal.Header>
                 <div className="text-lg font-bold text-appGreen">
-                    Update city{" "}
+                    Add vehicle
                 </div>
             </Modal.Header>
             <Modal.Body>
-                <div className="grid justify-between h-72">
-                    <div className="form-group ">
-                        <label htmlFor="city name">city Name</label>
-
-                        <ReactFlagsSelect
-                            selected={selected}
-                            searchable
-                            onSelect={(code) => setSelected(code)}
+                <div className="grid w-full">
+                    <div className="form-group">
+                        <label htmlFor=""> Vehicle Name</label>
+                        <input
+                            type="text"
+                            value={vehicle?.title}
+                            onChange={(e) =>
+                                setVehicle({
+                                    ...vehicle,
+                                    title: e.target.value,
+                                })
+                            }
+                            className="form-control"
                         />
                     </div>
-                    <div className="grid  justify-center md:grid-cols-2">
+
+                    <div className="grid md:grid-cols-2">
                         <div className="form-group">
-                            <label htmlFor=""> Distance type</label>
+                            <label htmlFor=""> Type</label>
                             <select
-                                name=""
-                                id=""
-                                value={distanceType}
+                                type="text"
+                                value={vehicle?.type}
                                 onChange={(e) =>
-                                    setDistanceType(e.target.value)
+                                    setVehicle({
+                                        ...vehicle,
+                                        type: e.target.value,
+                                    })
                                 }
-                                className="from-control"
+                                className="form-control"
                             >
-                                <option value={"km"}>km</option>
-                                <option value={"miles"}>miles</option>
+                                <option value={"all"}>All</option>
+                                <option value={"city_wise"}>City wise</option>
                             </select>
                         </div>
 
                         <div className="form-group">
-                            <label htmlFor=""> Weight type</label>
-                            <select
-                                name=""
-                                id=""
-                                value={weightType}
-                                onChange={(e) => setWeightType(e.target.value)}
-                                className="from-control"
-                            >
-                                <option value={"km"}>kg</option>
-                                <option value={"pound"}>Pound</option>
-                            </select>
+                            <label htmlFor=""> Vehicle Capacity</label>
+                            <input
+                                type="text"
+                                value={vehicle?.capacity}
+                                onChange={(e) =>
+                                    setVehicle({
+                                        ...vehicle,
+                                        capacity: e.target.value,
+                                    })
+                                }
+                                className="form-control"
+                            />
                         </div>
                     </div>
+
+                    <div className="form-group w-full ">
+                        <label htmlFor="oldVehicle name">Vehicle Size</label>
+                        <input
+                            required
+                            type="text"
+                            className="form-control w-full"
+                            value={vehicle.size}
+                            onChange={(e) =>
+                                setVehicle({
+                                    ...vehicle,
+                                    size: e.target.value,
+                                })
+                            }
+                        />
+                    </div>
+                    <div className="form-group w-full ">
+                        <label htmlFor="oldVehicle name">Description</label>
+                        <input
+                            required
+                            type="text"
+                            className="form-control w-full"
+                            value={vehicle.description}
+                            onChange={(e) =>
+                                setVehicle({
+                                    ...vehicle,
+                                    description: e.target.value,
+                                })
+                            }
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor=""> Vehicle Image</label>
+                        <input
+                            type="file"
+                       
+                            onChange={(e) =>
+                                setVehicle({
+                                    ...vehicle,
+                                    image: e.target.value,
+                                })
+                            }
+                            className="form-control"
+                        />
+                    </div>
+
                     <div className="flex flex-wrap  w-full gap-6 justify-between sm:justify-end">
                         <Button
                             auto
@@ -310,8 +556,13 @@ const UpdateModal = ({ city, open, setOpen }) => {
                             cancel
                         </Button>
 
-                        <Button auto color={"success"} className="text-black">
-                            update
+                        <Button
+                            auto
+                            color={"success"}
+                            onPress={handleCreate}
+                            className="text-black"
+                        >
+                            Create
                         </Button>
                     </div>
                 </div>
@@ -320,20 +571,30 @@ const UpdateModal = ({ city, open, setOpen }) => {
     );
 };
 
-const DeleteModal = ({ city, open, setOpen }) => {
+const DeleteModal = ({ vehicle, open, setOpen }) => {
+    const handleDlete = async () => {
+        const url = "/api/vehicle-delete" + vehicle?.id;
+
+        const res = await postWithAxios(url);
+        setOpen(false);
+        toast(res.message, {
+            type: "success",
+            hideProgressBar: true,
+        });
+    };
     return (
         <Modal open={open} closeButton onClose={() => setOpen(false)}>
             <Modal.Header>
                 {" "}
                 <div className="text-lg font-bold text-appGreen">
-                    Delete city modal
+                    Delete oldVehicle
                 </div>
             </Modal.Header>
             <Modal.Body>
                 <div className="font-bold text-black">
-                    Confirm, you want to delete city{" "}
+                    Confirm, you want to delete oldVehicle{" "}
                     <span className="text-red-300">
-                        {city.name} from list of countries .
+                        #{vehicle?.id} from list of oldVehicles .
                     </span>
                     <div className="flex flex-wrap  w-full gap-6 justify-between sm:justify-end">
                         <Button
@@ -345,7 +606,12 @@ const DeleteModal = ({ city, open, setOpen }) => {
                             Cancel
                         </Button>
 
-                        <Button auto color={"warning"} className="text-black">
+                        <Button
+                            auto
+                            color={"warning"}
+                            onPress={handleDlete}
+                            className="text-black"
+                        >
                             Delete
                         </Button>
                     </div>

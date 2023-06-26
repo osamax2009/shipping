@@ -3,51 +3,51 @@ import { useState } from "react";
 import { getWithAxios } from "../api/axios";
 import { useEffect } from "react";
 
-const PaymentGateway = () => {
-    const [payments, setPayments] = useState();
+const Document = () => {
+    const [documents, setDocuments] = useState();
     const [openCreate, setOpenCreate] = useState();
 
-    const getPayments = async () => {
-        const res = await getWithAxios("/api/paymentgateway-list");
-        setPayments(res.data);
+    const getDocuments = async () => {
+        const res = await getWithAxios("/api/document-list");
+        setDocuments(res.data);
         console.log(res.data);
     };
 
     useEffect(() => {
         if (!openCreate) {
-            getPayments();
+            getDocuments();
         }
     }, [openCreate]);
 
     return (
         <div className="">
-            <div className="font-bold py-4">Payment Gateway</div>
+            <div className="font-bold py-4">document Gateway</div>
             <div>
                 <Table>
                     <Table.Header>
                         <Table.Column>Id</Table.Column>
-                        <Table.Column>Payment Method</Table.Column>
+                        <Table.Column>document Method</Table.Column>
                         <Table.Column>Image</Table.Column>
                         <Table.Column>Mode</Table.Column>
                         <Table.Column>Status</Table.Column>
                         <Table.Column>Actions</Table.Column>
                     </Table.Header>
                     <Table.Body>
-                        {payments?.map((payment, index) => (
+                        {documents?.map((document, index) => (
                             <Table.Row key={index}>
-                                <Table.Cell> {payment.id} </Table.Cell>
-                                <Table.Cell>{payment.type == "stripe"  ? "Visa/Master Card" : null}</Table.Cell>
+                                <Table.Cell> {document.id} </Table.Cell>
+                                <Table.Cell>{document.type == "stripe"  ? "Visa/Master Card" : null}</Table.Cell>
                                 <Table.Cell>
                                     <Image
-                                        src={payment.gateway_logo}
+                                        src={document.gateway_logo}
                                         width={80}
                                         height={60}
                                     />
                                 </Table.Cell>
-                                <Table.Cell> {payment.is_test == 1 ? "Test" : "live"} </Table.Cell>
+                                <Table.Cell> {document.is_test == 1 ? "Test" : "live"} </Table.Cell>
 
                                 <Table.Cell>
-                                    {payment.status == 1 ? (
+                                    {document.status == 1 ? (
                                         <span className="text-green-700">
                                             Enabled
                                         </span>
@@ -59,7 +59,7 @@ const PaymentGateway = () => {
                                 </Table.Cell>
 
                                 <Table.Cell>
-                                    {/*  <PaymentLine payment={payment} /> */}
+                                    {/*  <documentLine document={document} /> */}
                                 </Table.Cell>
                             </Table.Row>
                         ))}
@@ -77,4 +77,4 @@ const PaymentGateway = () => {
     );
 };
 
-export default PaymentGateway;
+export default Document;
