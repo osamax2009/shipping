@@ -12,7 +12,7 @@ import Prohibited from "./pagesPartials/index/prohibited"
 
 const Index = () => {
     return(
-        <div>
+        <div className="overflow-x-hidden !w-screen">
             <Navbar/>
             <Brand/>
             <WorkWith/>

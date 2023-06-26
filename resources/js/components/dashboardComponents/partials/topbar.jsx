@@ -312,21 +312,6 @@ const DeliveryMan = ({ handleLogout }) => {
                 Profile
             </Link>
 
-            <Link className="dropdown-item" to={"/delivery_man/verify-document"}>
-                <i className="fas fa-file fa-sm fa-fw mr-2 text-gray-400"></i>
-               Verify Document
-            </Link>
-
-            <Link className="dropdown-item" to={"/admin/profile"}>
-                <i className="fas fa-wallet fa-sm fa-fw mr-2 text-gray-400"></i>
-                Earning History
-            </Link>
-
-            <Link className="dropdown-item" to={"/delivery_man/wallet"}>
-                <i className="fas fa-wallet fa-sm fa-fw mr-2 text-gray-400"></i>
-                Wallet
-            </Link>
-
             <button className="dropdown-item" onClick={handlePassModal}>
                 <i className="fas fa-lock fa-sm fa-fw mr-2 text-gray-400"></i>
                 Change Password

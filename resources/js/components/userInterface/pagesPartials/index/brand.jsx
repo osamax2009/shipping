@@ -190,7 +190,7 @@ const Brand = () => {
 
     return (
         <div className="bg-gradient-to-b from-[#4caf50] to-[#388a3a] pb-24 px-24 pt-32 h-fit " id="createOrder">
-            <div className="text-[4rem] text-white text-center mt-4 font-bold">
+            <div className="text-4xl text-white md:text-center mt-4 font-bold">
                 Save on wolrdwide
             </div>
             <div className=" text-white text-lg text-center">

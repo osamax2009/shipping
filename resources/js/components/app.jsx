@@ -23,8 +23,12 @@ import DeliveryManDashboard from "./deliveryManInterface/deliveryManDashboardLay
 import Brand from "./userInterface/pagesPartials/index/brand";
 import PrivacyAndPolicy from "./partials/privacyAndPolicy";
 import AboutUs from "./partials/aboutUs";
-import Wallet from "./userInterface/userDashboard/wallet";
+import Wallet from "./partials/wallet";
 import ContactUs from "./partials/contactUs";
+import EarnHistory from "./deliveryManInterface/earnHistory";
+import Drafts from "./deliveryManInterface/drafts";
+import VerifyDocument from "./deliveryManInterface/verifyDocument";
+import Payment from "./partials/payment";
 
 const router = createBrowserRouter([
     /*   Common routes */
@@ -106,10 +110,30 @@ const router = createBrowserRouter([
         path: "/delivery_man",
         element: <DeliveryManDashboard />,
         children: [
-            {
+           /*  {
                 path: "order-list",
                 element: <Orders />,
-            },
+            }, */
+
+            {
+                path: "wallet",
+                element: <Wallet />,
+            }, 
+
+            {
+                path: "earning-history",
+                element: <EarnHistory />,
+            }, 
+
+            {
+                path: "drafts",
+                element: <Drafts />,
+            }, 
+
+            {
+                path: "verify-document",
+                element: <VerifyDocument />,
+            }, 
 
             {
                 path : "createorder",
@@ -120,6 +144,11 @@ const router = createBrowserRouter([
                 path: "orderdetail/order_Id/:order_Id",
                 element: <SingleOrder />,
             },
+
+            {
+                path : "payment",
+                element : <Payment />
+            }
         ],
     },
     /* Admin routes */

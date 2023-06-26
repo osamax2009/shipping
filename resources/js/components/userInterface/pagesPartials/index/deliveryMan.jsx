@@ -36,10 +36,10 @@ const DeliveryMan = () => {
 
     return (
         <div className="py-6 px-8 bg-white/75" id="partner">
-            <div className="text-2xl text-appGreen font-bold mb-8 uppercase">
+            <div className="text-lg md:text-2xl text-appGreen font-bold mb-8 uppercase">
                 Register as delivery man
             </div>
-            <div className="font-bold text-xl">Deliver when you want</div>
+            <div className="font-bold text-lg md:text-xl">Deliver when you want</div>
             <div className="grid mt-1 items-center gap-6 sm:grid-cols-2 md:grid-cols-4">
                 {deliveryDetails.map((detail, index) => (
                     <DeliverDetail
@@ -54,11 +54,11 @@ const DeliveryMan = () => {
             </div>
             <div className="mt-4">
                 <a
-                    className="px-8 py-3 bg-black text-white text-md hover:bg-black/75 hover:no-underline"
+                    className="px-3 md:px-8 py-3  bg-black text-white text-md hover:bg-black/75 hover:no-underline"
                     target="blank"
                     href="https://play.google.com/store/apps/details?id=com.point.delivery"
                 >
-                    Become a 2point delivery partner
+                   Become a 2point delivery partner
                 </a>
             </div>
 
