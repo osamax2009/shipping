@@ -110,10 +110,10 @@ const router = createBrowserRouter([
         path: "/delivery_man",
         element: <DeliveryManDashboard />,
         children: [
-           /*  {
+            {
                 path: "order-list",
                 element: <Orders />,
-            }, */
+            },
 
             {
                 path: "wallet",

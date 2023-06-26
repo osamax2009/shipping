@@ -138,6 +138,12 @@ const Sidebar = () => {
     ];
 
     const deliveryManRoutes = [
+
+        {
+            title: "My orders",
+            path: "/delivery_man/order-list",
+            icon: <BsCardChecklist />,
+        },
         {
             title: "Create Order",
             path: "/delivery_man/createorder",
@@ -179,7 +185,7 @@ const Sidebar = () => {
 
     return (
         <aside
-            className="main-sidebar elevation-0 sidebar-dark-teal bg-appGreen  overflow-x-scroll"
+            className="main-sidebar elevation-0 sidebar-dark-teal bg-appGreen"
             id="accordionSidebar"
         >
             {/* Sidebar - Brand  */}

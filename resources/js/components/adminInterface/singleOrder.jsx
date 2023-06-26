@@ -245,13 +245,42 @@ const SingleOrder = () => {
                     {!active && (
                         <div className="grid gap-4 font-bold bg-white text-black py-4 px-6 rounded-b-lg">
                             <ul class="steps steps-vertical">
-                            {history[0] && <li data-content={<AiOutlineFileSearch/>} className="step step-success"> <Content history={history[0]} /> </li>}
-                            {history[0] && <li data-content={<DataContent icon={<AiOutlineFileSearch/>} />} className="step step-success"> <Content history={history[0]} /> </li>}
-                                {history[0] && <li data-content={<DataContent icon={<AiOutlineFileSearch/>} />} className="step step-success"> <Content history={history[0]} /> </li>}
-                                {history[1] && <li data-content={<DataContent icon={<AiOutlineFileSearch/>} />} className="step step-success"> <Content history={history[1]} /> </li>}
-                                {history[2] && <li data-content={<DataContent icon={<AiOutlineFileSearch/>} />} className="step step-success"> <Content history={history[2]} /> </li>}
-                                {history[3] && <li data-content={<DataContent icon={<AiOutlineFileSearch/>} />} className="step step-success"> <Content history={history[3]} /> </li>}
-
+                                {history[0] && (
+                                    <li
+                                        data-content="✓"
+                                        className="step step-success"
+                                    >
+                                        {" "}
+                                        <Content history={history[0]} />{" "}
+                                    </li>
+                                )}
+                                {history[1] && (
+                                    <li
+                                        data-content="✓"
+                                        className="step step-success"
+                                    >
+                                        {" "}
+                                        <Content history={history[1]} />{" "}
+                                    </li>
+                                )}
+                                {history[2] && (
+                                    <li
+                                        data-content="✓"
+                                        className="step step-success"
+                                    >
+                                        {" "}
+                                        <Content history={history[2]} />{" "}
+                                    </li>
+                                )}
+                                {history[3] && (
+                                    <li
+                                        data-content="✓"
+                                        className="step step-success"
+                                    >
+                                        {" "}
+                                        <Content history={history[3]} />{" "}
+                                    </li>
+                                )}
                             </ul>
                         </div>
                     )}
@@ -293,17 +322,15 @@ const SingleOrder = () => {
 export default SingleOrder;
 
 const DataContent = ({ icon }) => {
-    return <div className="text-lg text-white">
-        {icon}
-    </div>;
+    return <div className="text-lg text-white">{icon}</div>;
 };
 
-const Content = ({history}) => {
+const Content = ({ history }) => {
     return (
-        <div className="grid text-start gap-2 text-black">
+        <div className="grid text-start gap-2 font-bold text-black">
             <div>{history?.history_type}</div>
 
-            <div className="font-light">
+            <div className="flex gap-2 font-light text-sm ">
                 {history?.history_message}
                 {history?.datetime}
             </div>

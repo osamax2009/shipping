@@ -1,4 +1,4 @@
-import { Button, Loading, Modal, Table } from "@nextui-org/react";
+import { Avatar, Button, Loading, Modal, Table } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { getWithAxios, postWithAxios } from "../api/axios";
 import { BsPencilFill, BsTrash } from "react-icons/bs";
@@ -7,6 +7,8 @@ import { OrderStatus } from "../shared/constancy";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { toast } from "react-toastify";
 import dayjs, { Dayjs } from "dayjs";
+import { useContext } from "react";
+import { UserContext } from "../contexts/userContext";
 
 const Orders = () => {
     const [orders, setOrders] = useState();
@@ -14,6 +16,7 @@ const Orders = () => {
     const [selectedOrder, setSelectedOrder] = useState();
     const [openUpdate, setOpenUpdate] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
+    const { user, setUser } = useContext(UserContext);
     const [filter, setFilter] = useState({
         client_id: null,
         city_id: null,
@@ -52,10 +55,8 @@ const Orders = () => {
                 ? dayjs(filter.to_date).format("YYYY-MM-DD")
                 : null,
         };
-        console.log("params", params)
 
         const res = await getWithAxios("/api/order-list", params);
-        console.log("order list",res)
 
         setOrders(res.data);
     };
@@ -66,10 +67,9 @@ const Orders = () => {
         }
     }, [filter, openUpdate, openDelete]);
 
-    
     return (
         <div className="">
-            <div className="flex justify-between">
+            <div className="flex flex-wrap justify-between">
                 <div className="text-xl font-bold text-appGreen">Orders</div>
                 <div>
                     <form onSubmit={goOnorderPage}>
@@ -89,72 +89,74 @@ const Orders = () => {
                 </div>
             </div>
             <Filter filter={filter} setFilter={setFilter} />
-            <Table
-                aria-label="New orders table"
-                css={{
-                    height: "auto",
-                    minWidth: "100%",
-                }}
-                className="text-sm overflow-x-scroll"
-            >
-                <Table.Header>
-                    <Table.Column>Order Id</Table.Column>
-                    <Table.Column>Customer Name</Table.Column>
-                    <Table.Column>Delivery Person</Table.Column>
-                    <Table.Column>PickUp Date</Table.Column>
-                    <Table.Column>PickUp Address</Table.Column>
-                    <Table.Column>Delivery Address</Table.Column>
-                    <Table.Column>Create Date</Table.Column>
-                    <Table.Column>Status</Table.Column>
-                    <Table.Column>Assign</Table.Column>
-                    <Table.Column>Actions</Table.Column>
-                </Table.Header>
-                <Table.Body>
-                    {orders?.map((order, index) => (
-                        <Table.Row key={index}>
-                            <Table.Cell>{order?.id}</Table.Cell>
-                            <Table.Cell>{order?.client_name}</Table.Cell>
-                            <Table.Cell>{order?.delivery_man_name}</Table.Cell>
-                            <Table.Cell>
-                                {order?.pickup_point.date}
-                            </Table.Cell>
-                            <Table.Cell>
-                                {order?.pickup_point.address}
-                            </Table.Cell>
-                            <Table.Cell>
-                                {order?.delivery_point.address}
-                            </Table.Cell>
-                            <Table.Cell>{order?.date}</Table.Cell>
-                            <Table.Cell>
-                                <Status order={order} />
-                            </Table.Cell>
-                            <Table.Cell>
-                                <Assign
-                                    order={order}
-                                    setOpenUpdate={setOpenUpdate}
-                                    openUpdate={openUpdate}
-                                />
-                            </Table.Cell>
+            <div className="text-sm w-full overflow-x-scroll">
+                <Table
+                    aria-label="New orders table"
+                    css={{
+                        height: "auto",
+                        minWidth: "100%",
+                    }}
+                >
+                    <Table.Header>
+                        <Table.Column>Order Id</Table.Column>
+                        <Table.Column>Customer Name</Table.Column>
+                        <Table.Column>Delivery Person</Table.Column>
+                        <Table.Column>PickUp Date</Table.Column>
+                        <Table.Column>PickUp Address</Table.Column>
+                        <Table.Column>Delivery Address</Table.Column>
+                        <Table.Column>Create Date</Table.Column>
+                        <Table.Column>Status</Table.Column>
+                        <Table.Column>Assign</Table.Column>
+                        <Table.Column>Actions</Table.Column>
+                    </Table.Header>
+                    <Table.Body>
+                        {orders?.map((order, index) => (
+                            <Table.Row key={index}>
+                                <Table.Cell>{order?.id}</Table.Cell>
+                                <Table.Cell>{order?.client_name}</Table.Cell>
+                                <Table.Cell>
+                                    {order?.delivery_man_name}
+                                </Table.Cell>
+                                <Table.Cell>
+                                    {order?.pickup_point.date}
+                                </Table.Cell>
+                                <Table.Cell>
+                                    {order?.pickup_point.address}
+                                </Table.Cell>
+                                <Table.Cell>
+                                    {order?.delivery_point.address}
+                                </Table.Cell>
+                                <Table.Cell>{order?.date}</Table.Cell>
+                                <Table.Cell>
+                                    <Status order={order} />
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <Assign
+                                        order={order}
+                                        setOpenUpdate={setOpenUpdate}
+                                        setSelectedOrder={setSelectedOrder}
+                                    />
+                                </Table.Cell>
 
-                            <Table.Cell>
-                                <OrderLine
-                                    order={order}
-                                    setSelectedOrder={setSelectedOrder}
-                                    setOpenDelete={setOpenDelete}
-                                />
-                            </Table.Cell>
-                        </Table.Row>
-                    ))}
-                </Table.Body>
-                <Table.Pagination
-                    shadow
-                    noMargin
-                    align="center"
-                    rowsPerPage={7}
-                    onPageChange={(page) => console.log({ page })}
-                />
-            </Table>
-
+                                <Table.Cell>
+                                    <OrderLine
+                                        order={order}
+                                        setSelectedOrder={setSelectedOrder}
+                                        setOpenDelete={setOpenDelete}
+                                    />
+                                </Table.Cell>
+                            </Table.Row>
+                        ))}
+                    </Table.Body>
+                    <Table.Pagination
+                        shadow
+                        noMargin
+                        align="center"
+                        rowsPerPage={7}
+                        onPageChange={(page) => console.log({ page })}
+                    />
+                </Table>
+            </div>
             <UpdateModal
                 order={selectedOrder}
                 open={openUpdate}
@@ -193,25 +195,31 @@ const Status = ({ order }) => {
         <div className="text-center  font-bold text-sm ">
             {order?.status == "draft" && (
                 <div className="text-gray-600 px-3 py-2 rounded-lg bg-gray-300">
-                    Draft
+                    {order?.status}
                 </div>
             )}
 
             {order?.status == "create" && (
                 <div className="text-green-600 px-3 py-2 rounded-lg bg-green-300">
-                    Created
+                    {order?.status}
+                </div>
+            )}
+
+            {order?.status == "courier_assigned" && (
+                <div className="text-green-600 px-3 py-2 rounded-lg bg-green-300">
+                    {order?.status}
                 </div>
             )}
 
             {order?.status == "accepted" && (
                 <div className="text-green-600 px-3 py-2 rounded-lg bg-green-300">
-                    Accepted*
+                    {order?.status}*
                 </div>
             )}
 
             {order?.status == "cancelled" && (
-                <div className="text-red-600 px-3 py-2 rounded-lg bg-red-300">
-                    Cancelled
+                <div className="text-red-600 px-3 py-2 rounded-lg bg-red-400">
+                    {order?.status}*
                 </div>
             )}
         </div>
@@ -220,7 +228,7 @@ const Status = ({ order }) => {
 
 const Filter = ({ filter, setFilter }) => {
     return (
-        <div className="flex justify-between py-4">
+        <div className="flex flex-wrap justify-between py-4">
             <div>
                 <div className="flex items-center gap-3">
                     <div className="font-bold">Status</div>
@@ -266,60 +274,170 @@ const Filter = ({ filter, setFilter }) => {
     );
 };
 
-const Assign = ({ order, openUpdate, setOpenUpdate }) => {
+const Assign = ({ order, setSelectedOrder, setOpenUpdate }) => {
+    const { user, setUser } = useContext(UserContext);
+
     const handleStatus = async () => {
         setOpenUpdate(true);
-        if (order?.status == "create") {
-            const dataToSend = {
-                id: order?.id,
-                cancelled_delivery_man_ids: order?.cancelled_delivery_man_ids,
-            };
-            const res = await postWithAxios(
-                "/api/order-auto-assign",
-                dataToSend
-            );
-            console.log(res);
+        setSelectedOrder(order);
+    };
 
-            if (res.message) {
-                setOpenUpdate(false);
-                toast(res.message, {
-                    type: "default",
-                    hideProgressBar: true,
-                });
-            }
+    const handleAutoAssign = async () => {
+        const dataToSeend = {
+            id: order?.id,
+            cancelled_delivery_man_ids: [],
+        };
+
+        const res = await postWithAxios("/api/order-auto-assign", dataToSeend);
+
+        if (res.message == "Order has been assigned successfully.") {
+            toast(res.message, {
+                type: "info",
+                hideProgressBar: true,
+            });
         }
     };
 
-    const handleOpenUpdate = () => {
-        setOpenUpdate(true);
+    
+    const cancelOrder = async () => {
+        const dataToSeend = {
+            id: order?.id,
+            cancelled_delivery_man_ids: [],
+        };
+
+        const res = await postWithAxios("/api/order-auto-assign", dataToSeend);
+
+        if (res.message == "Order has been assigned successfully.") {
+            toast(res.message, {
+                type: "info",
+                hideProgressBar: true,
+            });
+        }
     };
 
     return (
         <div>
-            {order?.status != "draft" && order?.status != "cancelled" ? (
-                <Button
+            {user?.user_type == "admin" ? (
+                order?.status == "draft" ? (
+                    <Button
+                        auto
+                        onPress={handleStatus}
+                        color={"success"}
+                        className="mx-6"
+                    >
+                        create
+                    </Button>
+                ) : order?.status == "create" ? (
+                    <Button
+                        auto
+                        onPress={handleStatus}
+                        color={"success"}
+                        className="mx-6"
+                    >
+                        {" "}
+                        Assign
+                    </Button>
+                ) : order?.status == "courier_assigned" ? (
+                    <div className="font-bold text-orange-600 ">Assigned*</div>
+                ) : order?.status == "accepted" ? (
+                    <div className="font-bold text-green-600 ">Accepted*</div>
+                ) : order?.status == "cancelled" ? (
+                    <Button
+                        auto
+                        onPress={handleStatus}
+                        color={"success"}
+                        className="mx-6"
+                    >
+                        {" "}
+                        Assign
+                    </Button>
+                ) : order?.status == "departed" ? (
+                    <div className="font-bold text-green-600 ">Departed*</div>
+                ) : order?.status == "active" ? (
+                    <div className="font-bold text-green-600 ">Pick Up*</div>
+                ) : order?.status == "arrived" ? (
+                    <div className="font-bold text-green-600 ">Arrived*</div>
+                ) : order?.status == "delivered" ? (
+                    <div className="font-bold text-gray-600 ">Delivered*</div>
+                ) : (
+                    <div className="text-green-500">{order?.status}</div>
+                )
+            ) : null}
+
+            {user?.user_type == "delivery_man" ? (
+                order?.status == "draft" ? (
+                    <div className="font-bold text-orange-600 ">Created</div>
+                ) : order?.status == "create" ? (
+                    <Button
+                        auto
+                        onPress={handleAutoAssign}
+                        color={"success"}
+                        className="mx-6"
+                    >
+                        {" "}
+                        Assign
+                    </Button>
+                ) : order?.status == "courier_assigned" ? (
+                    <div className="grid gap-3">
+                        <Button
+                            auto
+                            onPress={handleStatus}
+                            color={"success"}
+                            className="mx-6"
+                        >
+                            {" "}
+                            Accept
+                        </Button>
+
+                        <Button
+                            auto
+                            disabled
+                            onPress={cancelOrder}
+                            color={"error"}
+                            className="mx-6"
+                        >
+                            {" "}
+                            Cancel
+                        </Button>
+                    </div>
+                ) : order?.status == "accepted" ? (
+                    <div className="font-bold text-green-600 ">Pick Up*</div>
+                ) : order?.status == "departed" ? (
+                    <Button
                     auto
                     onPress={handleStatus}
                     color={"success"}
                     className="mx-6"
                 >
-                    {OrderStatus.map((orderStatus) => {
-                        if (orderStatus.value == order?.status) {
-                            return orderStatus.value == "create"
-                                ? "Assign"
-                                : "Transfer";
-                        }
-                    })}
+                    {" "}
+                    Arrived
                 </Button>
-            ) : (
-                <div className="text-green-500">
-                    {OrderStatus.map((orderStatus) => {
-                        if (orderStatus.value == order?.status) {
-                            return orderStatus.value;
-                        }
-                    })}
-                </div>
-            )}
+                ) : order?.status == "active" ? (
+                    <Button
+                    auto
+                    onPress={handleStatus}
+                    color={"success"}
+                    className="mx-6"
+                >
+                    {" "}
+                    Departed
+                </Button>
+                ) : order?.status == "arrived" ? (
+                    <Button
+                    auto
+                    onPress={handleStatus}
+                    color={"success"}
+                    className="mx-6"
+                >
+                    {" "}
+                    Delivered
+                </Button>
+                ) : order?.status == "delivered" ? (
+                    <div className="font-bold text-gray-600 ">Delivered*</div>
+                ) : (
+                    <div className="text-green-500">{order?.status}</div>
+                )
+            ) : null}
 
             <div></div>
         </div>
@@ -327,39 +445,78 @@ const Assign = ({ order, openUpdate, setOpenUpdate }) => {
 };
 
 const UpdateModal = ({ order, open, setOpen }) => {
-    const [orderValue, setorderValue] = useState(order?.value);
-    const [orderLabel, setorderLabel] = useState(order?.label);
+    const [delivers, setDelivers] = useState();
+    const [deliverId, setDeliverId] = useState();
 
-    const handleCreate = async () => {
+    const getDelivers = async () => {
         const dataToSend = {
-            id: order?.id,
-            type: "order_type",
-            label: orderLabel,
-            value: orderValue,
+            user_type: "delivery_man",
         };
 
-        const res = await postWithAxios("/api/staticdata-save", dataToSend);
+        const res = await getWithAxios("/api/user-list", dataToSend);
 
-        if (res.message == "Static Data has been save successfully") {
-            setOpen(false);
-            window.location.reload();
-            toast(res.message, {
-                type: "success",
-                hideProgressBar: true,
-            });
+        setDelivers(res.data);
+        console.log(res.data);
+    };
+
+    const handleAssignOrder = async () => {
+        if (order?.status == "create") {
+            const dataToSend = {
+                id: order?.id,
+                type: "courier_assigned",
+                delivery_man_id: deliverId,
+                status: "courier_assigned",
+            };
+
+            const res = await postWithAxios("/api/order-action", dataToSend);
+
+            if (res.message == "Order has been assigned successfully.") {
+                setOpen(false);
+                toast(res.message, {
+                    type: "info",
+                    hideProgressBar: true,
+                });
+                setDeliverId(null);
+            }
         }
 
-        if (res.message !== "Static Data has been save successfully") {
-            toast(res.message, {
-                type: "error",
-                hideProgressBar: true,
-            });
-        }
+        /*  if (order?.status == "courrier_assigned") {
+            const dataToSend = {
+                id: order?.id,
+                type: "courier_assigned",
+                delivery_man_id: deliverId,
+                status: "courier_assigned",
+            };
+            const res = await postWithAxios("/api/order-action", dataToSend);
+
+            if (res.message == "Order has been assigned successfully.") {
+                setOpen(false);
+                toast(res.message, {
+                    type: "success",
+                    hideProgressBar: true,
+                });
+                setDeliverId(null);
+            }
+
+            if (res.message != "Order has been assigned successfully.") {
+                setOpen(false);
+                toast(res.message, {
+                    type: "error",
+                    hideProgressBar: true,
+                });
+                setDeliverId(null);
+            }
+        } */
     };
     useEffect(() => {
-        setorderValue(order?.value);
-        setorderLabel(order?.label);
-    }, [order]);
+        getDelivers();
+    }, []);
+
+    useEffect(() => {
+        handleAssignOrder();
+        // setDeliverId(null);
+    }, [deliverId]);
+
     return (
         <Modal
             open={open}
@@ -373,13 +530,32 @@ const UpdateModal = ({ order, open, setOpen }) => {
                 </div>
             </Modal.Header>
             <Modal.Body>
-                <div className="">
-                    {order?.status == "create" && (
-                        <div className="flex gap-3">
-                            Assigning order to a delivery man{" "}
-                            <Loading type="points" />
+                <div className="h-[80vh]">
+                    {delivers?.map((deliver, index) => (
+                        <div key={index}>
+                            <div className="flex flex-wrap gap-2 py-4 items-center justify-between">
+                                <Avatar
+                                    src={deliver.profile_image}
+                                    size={"md"}
+                                />
+                                <div className="flex flex-col gap-2 text-sm font-bold">
+                                    <div>{deliver.name}</div>
+                                    <div className="font-light">
+                                        {deliver.contact_number}
+                                    </div>
+                                </div>
+                                <div>
+                                    <Button
+                                        auto
+                                        color={"success"}
+                                        onPress={() => setDeliverId(deliver.id)}
+                                    >
+                                        assign
+                                    </Button>
+                                </div>
+                            </div>
                         </div>
-                    )}
+                    ))}
                 </div>
             </Modal.Body>
         </Modal>

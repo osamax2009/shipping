@@ -136,9 +136,15 @@ export const OrderStatus = [
     },
 
     {
-        label : "Departed",
-        value : "departed"
+        label : "Created",
+        value : "create"
     },
+
+    {
+        label : "Assigned",
+        value : "courier_assigned"
+    },
+
 
     {
         label : "Accepted",
@@ -151,9 +157,11 @@ export const OrderStatus = [
     },
 
     {
-        label : "Assigned",
-        value : "courier_assigned"
+        label : "Departed",
+        value : "departed"
     },
+
+   
 
     {
         label : "Arrived",
@@ -170,10 +178,7 @@ export const OrderStatus = [
         value : "delivered"
     },
 
-    {
-        label : "Created",
-        value : "create"
-    },
+   
 
    
 ]
