@@ -32,28 +32,24 @@ const SingleOrder = () => {
         };
 
         if (orderId) {
-
             let res;
-             try {
-                res  = await getWithAxios("/api/order-detail", dataToSend);
-             } catch (error) {
-                res = "error"
-             }
-
-           
+            try {
+                res = await getWithAxios("/api/order-detail", dataToSend);
+            } catch (error) {
+                res = "error";
+            }
 
             if (res == "error") {
-               
                 toast("invalid order id", {
                     type: "error",
                     hideProgressBar: true,
                 });
-    
+
                 if (user?.user_type == "client") {
                     const url = "/client/order-list";
                     navigate(url);
                 }
-    
+
                 if (user?.user_type == "admin") {
                     const url = "/admin/orders";
                     navigate(url);
@@ -67,6 +63,7 @@ const SingleOrder = () => {
 
             if (res.data.id) {
                 setOrder(res.data);
+                console.log(res.order_history);
                 setHistory(res.order_history);
                 const id = {
                     id: res.data.client_id,
@@ -74,11 +71,7 @@ const SingleOrder = () => {
                 const client = await getWithAxios("/api/user-detail", id);
                 setClient(client.data);
             }
-
-           
         }
-
-       
     };
 
     const handleTab = () => {
@@ -251,19 +244,15 @@ const SingleOrder = () => {
                     )}
                     {!active && (
                         <div className="grid gap-4 font-bold bg-white text-black py-4 px-6 rounded-b-lg">
-                            <div className="flex">
-                                <div className="p-12 text-xl bg-green-700 rounded-[80px]">
-                                    <AiOutlineFileSearch />
-                                </div>
-                                <div className="grid gap-4">
-                                    <div>{history?.history_type}</div>
+                            <ul class="steps steps-vertical">
+                            {history[0] && <li data-content={<AiOutlineFileSearch/>} className="step step-success"> <Content history={history[0]} /> </li>}
+                            {history[0] && <li data-content={<DataContent icon={<AiOutlineFileSearch/>} />} className="step step-success"> <Content history={history[0]} /> </li>}
+                                {history[0] && <li data-content={<DataContent icon={<AiOutlineFileSearch/>} />} className="step step-success"> <Content history={history[0]} /> </li>}
+                                {history[1] && <li data-content={<DataContent icon={<AiOutlineFileSearch/>} />} className="step step-success"> <Content history={history[1]} /> </li>}
+                                {history[2] && <li data-content={<DataContent icon={<AiOutlineFileSearch/>} />} className="step step-success"> <Content history={history[2]} /> </li>}
+                                {history[3] && <li data-content={<DataContent icon={<AiOutlineFileSearch/>} />} className="step step-success"> <Content history={history[3]} /> </li>}
 
-                                    <div className="font-light">
-                                        {history?.history_message}
-                                        {history?.datetime}
-                                    </div>
-                                </div>
-                            </div>
+                            </ul>
                         </div>
                     )}
                 </div>
@@ -302,3 +291,22 @@ const SingleOrder = () => {
 };
 
 export default SingleOrder;
+
+const DataContent = ({ icon }) => {
+    return <div className="text-lg text-white">
+        {icon}
+    </div>;
+};
+
+const Content = ({history}) => {
+    return (
+        <div className="grid text-start gap-2 text-black">
+            <div>{history?.history_type}</div>
+
+            <div className="font-light">
+                {history?.history_message}
+                {history?.datetime}
+            </div>
+        </div>
+    );
+};

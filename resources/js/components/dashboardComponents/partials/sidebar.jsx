@@ -4,6 +4,7 @@ import { appName } from "../../shared/constancy";
 import { Link, useLocation } from "react-router-dom";
 import {
     BsBagPlusFill,
+    BsBellFill,
     BsBicycle,
     BsBox,
     BsBox2,
@@ -16,10 +17,11 @@ import {
     BsFillCreditCardFill,
     BsFillWalletFill,
     BsListCheck,
+    BsPersonCheckFill,
     BsPinMapFill,
     BsWalletFill,
 } from "react-icons/bs";
-import { FaListAlt, FaMapMarkedAlt } from "react-icons/fa";
+import { FaListAlt, FaMapMarkedAlt, FaUsers } from "react-icons/fa";
 import { RiDashboardFill, RiEBikeFill } from "react-icons/ri";
 import { BiListCheck } from "react-icons/bi";
 import { margin } from "@mui/system";
@@ -109,6 +111,30 @@ const Sidebar = () => {
             path: "/",
             icon: <BsFiles />,
         },
+
+        {
+            title: "Users",
+            path: "/",
+            icon: <FaUsers />,
+        },
+
+        {
+            title: "Users",
+            path: "/",
+            icon: <BsPersonCheckFill />,
+        },
+
+        {
+            title: "Withdraw Request",
+            path: "/",
+            icon: <BsPersonCheckFill />,
+        },
+
+        {
+            title: "App Settings",
+            path: "/",
+            icon: <BsBellFill />,
+        },
     ];
 
     const deliveryManRoutes = [
@@ -153,7 +179,7 @@ const Sidebar = () => {
 
     return (
         <aside
-            className="main-sidebar elevation-0 sidebar-dark-teal bg-appGreen"
+            className="main-sidebar elevation-0 sidebar-dark-teal bg-appGreen  overflow-x-scroll"
             id="accordionSidebar"
         >
             {/* Sidebar - Brand  */}

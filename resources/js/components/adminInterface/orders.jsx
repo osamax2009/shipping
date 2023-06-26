@@ -68,7 +68,7 @@ const Orders = () => {
 
     
     return (
-        <div>
+        <div className="">
             <div className="flex justify-between">
                 <div className="text-xl font-bold text-appGreen">Orders</div>
                 <div>
@@ -95,7 +95,7 @@ const Orders = () => {
                     height: "auto",
                     minWidth: "100%",
                 }}
-                className="text-sm"
+                className="text-sm overflow-x-scroll"
             >
                 <Table.Header>
                     <Table.Column>Order Id</Table.Column>
@@ -116,7 +116,7 @@ const Orders = () => {
                             <Table.Cell>{order?.client_name}</Table.Cell>
                             <Table.Cell>{order?.delivery_man_name}</Table.Cell>
                             <Table.Cell>
-                                {order?.pickup_point.start_time}
+                                {order?.pickup_point.date}
                             </Table.Cell>
                             <Table.Cell>
                                 {order?.pickup_point.address}
