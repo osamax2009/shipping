@@ -72,7 +72,7 @@ const Sidebar = () => {
 
         {
             title: "Extra Charges",
-            path: "#",
+            path: "/admin/extracharges",
             icon: <RiDashboardFill />,
         },
 

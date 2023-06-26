@@ -29,6 +29,7 @@ import EarnHistory from "./deliveryManInterface/earnHistory";
 import Drafts from "./deliveryManInterface/drafts";
 import VerifyDocument from "./deliveryManInterface/verifyDocument";
 import Payment from "./partials/payment";
+import ExtraCharges from "./adminInterface/extarCharges";
 
 const router = createBrowserRouter([
     /*   Common routes */
@@ -186,6 +187,11 @@ const router = createBrowserRouter([
             {
                 path: "parcel-types",
                 element: <ParcelTypes />,
+            },
+
+            {
+                path: "extracharges",
+                element: <ExtraCharges />,
             },
 
             {
