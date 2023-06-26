@@ -28,6 +28,7 @@ import ContactUs from "./partials/contactUs";
 import EarnHistory from "./deliveryManInterface/earnHistory";
 import Drafts from "./deliveryManInterface/drafts";
 import VerifyDocument from "./deliveryManInterface/verifyDocument";
+import Payment from "./partials/payment";
 
 const router = createBrowserRouter([
     /*   Common routes */
@@ -143,6 +144,11 @@ const router = createBrowserRouter([
                 path: "orderdetail/order_Id/:order_Id",
                 element: <SingleOrder />,
             },
+
+            {
+                path : "payment",
+                element : <Payment />
+            }
         ],
     },
     /* Admin routes */
