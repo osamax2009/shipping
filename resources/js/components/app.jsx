@@ -38,6 +38,7 @@ import Users from "./adminInterface/users";
 import AppSettings from "./adminInterface/appSettings";
 import WithdrawRequest from "./adminInterface/withdrawRequestList";
 import DeliveryPerson from "./adminInterface/deliveryPerson";
+import VerifyDocuments from "./adminInterface/verifyDocuments";
 
 const router = createBrowserRouter([
     /*   Common routes */
@@ -223,9 +224,22 @@ const router = createBrowserRouter([
             },
 
             {
+                path: "deliverypersondocuments/delivery_man_id/:delivery_man_id",
+                element: <VerifyDocuments />,
+            },
+
+            {
                 path: "users",
                 element: <Users />,
             },
+
+            {
+                path: "users",
+                element: <Users />,
+            },
+
+
+
 
             {
                 path: "deliverypersons",

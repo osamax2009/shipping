@@ -92,7 +92,7 @@ const Users = () => {
                 </Table>
             </div>
             <CreateModal open={openCreate} setOpen={setOpenCreate} />
-            
+
             <UpdateModal
                 oldUser={selected}
                 open={openUpdate}
@@ -146,7 +146,6 @@ const CreateModal = ({ open, setOpen }) => {
     const [user, setUser] = useState({});
 
     const handleCreate = async () => {
-
         const res = await postWithAxios("/api/update-profile", document);
 
         if (res.message == "Client has been save successfully.") {
@@ -166,7 +165,6 @@ const CreateModal = ({ open, setOpen }) => {
         }
     };
 
-
     return (
         <Modal
             open={open}
@@ -175,9 +173,7 @@ const CreateModal = ({ open, setOpen }) => {
             onClose={() => setOpen(false)}
         >
             <Modal.Header>
-                <div className="text-lg font-bold text-appGreen">
-                    Add User
-                </div>
+                <div className="text-lg font-bold text-appGreen">Add User</div>
             </Modal.Header>
             <Modal.Body>
                 <div className="grid w-full">
@@ -272,17 +268,16 @@ const CreateModal = ({ open, setOpen }) => {
 };
 
 const UpdateModal = ({ open, setOpen, oldUser }) => {
-
     const [user, setUser] = useState(oldUser);
 
     const handleCreate = async () => {
         const dataToSend = {
-            id : user?.id,
-            email : user?.email,
-            name : user?.name,
-            username : user?.username,
-            contact_number : user?.contact_number
-        }
+            id: user?.id,
+            email: user?.email,
+            name: user?.name,
+            username: user?.username,
+            contact_number: user?.contact_number,
+        };
         const res = await postWithAxios("/api/update-profile", dataToSend);
 
         if (res.message == "updated successfully") {
@@ -303,8 +298,8 @@ const UpdateModal = ({ open, setOpen, oldUser }) => {
     };
 
     useEffect(() => {
-        setUser(oldUser)
-    },[oldUser])
+        setUser(oldUser);
+    }, [oldUser]);
     return (
         <Modal
             open={open}
@@ -313,9 +308,7 @@ const UpdateModal = ({ open, setOpen, oldUser }) => {
             onClose={() => setOpen(false)}
         >
             <Modal.Header>
-                <div className="text-lg font-bold text-appGreen">
-                    Add User
-                </div>
+                <div className="text-lg font-bold text-appGreen">Add User</div>
             </Modal.Header>
             <Modal.Body>
                 <div className="grid w-full">
@@ -410,18 +403,16 @@ const UpdateModal = ({ open, setOpen, oldUser }) => {
 };
 
 const DeleteModal = ({ user, open, setOpen }) => {
-
     const handleDelete = async () => {
-
         const dataToSend = {
-            id :  user.id
+            id: user.id,
         };
 
         const res = await postWithAxios("/api/delete-user", dataToSend);
 
         setOpen(false);
 
-        console.log(res)
+        console.log(res);
 
         toast(res.message, {
             type: "success",
