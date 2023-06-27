@@ -6,7 +6,14 @@ import { useEffect } from "react";
 
 const Users = () => {
     const [users, setUsers] = useState();
-    const [openCreate, setOpenCreate] = useState();
+    const [selected, setSelected] = useState();
+    const [openCreate, setOpenCreate] = useState(false);
+    const [openDelete, setOpenDelete] = useState(false);
+    const [openUpdate, setOpenUpdate] = useState(false);
+
+    const handleOpenCreate = () => {
+        setOpenCreate(true);
+    };
 
     const getUsers = async () => {
         const res = await getWithAxios("/api/user-list");
@@ -15,14 +22,19 @@ const Users = () => {
     };
 
     useEffect(() => {
-        if (!openCreate) {
+        if (!openCreate && !openDelete && !openUpdate) {
             getUsers();
         }
-    }, [openCreate]);
+    }, [openCreate, openDelete, openUpdate]);
 
     return (
         <div className="">
             <div className="font-bold py-4">Delivery Man Documents</div>
+            <div className="flex justify-end py-4">
+                <Button color={"success"} onPress={handleOpenCreate}>
+                    Add Document
+                </Button>
+            </div>
             <div>
                 <Table>
                     <Table.Header>
@@ -62,7 +74,12 @@ const Users = () => {
                                 </Table.Cell>
 
                                 <Table.Cell>
-                                    {/*  <UsersLine users={users} /> */}
+                                <UserLine
+                                        user={user}
+                                        setOpenUpdate={setOpenUpdate}
+                                        setOpenDelete={setOpenDelete}
+                                        setSelected={setSelected}
+                                    />
                                 </Table.Cell>
                             </Table.Row>
                         ))}
@@ -81,3 +98,40 @@ const Users = () => {
 };
 
 export default Users;
+
+const UserLine = ({
+    user,
+    setSelected,
+    setOpenDelete,
+    setOpenUpdate,
+}) => {
+    const handleOpenUpdate = () => {
+        setOpenUpdate(true);
+        setSelected(document);
+    };
+
+    const handleOpenDelete = () => {
+        setOpenDelete(true);
+        setSelected(document);
+    };
+
+    return (
+        <div>
+            <div className="flex flex-wrap gap-4">
+                <Button
+                    auto
+                    onPress={handleOpenUpdate}
+                    color={"success"}
+                    icon={<BsPencilFill />}
+                ></Button>
+                <Button
+                    auto
+                    onPress={handleOpenDelete}
+                    color={"error"}
+                    icon={<BsTrash />}
+                ></Button>
+            </div>
+            <div></div>
+        </div>
+    );
+};
