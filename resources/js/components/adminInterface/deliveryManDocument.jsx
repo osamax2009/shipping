@@ -1,64 +1,55 @@
-import { Image, Table, Button } from "@nextui-org/react";
+
+import { Image, Table } from "@nextui-org/react";
 import { useState } from "react";
 import { getWithAxios } from "../api/axios";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { BsPencilFill } from "react-icons/bs";
 
-const PaymentGateway = () => {
-    const [payments, setPayments] = useState();
+const DeliveryManDocument = () => {
+    const [deliveryManDocuments, setDeliveryManDocuments] = useState();
     const [openCreate, setOpenCreate] = useState();
 
-    const getPayments = async () => {
-        const res = await getWithAxios("/api/paymentgateway-list");
-        setPayments(res.data);
-        console.log(res.data);
+    const getDeliveryManDocuments = async () => {
+        const res = await getWithAxios("/api/delivery-man-document-list");
+        setDeliveryManDocuments(res.data);
+        console.log(res.data)
+        
     };
 
     useEffect(() => {
         if (!openCreate) {
-            getPayments();
+            getDeliveryManDocuments();
         }
     }, [openCreate]);
 
     return (
-        <div className="">
-            <div className="font-bold py-4">Payment Gateway</div>
+        <div className=" ">
+            <div className="font-bold py-4">Delivery Man Documents</div>
             <div>
                 <Table>
                     <Table.Header>
                         <Table.Column>Id</Table.Column>
-                        <Table.Column>Payment Method</Table.Column>
+                        <Table.Column>DeliveryManDocument Method</Table.Column>
                         <Table.Column>Image</Table.Column>
                         <Table.Column>Mode</Table.Column>
                         <Table.Column>Status</Table.Column>
                         <Table.Column>Actions</Table.Column>
                     </Table.Header>
                     <Table.Body>
-                        {payments?.map((payment, index) => (
+                        {deliveryManDocuments?.map((deliveryManDocument, index) => (
                             <Table.Row key={index}>
-                                <Table.Cell> {payment.id} </Table.Cell>
-                                <Table.Cell>
-                                    {payment.type == "stripe"
-                                        ? "Visa/Master Card"
-                                        : null}
-                                </Table.Cell>
+                                <Table.Cell> {deliveryManDocument.id} </Table.Cell>
+                                <Table.Cell>{DeliveryManDocument.type == "stripe"  ? "Visa/Master Card" : null}</Table.Cell>
                                 <Table.Cell>
                                     <Image
-                                        src={payment.gateway_logo}
+                                        src={DeliveryManDocument.gateway_logo}
                                         width={80}
                                         height={60}
                                     />
                                 </Table.Cell>
-                                <Table.Cell>
-                                    {" "}
-                                    {payment.is_test == 1
-                                        ? "Test"
-                                        : "live"}{" "}
-                                </Table.Cell>
+                                <Table.Cell> {deliveryManDocument.is_test == 1 ? "Test" : "live"} </Table.Cell>
 
                                 <Table.Cell>
-                                    {payment.status == 1 ? (
+                                    {deliveryManDocument.status == 1 ? (
                                         <span className="text-green-700">
                                             Enabled
                                         </span>
@@ -70,7 +61,7 @@ const PaymentGateway = () => {
                                 </Table.Cell>
 
                                 <Table.Cell>
-                                     <PaymentLine payment={payment} />
+                                    {/*  <DeliveryManDocumentLine deliveryManDocument={deliveryManDocument} /> */}
                                 </Table.Cell>
                             </Table.Row>
                         ))}
@@ -88,25 +79,4 @@ const PaymentGateway = () => {
     );
 };
 
-export default PaymentGateway;
-
-const PaymentLine = ({ payment }) => {
-    const navigate = useNavigate();
-
-    const handleOpenUpdate = () => {
-        navigate("/admin/paymentsetup");
-    };
-
-    return (
-        <div>
-            <div className="flex flex-wrap gap-2">
-                <Button
-                    auto
-                    onPress={handleOpenUpdate}
-                    color={"success"}
-                    icon={<BsPencilFill />}
-                ></Button>
-            </div>
-        </div>
-    );
-};
+export default DeliveryManDocument;

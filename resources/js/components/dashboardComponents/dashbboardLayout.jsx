@@ -31,8 +31,10 @@ const DashboardLayout = ({ children }) => {
                 <div className="content">
                
                     <div className="container-fluid">
-                        <div className="col-12 min-h-screen py-12 mt-[10px]">
+                        <div className="col-12 py-12 mt-[10px]">
+                        <div className="min-h-screen">
                         {children}
+                        </div>
                         </div>
                     </div>
                 </div>

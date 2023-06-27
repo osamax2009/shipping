@@ -6,7 +6,10 @@ import { toast } from "react-toastify";
 
 const Vehicle = () => {
     const [vehicles, setVehicles] = useState();
+    const [selected, setSelected] = useState();
     const [openCreate, setOpenCreate] = useState(false);
+    const [openDelete, setOpenDelete] = useState(false);
+    const [openUpdate, setOpenUpdate] = useState(false);
 
     const getVehicles = async () => {
         const res = await getWithAxios("/api/vehicle-list");
@@ -18,10 +21,10 @@ const Vehicle = () => {
     };
 
     useEffect(() => {
-        if (!openCreate) {
+        if (!openCreate && !openDelete && !openUpdate) {
             getVehicles();
         }
-    }, [openCreate]);
+    }, [openCreate, openDelete, openUpdate]);
 
     return (
         <div>
@@ -70,7 +73,12 @@ const Vehicle = () => {
                             </Table.Cell>
 
                             <Table.Cell>
-                                <VehicleLine vehicle={vehicle} />
+                                <VehicleLine
+                                    setOpenDelete={setOpenDelete}
+                                    setOpenUpdate={setOpenUpdate}
+                                    setSelected={setSelected}
+                                    vehicle={vehicle}
+                                />
                             </Table.Cell>
                         </Table.Row>
                     ))}
@@ -85,26 +93,40 @@ const Vehicle = () => {
             </Table>
 
             <CreateModal open={openCreate} setOpen={setOpenCreate} />
+            <UpdateModal
+                oldVehicle={selected}
+                open={openUpdate}
+                setOpen={setOpenUpdate}
+            />
+            <DeleteModal
+                vehicle={selected}
+                open={openDelete}
+                setOpen={setOpenDelete}
+            />
         </div>
     );
 };
 export default Vehicle;
 
-const VehicleLine = ({ vehicle }) => {
-    const [openUpdate, setOpenUpdate] = useState(false);
-    const [openDelete, setOpenDelete] = useState(false);
-
+const VehicleLine = ({
+    vehicle,
+    setSelected,
+    setOpenDelete,
+    setOpenUpdate,
+}) => {
     const handleOpenUpdate = () => {
         setOpenUpdate(true);
+        setSelected(vehicle);
     };
 
     const handleOpenDelete = () => {
         setOpenDelete(true);
+        setSelected(vehicle);
     };
 
     return (
         <div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-4">
                 <Button
                     auto
                     onPress={handleOpenUpdate}
@@ -118,18 +140,7 @@ const VehicleLine = ({ vehicle }) => {
                     icon={<BsTrash />}
                 ></Button>
             </div>
-            <div>
-                <UpdateModal
-                    oldVehicle={vehicle}
-                    open={openUpdate}
-                    setOpen={setOpenUpdate}
-                />
-                <DeleteModal
-                    vehicle={vehicle}
-                    open={openDelete}
-                    setOpen={setOpenDelete}
-                />
-            </div>
+            <div></div>
         </div>
     );
 };
@@ -230,26 +241,12 @@ const CreateModal = ({ open, setOpen }) => {
         size: "",
         capacity: "",
         description: "",
-        status: "",
+        status: "1",
         vehicle_image: "",
     });
-    const [checked, setChecked] = useState("percentage");
-
-    const [city, setCity] = useState();
-    const [country, setCountry] = useState();
 
     const handleCreate = async () => {
-        const dataToSend = {
-            title: "",
-            type: "",
-            city_ids: "",
-            size: "",
-            capacity: "",
-            description: "",
-            status: "1",
-            vehicle_image: "",
-        };
-        const res = await postWithAxios("/api/vehicle-save", dataToSend);
+        const res = await postWithAxios("/api/vehicle-save", vehicle);
 
         if (res.message == "Vehicle has been save successfully.") {
             setOpen(false);
@@ -295,7 +292,7 @@ const CreateModal = ({ open, setOpen }) => {
                         />
                     </div>
 
-                    <div className="grid md:grid-cols-2">
+                    <div className="grid gap-4 md:grid-cols-2">
                         <div className="form-group">
                             <label htmlFor=""> Type</label>
                             <select
@@ -365,7 +362,6 @@ const CreateModal = ({ open, setOpen }) => {
                         <label htmlFor=""> Vehicle Image</label>
                         <input
                             type="file"
-                           
                             onChange={(e) =>
                                 setVehicle({
                                     ...vehicle,
@@ -402,24 +398,14 @@ const CreateModal = ({ open, setOpen }) => {
 };
 
 const UpdateModal = ({ oldVehicle, open, setOpen }) => {
-    const [vehicle, setVehicle] = useState(oldVehicle);
-    const [checked, setChecked] = useState("percentage");
 
-    const [city, setCity] = useState();
-    const [country, setCountry] = useState();
+    const [vehicle, setVehicle] = useState(oldVehicle);
 
     const handleCreate = async () => {
-        const dataToSend = {
-            title: "",
-            type: "",
-            city_ids: "",
-            size: "",
-            capacity: "",
-            description: "",
-            status: "1",
-            vehicle_image: "",
-        };
-        const res = await postWithAxios("/api/vehicle-save", dataToSend);
+        console.log("veehicle", vehicle);
+        console.log("OldVehicle", oldVehicle);
+
+        const res = await postWithAxios("/api/vehicle-save", vehicle);
 
         if (res.message == "Vehicle has been save successfully.") {
             setOpen(false);
@@ -430,12 +416,17 @@ const UpdateModal = ({ oldVehicle, open, setOpen }) => {
         }
 
         if (res.message != "Vehicle has been save successfully.") {
+            setOpen(false);
             toast(res.message, {
-                type: "error",
+                type: "info",
                 hideProgressBar: true,
             });
         }
     };
+
+    useEffect(() => {
+        setVehicle(oldVehicle)
+    },[oldVehicle])
     return (
         <Modal
             open={open}
@@ -445,7 +436,7 @@ const UpdateModal = ({ oldVehicle, open, setOpen }) => {
         >
             <Modal.Header>
                 <div className="text-lg font-bold text-appGreen">
-                    Add vehicle
+                    Update vehicle
                 </div>
             </Modal.Header>
             <Modal.Body>
@@ -465,7 +456,7 @@ const UpdateModal = ({ oldVehicle, open, setOpen }) => {
                         />
                     </div>
 
-                    <div className="grid md:grid-cols-2">
+                    <div className="grid gap-4 md:grid-cols-2">
                         <div className="form-group">
                             <label htmlFor=""> Type</label>
                             <select
@@ -506,7 +497,7 @@ const UpdateModal = ({ oldVehicle, open, setOpen }) => {
                             required
                             type="text"
                             className="form-control w-full"
-                            value={vehicle.size}
+                            value={vehicle?.size}
                             onChange={(e) =>
                                 setVehicle({
                                     ...vehicle,
@@ -521,7 +512,7 @@ const UpdateModal = ({ oldVehicle, open, setOpen }) => {
                             required
                             type="text"
                             className="form-control w-full"
-                            value={vehicle.description}
+                            value={vehicle?.description}
                             onChange={(e) =>
                                 setVehicle({
                                     ...vehicle,
@@ -535,7 +526,6 @@ const UpdateModal = ({ oldVehicle, open, setOpen }) => {
                         <label htmlFor=""> Vehicle Image</label>
                         <input
                             type="file"
-                       
                             onChange={(e) =>
                                 setVehicle({
                                     ...vehicle,
@@ -573,10 +563,11 @@ const UpdateModal = ({ oldVehicle, open, setOpen }) => {
 
 const DeleteModal = ({ vehicle, open, setOpen }) => {
     const handleDlete = async () => {
-        const url = "/api/vehicle-delete" + vehicle?.id;
+        const url = "/api/vehicle-delete/" + vehicle?.id;
 
         const res = await postWithAxios(url);
         setOpen(false);
+
         toast(res.message, {
             type: "success",
             hideProgressBar: true,
@@ -587,14 +578,14 @@ const DeleteModal = ({ vehicle, open, setOpen }) => {
             <Modal.Header>
                 {" "}
                 <div className="text-lg font-bold text-appGreen">
-                    Delete oldVehicle
+                    Delete Vehicle
                 </div>
             </Modal.Header>
             <Modal.Body>
                 <div className="font-bold text-black">
-                    Confirm, you want to delete oldVehicle{" "}
+                    Confirm, you want to delete vehicle{" "}
                     <span className="text-red-300">
-                        #{vehicle?.id} from list of oldVehicles .
+                        #{vehicle?.id} from list of Vehicles .
                     </span>
                     <div className="flex flex-wrap  w-full gap-6 justify-between sm:justify-end">
                         <Button

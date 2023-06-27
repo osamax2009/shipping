@@ -1,49 +1,56 @@
+
 import { Image, Table } from "@nextui-org/react";
 import { useState } from "react";
 import { getWithAxios } from "../api/axios";
 import { useEffect } from "react";
 
-const Document = () => {
-    const [documents, setDocuments] = useState();
+const Users = () => {
+    const [users, setUsers] = useState();
     const [openCreate, setOpenCreate] = useState();
 
-    const getDocuments = async () => {
-        const res = await getWithAxios("/api/document-list");
-        setDocuments(res.data);
+    const getUsers = async () => {
+        const res = await getWithAxios("/api/user-list");
+        setUsers(res.data);
         
     };
 
     useEffect(() => {
         if (!openCreate) {
-            getDocuments();
+            getUsers();
         }
     }, [openCreate]);
 
     return (
         <div className="">
-            <div className="font-bold py-4 text-appGreen text-lg">Document</div>
+            <div className="font-bold py-4">Delivery Man Documents</div>
             <div>
                 <Table>
                     <Table.Header>
                         <Table.Column>Id</Table.Column>
-                        <Table.Column>Name</Table.Column>
-                        <Table.Column>Required</Table.Column>
-                        <Table.Column>Created</Table.Column>
+                        <Table.Column> Name</Table.Column>
+                        <Table.Column>Contact Number</Table.Column>
+                        <Table.Column>Email</Table.Column>
+                        <Table.Column>City</Table.Column>
+                        <Table.Column>Country</Table.Column>
+                        <Table.Column>Register Date</Table.Column>
                         <Table.Column>Status</Table.Column>
                         <Table.Column>Actions</Table.Column>
                     </Table.Header>
                     <Table.Body>
-                        {documents?.map((document, index) => (
+                        {users?.map((user, index) => (
                             <Table.Row key={index}>
-                                <Table.Cell> {document.id} </Table.Cell>
-                                <Table.Cell>{document.name}</Table.Cell>
+                                <Table.Cell> {user.id} </Table.Cell>
+                                <Table.Cell>{user.name}</Table.Cell>
                                 <Table.Cell>
-                                {document.required == 1 ? 'Yes' : "No"}
+                                {user.contact_number}
                                 </Table.Cell>
-                                <Table.Cell> {document.created_at} </Table.Cell>
+                                <Table.Cell> {user.email} </Table.Cell>
+                                <Table.Cell> {user.city_name} </Table.Cell>
+                                <Table.Cell> {user.country_name} </Table.Cell>
+                                <Table.Cell> {user.created_at} </Table.Cell>
 
                                 <Table.Cell>
-                                    {document.status == 1 ? (
+                                    {user.status == 1 ? (
                                         <span className="text-green-700">
                                             Enabled
                                         </span>
@@ -55,7 +62,7 @@ const Document = () => {
                                 </Table.Cell>
 
                                 <Table.Cell>
-                                    {/*  <documentLine document={document} /> */}
+                                    {/*  <UsersLine users={users} /> */}
                                 </Table.Cell>
                             </Table.Row>
                         ))}
@@ -73,4 +80,4 @@ const Document = () => {
     );
 };
 
-export default Document;
+export default Users;

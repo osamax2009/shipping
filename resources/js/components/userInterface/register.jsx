@@ -71,6 +71,7 @@ const Register = () => {
             country_id: country,
             city: city,
             address: address,
+            status : 1
         };
 
         const data = await postWithAxios("/api/register", dataToSend);
@@ -246,6 +247,7 @@ const Register = () => {
                                     type="text"
                                     ref={cityInput}
                                     value={city}
+                                    defaultValue={cities && cities[0].id}
                                     onChange={(e) => setCity(e.target.value)}
                                     className="form-control"
                                     placeholder="city"
