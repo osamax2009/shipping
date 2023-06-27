@@ -7,23 +7,68 @@ import { toast } from "react-toastify";
 
 const AppSettings = () => {
     const [appSettings, setAppSettings] = useState();
+
+    const [active, setactive] = useState(
+        appSettings?.notification_settings.active
+    );
+    const [failed, setfailed] = useState(
+        appSettings?.notification_settings.failed
+    );
+    const [delayed, setdelayed] = useState(
+        appSettings?.notification_settings.delayed
+    );
+    const [cancelled, setcancelled] = useState(
+        appSettings?.notification_settings.cancelled
+    );
+    const [completed, setcompleted] = useState(
+        appSettings?.notification_settings.completed
+    );
+    const [courier_arrived, setcourier_arrived] = useState(
+        appSettings?.notification_settings.courier_arrived
+    );
+    const [courier_assigned, setcourier_assigned] = useState(
+        appSettings?.notification_settings.courier_assigned
+    );
+    const [courier_departed, setcourier_departed] = useState(
+        appSettings?.notification_settings.courier_departed
+    );
+    const [courier_transfer, setcourier_transfer] = useState(
+        appSettings?.notification_settings.courier_transfer
+    );
+    const [courier_picked_up, setcourier_picked_up] = useState(
+        appSettings?.notification_settings.courier_picked_up
+    );
+    const [payment_status_message, setpayment_status_message] = useState(
+        appSettings?.notification_settings.payment_status_message
+    );
     const [openCreate, setOpenCreate] = useState("false");
 
     const getAppSettingss = async () => {
         const res = await getWithAxios("/api/get-appsetting");
         setAppSettings(res);
-        console.log(res);
+        // console.log(res);
     };
 
     const updateAppSettings = async () => {
-        const res = await postWithAxios("/api/update-appsetting", appSettings);
+       
+        if (openCreate == "true") {
+            const res = await postWithAxios(
+                "/api/update-appsetting",
+                appSettings
+            );
 
-        if (res.message) {
-            toast(res.message, {
-                type: "success",
-                hideProgressBar: true,
-            });
+            if (res.message) {
+                toast(res.message, {
+                    type: "success",
+                    hideProgressBar: true,
+                });
+            }
         }
+
+        if (openCreate == "false") {
+            setOpenCreate("true");
+        }
+
     };
 
     useEffect(() => {
@@ -31,9 +76,7 @@ const AppSettings = () => {
     }, []);
 
     useEffect(() => {
-        if (openCreate == "true") {
-            updateAppSettings();
-        }
+        updateAppSettings();
     }, [appSettings]);
 
     return (
@@ -69,8 +112,68 @@ const AppSettings = () => {
                             </tr>
                         </thead>
                         <tbody>
+                            {/*  <tr>
+                                <td> Active </td>
+
+                                <td>
+                                    <div className="flex justify-center">
+                                        <input
+                                            type="checkbox"
+                                            className="form-checkbox"
+                                            checked={
+                                                active.IS_ONESIGNAL_NOTIFICATION ==
+                                                1
+                                                    ? true
+                                                    : false
+                                            }
+                                            value={
+                                                active.IS_ONESIGNAL_NOTIFICATION ==
+                                                1
+                                                    ? 0
+                                                    : 1
+                                            }
+                                            onChange={(e) =>
+                                                setactive({
+                                                    ...active,
+                                                    IS_ONESIGNAL_NOTIFICATION:
+                                                        e.target.value,
+                                                })
+                                            }
+                                        />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div className="flex justify-center">
+                                        <input
+                                            type="checkbox"
+                                            className="form-checkbox"
+                                            checked={
+                                                active.IS_FIREBASE_NOTIFICATION ==
+                                                1
+                                                    ? true
+                                                    : false
+                                            }
+                                            value={
+                                                active.IS_FIREBASE_NOTIFICATION ==
+                                                1
+                                                    ? 0
+                                                    : 1
+                                            }
+                                            onChange={(e) =>
+                                                setactive({
+                                                    ...active,
+                                                    IS_FIREBASE_NOTIFICATION:
+                                                        e.target.value,
+                                                })
+                                            }
+                                        />
+                                    </div>
+                                </td>
+                            </tr> */}
                             {appSettings
-                                ? Object.keys(appSettings.notification_settings)?.map((setting) => (
+                                ? Object.keys(
+                                      appSettings.notification_settings
+                                  )?.map((setting) => (
                                       <tr key={setting}>
                                           <td> {setting} </td>
 
@@ -80,15 +183,24 @@ const AppSettings = () => {
                                                       type="checkbox"
                                                       className="form-checkbox"
                                                       checked={
-                                                          appSettings.notification_settings[setting]
+                                                          appSettings
+                                                              .notification_settings[
+                                                              setting
+                                                          ]
                                                               .IS_ONESIGNAL_NOTIFICATION ==
                                                           1
                                                               ? true
                                                               : false
                                                       }
                                                       value={
-                                                          appSettings.notification_settings[setting]
-                                                              .IS_ONESIGNAL_NOTIFICATION
+                                                          appSettings
+                                                              .notification_settings[
+                                                              setting
+                                                          ]
+                                                              .IS_ONESIGNAL_NOTIFICATION ==
+                                                          1
+                                                              ? 0
+                                                              : 1
                                                       }
                                                   />
                                               </div>
@@ -99,14 +211,20 @@ const AppSettings = () => {
                                                       type="checkbox"
                                                       className="form-checkbox"
                                                       checked={
-                                                          appSettings.notification_settings[setting]
+                                                          appSettings
+                                                              .notification_settings[
+                                                              setting
+                                                          ]
                                                               .IS_FIREBASE_NOTIFICATION ==
                                                           1
                                                               ? true
                                                               : false
                                                       }
                                                       value={
-                                                          appSettings.notification_settings[setting]
+                                                          appSettings
+                                                              .notification_settings[
+                                                              setting
+                                                          ]
                                                               .IS_FIREBASE_NOTIFICATION
                                                       }
                                                   />
@@ -123,27 +241,22 @@ const AppSettings = () => {
                         <div className="grid gap-6 p-4 border">
                             <div className="flex w-full font-bold justify-between">
                                 <div className="">Order Auto Assign</div>
-                                {appSettings?.auto_assign == 1 ? (
-                                    <Switch
-                                        defaultChecked
-                                        onChange={(e) =>
-                                            setAppSettings({
-                                                ...appSettings,
-                                                auto_assign: e.target.value,
-                                            })
-                                        }
-                                    />
-                                ) : (
-                                    <Switch
-                                        defaultChecked
-                                        onChange={(e) =>
-                                            setAppSettings({
-                                                ...appSettings,
-                                                auto_assign: e.target.value,
-                                            })
-                                        }
-                                    />
-                                )}
+                                <Switch
+                                    checked={
+                                        appSettings?.auto_assign == 1
+                                            ? true
+                                            : false
+                                    }
+                                    value={
+                                        appSettings?.auto_assign == 1 ? 0 : 1
+                                    }
+                                    onChange={(e) =>
+                                        setAppSettings({
+                                            ...appSettings,
+                                            auto_assign: e.target.value,
+                                        })
+                                    }
+                                />
                             </div>
 
                             <div className="flex w-full justify-between">
@@ -151,29 +264,27 @@ const AppSettings = () => {
                                     Otp verification on Pickup and Delivery
                                     Location
                                 </div>
-                                {appSettings?.otp_verify_on_pickup_delivery ==
-                                1 ? (
-                                    <Switch
-                                        defaultChecked
-                                        onChange={(e) =>
-                                            setAppSettings({
-                                                ...appSettings,
-                                                otp_verify_on_pickup_delivery:
-                                                    e.target.value,
-                                            })
-                                        }
-                                    />
-                                ) : (
-                                    <Switch
-                                        onChange={(e) =>
-                                            setAppSettings({
-                                                ...appSettings,
-                                                otp_verify_on_pickup_delivery:
-                                                    e.target.value,
-                                            })
-                                        }
-                                    />
-                                )}
+                                <Switch
+                                    checked={
+                                        appSettings?.otp_verify_on_pickup_delivery ==
+                                        1
+                                            ? true
+                                            : false
+                                    }
+                                    value={
+                                        appSettings?.otp_verify_on_pickup_delivery ==
+                                        1
+                                            ? 0
+                                            : 1
+                                    }
+                                    onChange={(e) =>
+                                        setAppSettings({
+                                            ...appSettings,
+                                            otp_verify_on_pickup_delivery:
+                                                e.target.value,
+                                        })
+                                    }
+                                />
                             </div>
                         </div>
                     </div>
@@ -220,26 +331,27 @@ const AppSettings = () => {
                     <div>
                         <div className="flex justify-between w-full gap-6 p-4 border font-bold">
                             <div>Vehicle</div>
-                            {appSettings?.is_vehicle_in_order == 1 ? (
-                                <Switch
-                                    defaultChecked
-                                    onChange={(e) =>
-                                        setAppSettings({
-                                            ...appSettings,
-                                            is_vehicle_in_order: e.target.value,
-                                        })
-                                    }
-                                />
-                            ) : (
-                                <Switch
-                                    onChange={(e) =>
-                                        setAppSettings({
-                                            ...appSettings,
-                                            is_vehicle_in_order: e.target.value,
-                                        })
-                                    }
-                                />
-                            )}
+                            <Switch 
+                            checked={
+                                appSettings?.is_vehicle_in_order ==
+                                1
+                                    ? true
+                                    : false
+                            }
+                            value={
+                                appSettings?.is_vehicle_in_order ==
+                                1
+                                    ? 0
+                                    : 1
+                            }
+                            onChange={(e) =>
+                                setAppSettings({
+                                    ...appSettings,
+                                    is_vehicle_in_order:
+                                        e.target.value,
+                                })
+                            }
+                           />
                         </div>
                     </div>
                 </div>

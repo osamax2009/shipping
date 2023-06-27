@@ -10,7 +10,7 @@ const ContactUs = () => {
                 Constact Us
             </div>
 
-            <div className="grid px-24 bg-[#f2eff6] md:grid-cols-2">
+            <div className="grid px-8 pt-12 md:px-12 lg:px-24 bg-[#f2eff6] md:grid-cols-2">
                 <div className="font-bold text-5xl text-start w-full flex flex-col justify-center items-start">
                     Save the <br /> excuses and time
                     <div className="text-md mt-12">

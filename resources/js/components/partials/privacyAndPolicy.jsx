@@ -4,7 +4,7 @@ const PrivacyAndPolicy = () => {
     return (
         <div className=" flex flex-col justify-between min-h-screen">
             <div className="py-24 text-center text-white font-bold text-4xl bg-appGreen">Privacy Policy</div>
-            <div className="h-full px-12 text-justify bg-white font-bold">
+            <div className="h-full px-12 py-12 text-justify bg-white font-bold">
                 At 2Point Delivery, accessible from <a href="/">https://2pointdelivery.com</a>,
                 one of our main priorities is the privacy of our visitors. This
                 Privacy Policy document contains types of information that is
