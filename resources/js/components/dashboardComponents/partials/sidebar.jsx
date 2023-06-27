@@ -12,16 +12,18 @@ import {
     BsCardChecklist,
     BsEnvelopeOpen,
     BsFile,
+    BsFileEarmarkTextFill,
     BsFiles,
     BsFillBoxSeamFill,
     BsFillCreditCardFill,
+    BsFillFileEarmarkPersonFill,
     BsFillWalletFill,
     BsListCheck,
     BsPersonCheckFill,
     BsPinMapFill,
     BsWalletFill,
 } from "react-icons/bs";
-import { FaListAlt, FaMapMarkedAlt, FaUsers } from "react-icons/fa";
+import { FaListAlt, FaMapMarkedAlt, FaMoneyCheckAlt, FaUsers } from "react-icons/fa";
 import { RiDashboardFill, RiEBikeFill } from "react-icons/ri";
 import { BiListCheck } from "react-icons/bi";
 import { margin } from "@mui/system";
@@ -66,13 +68,13 @@ const Sidebar = () => {
 
         {
             title: "vehicle",
-            path: "#",
+            path: "/admin/vehicle",
             icon: <RiEBikeFill />,
         },
 
         {
             title: "Extra Charges",
-            path: "#",
+            path: "/admin/extracharges",
             icon: <RiDashboardFill />,
         },
 
@@ -84,7 +86,7 @@ const Sidebar = () => {
 
         {
             title: "Payment gateway",
-            path: "#",
+            path: "/admin/paymentgateway",
             icon: <BsFillCreditCardFill />,
         },
 
@@ -102,37 +104,38 @@ const Sidebar = () => {
 
         {
             title: "Document",
-            path: "#",
-            icon: <BsFile />,
+            path: "/admin/documents",
+            icon: <BsFileEarmarkTextFill />,
         },
 
         {
             title: "Delivery Person Document",
-            path: "/",
-            icon: <BsFiles />,
+            path: "/admin/deliverypersondocuments",
+            icon: <BsFillFileEarmarkPersonFill />,
         },
 
         {
             title: "Users",
-            path: "/",
+            path: "/admin/users",
             icon: <FaUsers />,
         },
 
         {
-            title: "Users",
-            path: "/",
+            title: "Delivery Person",
+            path: "/admin/deliverypersons",
             icon: <BsPersonCheckFill />,
         },
 
+
         {
             title: "Withdraw Request",
-            path: "/",
-            icon: <BsPersonCheckFill />,
+            path: "/admin/withdraw",
+            icon: <FaMoneyCheckAlt />,
         },
 
         {
             title: "App Settings",
-            path: "/",
+            path: "/admin/appsetting",
             icon: <BsBellFill />,
         },
     ];
@@ -185,7 +188,7 @@ const Sidebar = () => {
 
     return (
         <aside
-            className="main-sidebar elevation-0 sidebar-dark-teal bg-appGreen"
+            className="main-sidebar elevation-0 sidebar-dark-teal bg-appGreen pb-6"
             id="accordionSidebar"
         >
             {/* Sidebar - Brand  */}

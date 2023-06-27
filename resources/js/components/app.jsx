@@ -29,6 +29,15 @@ import EarnHistory from "./deliveryManInterface/earnHistory";
 import Drafts from "./deliveryManInterface/drafts";
 import VerifyDocument from "./deliveryManInterface/verifyDocument";
 import Payment from "./partials/payment";
+import ExtraCharges from "./adminInterface/extarCharges";
+import Vehicle from "./adminInterface/vehicle";
+import PaymentGateway from "./adminInterface/paymentGateway";
+import Document from "./adminInterface/document";
+import DeliveryManDocument from "./adminInterface/deliveryManDocument";
+import Users from "./adminInterface/users";
+import AppSettings from "./adminInterface/appSettings";
+import WithdrawRequest from "./adminInterface/withdrawRequestList";
+import DeliveryPerson from "./adminInterface/deliveryPerson";
 
 const router = createBrowserRouter([
     /*   Common routes */
@@ -187,6 +196,53 @@ const router = createBrowserRouter([
                 path: "parcel-types",
                 element: <ParcelTypes />,
             },
+
+            {
+                path: "extracharges",
+                element: <ExtraCharges />,
+            },
+
+            {
+                path: "vehicle",
+                element: <Vehicle />,
+            },
+
+            {
+                path: "paymentgateway",
+                element: <PaymentGateway />,
+            },
+
+            {
+                path: "documents",
+                element: <Document />,
+            },
+
+            {
+                path: "deliverypersondocuments",
+                element: <DeliveryManDocument />,
+            },
+
+            {
+                path: "users",
+                element: <Users />,
+            },
+
+            {
+                path: "deliverypersons",
+                element: <DeliveryPerson />,
+            },
+            {
+                path: "withdraw",
+                element: <WithdrawRequest />,
+            },
+
+
+
+            {
+                path: "appsetting",
+                element: <AppSettings />,
+            },
+
 
             {
                 path: "orderdetail/order_Id/:order_Id",

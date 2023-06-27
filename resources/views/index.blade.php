@@ -42,8 +42,8 @@
 
     <script src="{{ asset('js/app.js') }}"></script>
 </head>
-<body class="hold-transition font-sans font-nunito">
-    <div  id="page-top">
+<body class="hold-transition font-sans font-nunito overflow-x-hidden bg-[#f4f6f9]">
+    <div  id="page-top" class="bg-[#f4f6f9]">
 
     </div>
 
