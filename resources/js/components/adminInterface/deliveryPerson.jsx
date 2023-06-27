@@ -1,7 +1,8 @@
-import { Image, Table } from "@nextui-org/react";
+import { Button, Image, Table } from "@nextui-org/react";
 import { useState } from "react";
 import { getWithAxios } from "../api/axios";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const DeliveryPerson = () => {
     const [users, setUsers] = useState();
@@ -9,6 +10,7 @@ const DeliveryPerson = () => {
 
     const getUsers = async () => {
         const res = await getWithAxios("/api/user-list?user_type=delivery_man");
+        console.log(res.data);
         setUsers(res.data);
     };
 
@@ -20,7 +22,7 @@ const DeliveryPerson = () => {
 
     return (
         <div className="">
-            <div className="font-bold py-4">Delivery Man Documents</div>
+            <div className="font-bold py-4">Delivery Person</div>
             <div>
                 <Table>
                     <Table.Header>
@@ -58,7 +60,7 @@ const DeliveryPerson = () => {
                                 </Table.Cell>
 
                                 <Table.Cell>
-                                    {/*  <UsersLine users={users} /> */}
+                                    <UserLine user={user} />
                                 </Table.Cell>
                             </Table.Row>
                         ))}
@@ -77,3 +79,24 @@ const DeliveryPerson = () => {
 };
 
 export default DeliveryPerson;
+
+const UserLine = ({ user }) => {
+    const navigate = useNavigate();
+
+    const verifyDeliverPerson = () => {
+        const url =
+            "/admin/deliverypersondocuments/delivery_man_id/" + user?.id;
+        navigate(url);
+    };
+    return (
+        <div>
+            {user?.is_verified_delivery_man == 1 ? (
+                <div className="text-green-700">verified</div>
+            ) : (
+                <Button color={"success"} auto onPress={verifyDeliverPerson}>
+                    <div className="font-bold">verify</div>
+                </Button>
+            )}
+        </div>
+    );
+};

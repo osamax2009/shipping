@@ -10,7 +10,7 @@ const AboutUs = () => {
                     You have now the power to move things
                 </div>
             </div>
-            <div className="h-full px-12 md:px-24 py-12 text-justify bg-white font-bold">
+            <div className="h-full  px-12 md:px-24 py-24 lg:py-12 text-justify bg-white font-bold">
                 At Why 2 Point Delivery, we are passionate about providing
                 exceptional parcel delivery services. With a focus on speed,
                 reliability, and customer satisfaction, we strive to exceed
@@ -24,8 +24,8 @@ const AboutUs = () => {
                 delivered with precision.{" "}
             </div>
 
-            <div className="grid bg-[#f2eff6] md:grid-cols-2">
-                <div className="font-bold text-5xl flex flex-col justify-center items-center">
+            <div className="grid px-8 bg-[#f2eff6] md:grid-cols-2">
+                <div className="font-bold text-5xl p-12 flex flex-col justify-center items-center">
                     Save the <br /> excuses  and time
                     <div className="text-md text-start mt-12">
                     You have now the power to move things
