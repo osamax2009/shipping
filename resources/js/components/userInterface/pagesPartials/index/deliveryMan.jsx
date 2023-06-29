@@ -54,7 +54,7 @@ const DeliveryMan = () => {
             </div>
             <div className="mt-4">
                 <a
-                    className="px-3 md:px-8 py-3  bg-black text-white text-md hover:bg-black/75 hover:no-underline"
+                    className="px-3 md:px-8 py-3 bg-black text-white text-md hover:bg-black/75 hover:no-underline"
                     target="blank"
                     href="https://play.google.com/store/apps/details?id=com.point.delivery"
                 >
