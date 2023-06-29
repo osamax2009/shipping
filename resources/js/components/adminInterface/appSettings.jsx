@@ -4,9 +4,11 @@ import { getWithAxios, postWithAxios } from "../api/axios";
 import { useEffect } from "react";
 import { Switch } from "@mui/material";
 import { toast } from "react-toastify";
+import { useContext } from "react";
+import { AppSettingsContext } from "../contexts/appSettings";
 
 const AppSettings = () => {
-    const [appSettings, setAppSettings] = useState();
+    const { appSettings, setAppSettings } = useContext(AppSettingsContext);
 
     const [active, setactive] = useState(
         appSettings?.notification_settings.active
@@ -41,16 +43,11 @@ const AppSettings = () => {
     const [payment_status_message, setpayment_status_message] = useState(
         appSettings?.notification_settings.payment_status_message
     );
+
     const [openCreate, setOpenCreate] = useState("false");
 
     const getAppSettingss = async () => {
-        const res = await getWithAxios("/api/get-appsetting");
-        setAppSettings(res);
-        // console.log(res);
-    };
-
-    const updateAppSettings = async () => {
-       
+        
         if (openCreate == "true") {
             const res = await postWithAxios(
                 "/api/update-appsetting",
@@ -66,22 +63,30 @@ const AppSettings = () => {
         }
 
         if (openCreate == "false") {
-            setOpenCreate("true");
-        }
+            const res = await getWithAxios("/api/get-appsetting");
+            setAppSettings(res);
+            setOpenCreate("charged")
 
+        }
+        // console.log(res);
     };
+
+    const updateAppSettings = async () => {};
 
     useEffect(() => {
         getAppSettingss();
-    }, []);
+    }, [appSettings]);
 
     useEffect(() => {
-        updateAppSettings();
+        if (openCreate == "charged" && appSettings) {
+            setOpenCreate("true");
+        }
+
     }, [appSettings]);
 
     return (
         <div className="">
-            <div className="font-bold py-4">App Settings</div>
+            <div className="font-bold py-4">App Settings {openCreate} </div>
             <div className="grid gap-8 md:grid-cols-2">
                 <div className="px-6 font-bold border">
                     <div className="py-4 ">Notification settings</div>
@@ -290,6 +295,28 @@ const AppSettings = () => {
                     </div>
                     <div>
                         <div className="grid gap-6 p-4 border ">
+                            <div className="py-2 font-bold">Weight Setting</div>
+                            <div className="form-group">
+                                <label htmlFor=""> Weight</label>
+                                <select
+                                    className="form-control"
+                                    value={appSettings?.weight}
+                                    defaultValue={appSettings?.weight}
+                                    onChange={(e) =>
+                                        setAppSettings({
+                                            ...appSettings,
+                                            weight: e.target.value,
+                                        })
+                                    }
+                                >
+                                    <option value="kg">KG</option>
+                                    <option value="lbs">LBS</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div className="grid gap-6 p-4 border ">
                             <div className="py-4 font-bold">
                                 Currency Setting
                             </div>
@@ -331,27 +358,24 @@ const AppSettings = () => {
                     <div>
                         <div className="flex justify-between w-full gap-6 p-4 border font-bold">
                             <div>Vehicle</div>
-                            <Switch 
-                            checked={
-                                appSettings?.is_vehicle_in_order ==
-                                1
-                                    ? true
-                                    : false
-                            }
-                            value={
-                                appSettings?.is_vehicle_in_order ==
-                                1
-                                    ? 0
-                                    : 1
-                            }
-                            onChange={(e) =>
-                                setAppSettings({
-                                    ...appSettings,
-                                    is_vehicle_in_order:
-                                        e.target.value,
-                                })
-                            }
-                           />
+                            <Switch
+                                checked={
+                                    appSettings?.is_vehicle_in_order == 1
+                                        ? true
+                                        : false
+                                }
+                                value={
+                                    appSettings?.is_vehicle_in_order == 1
+                                        ? 0
+                                        : 1
+                                }
+                                onChange={(e) =>
+                                    setAppSettings({
+                                        ...appSettings,
+                                        is_vehicle_in_order: e.target.value,
+                                    })
+                                }
+                            />
                         </div>
                     </div>
                 </div>

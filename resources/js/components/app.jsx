@@ -39,6 +39,7 @@ import AppSettings from "./adminInterface/appSettings";
 import WithdrawRequest from "./adminInterface/withdrawRequestList";
 import DeliveryPerson from "./adminInterface/deliveryPerson";
 import VerifyDocuments from "./adminInterface/verifyDocuments";
+import { AppSettingsContextProvider } from "./contexts/appSettings";
 
 const router = createBrowserRouter([
     /*   Common routes */
@@ -58,18 +59,18 @@ const router = createBrowserRouter([
     },
 
     {
-        path : "/privacypolicy",
-        element : <PrivacyAndPolicy />
+        path: "/privacypolicy",
+        element: <PrivacyAndPolicy />,
     },
 
     {
-        path : "/aboutus",
-        element : <AboutUs />
+        path: "/aboutus",
+        element: <AboutUs />,
     },
 
     {
-        path : "/contactus",
-        element : <ContactUs />
+        path: "/contactus",
+        element: <ContactUs />,
     },
 
     /*   Common routes */
@@ -109,8 +110,6 @@ const router = createBrowserRouter([
                 path: "bank-informations",
                 element: <BankProfil />,
             },
-
-            
         ],
     },
 
@@ -128,26 +127,26 @@ const router = createBrowserRouter([
             {
                 path: "wallet",
                 element: <Wallet />,
-            }, 
+            },
 
             {
                 path: "earning-history",
                 element: <EarnHistory />,
-            }, 
+            },
 
             {
                 path: "drafts",
                 element: <Drafts />,
-            }, 
+            },
 
             {
                 path: "verify-document",
                 element: <VerifyDocument />,
-            }, 
+            },
 
             {
-                path : "createorder",
-                element : <AdminCreateOrder />
+                path: "createorder",
+                element: <AdminCreateOrder />,
             },
 
             {
@@ -156,9 +155,9 @@ const router = createBrowserRouter([
             },
 
             {
-                path : "payment",
-                element : <Payment />
-            }
+                path: "payment",
+                element: <Payment />,
+            },
         ],
     },
     /* Admin routes */
@@ -238,9 +237,6 @@ const router = createBrowserRouter([
                 element: <Users />,
             },
 
-
-
-
             {
                 path: "deliverypersons",
                 element: <DeliveryPerson />,
@@ -250,13 +246,10 @@ const router = createBrowserRouter([
                 element: <WithdrawRequest />,
             },
 
-
-
             {
                 path: "appsetting",
                 element: <AppSettings />,
             },
-
 
             {
                 path: "orderdetail/order_Id/:order_Id",
@@ -271,9 +264,11 @@ if (document.getElementById("page-top")) {
     Index.render(
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <UserContextProvider>
-                <React.StrictMode>
-                    <RouterProvider router={router} />
-                </React.StrictMode>
+                <AppSettingsContextProvider>
+                    <React.StrictMode>
+                        <RouterProvider router={router} />
+                    </React.StrictMode>
+                </AppSettingsContextProvider>
             </UserContextProvider>
         </LocalizationProvider>
     );

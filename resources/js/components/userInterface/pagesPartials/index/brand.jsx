@@ -26,6 +26,7 @@ import {
 import PhoneInput from "react-phone-input-2";
 import { todaysDate, tomorrowsDate } from "../../../shared/date";
 import { UserContext } from "../../../contexts/userContext";
+import { AppSettingsContext } from "../../../contexts/appSettings";
 
 const Brand = () => {
     const [from, setFrom] = useState();
@@ -199,11 +200,11 @@ const Brand = () => {
 
             <div className="grid bg-white mt-6  md:grid-cols-2 lg:grid-cols-5">
                 <CityGetter
-                    title={"From"}
+                    title={"Pickup Address"}
                     selected={from}
                     setSelected={setFrom}
                 />
-                <CityGetter title={"To"} selected={to} setSelected={setTo} />
+                <CityGetter title={"Delivery Address"} selected={to} setSelected={setTo} />
                 <Services selected={service} setSelected={setServive} />
                 <WeightGetter selected={weight} setSelected={setWeight} />
                 <div className="md:col-span-2 lg:col-span-1">
@@ -415,7 +416,7 @@ const Services = ({ selected, setSelected }) => {
         >
             <div className="pl-3 pt-2">
                 <span className="uppercase font-bold text-black text-lg">
-                    Service
+                    Package Type
                 </span>
             </div>
 
@@ -459,6 +460,9 @@ const WeightGetter = ({ selected, setSelected }) => {
     const divRef = useRef(null);
     const inputRef = useRef(null);
 
+    const {appSettings, setAppSettings} = useContext(AppSettingsContext)
+  
+
     const handleFocus = () => {
         if (expanded) {
             divRef.current.classList.add("ring-1");
@@ -500,7 +504,7 @@ const WeightGetter = ({ selected, setSelected }) => {
         >
             <div className="pl-3 pt-2">
                 <span className="uppercase font-bold text-black text-lg">
-                    Weight
+                    Weight {appSettings?.weight == "kg" ? "(KG)" : "(LBS)"}
                 </span>
             </div>
 
