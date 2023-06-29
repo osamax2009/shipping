@@ -11,7 +11,7 @@ class AppSetting extends Model
     
     protected $table = 'app_settings';
     
-    protected $fillable = [ 'site_name', 'site_email', 'site_description', 'site_copyright', 'facebook_url','twitter_url','linkedin_url', 'instagram_url', 'support_email', 'support_number', 'notification_settings', 'auto_assign', 'distance_unit', 'distance', 'otp_verify_on_pickup_delivery', 'currency', 'currency_code', 'currency_position', 'is_vehicle_in_order' ];
+    protected $fillable = [ 'site_name', 'site_email', 'site_description', 'site_copyright', 'facebook_url','twitter_url','linkedin_url', 'instagram_url', 'support_email', 'support_number', 'notification_settings', 'auto_assign', 'distance_unit', 'distance', 'otp_verify_on_pickup_delivery', 'currency', 'currency_code', 'currency_position', 'is_vehicle_in_order', 'weight' ];
 
 
     protected $casts = [

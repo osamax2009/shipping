@@ -48,6 +48,7 @@ Route::get('place-autocomplete-api', [ API\CommonController::class, 'placeAutoCo
 Route::get('place-detail-api', [ API\CommonController::class, 'placeDetail' ] );
 Route::get('distance-between-places', [ API\CommonController::class, 'distanceBetwennTwoPlaces' ] );
 
+Route::get('get-appsetting',[API\UserController::class,'getAppSetting']);
 
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
@@ -101,7 +102,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('user-action', [ API\UserController::class, 'userAction' ] );
 
     Route::post('update-appsetting',[API\UserController::class,'updateAppSetting']);
-    Route::get('get-appsetting',[API\UserController::class,'getAppSetting']);
 
     Route::get('document-list', [ API\DocumentController::class, 'getList' ] );
     Route::post('document-save', [ App\Http\Controllers\DocumentController::class, 'store' ] );

@@ -85,7 +85,7 @@ const Navbar = () => {
                                     auto
                                     onPress={handleLogin}
                                 >
-                                    create account
+                                    Create Account
                                 </Button>
                             )}
                         </div>
