@@ -30,7 +30,7 @@ const Vehicle = () => {
         <div>
             <div className="flex justify-end py-4">
                 <Button color={"success"} onPress={handleOpenCreate}>
-                   Add document
+                   Add Vehicles
                 </Button>
             </div>
             <Table>

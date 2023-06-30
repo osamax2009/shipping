@@ -5,6 +5,7 @@ import { BsPencilFill, BsTrash } from "react-icons/bs";
 import ReactFlagsSelect from "react-flags-select";
 import countryList from "react-select-country-list";
 import { toast } from "react-toastify";
+import dayjs from "dayjs";
 
 const Country = () => {
     const [countries, setCountries] = useState();
@@ -52,7 +53,7 @@ const Country = () => {
                             <Table.Cell>{country?.name}</Table.Cell>
                             <Table.Cell> {country?.distance_type} </Table.Cell>
                             <Table.Cell>{country?.weight_type}</Table.Cell>
-                            <Table.Cell>{country?.created_at}</Table.Cell>
+                            <Table.Cell>{dayjs(country?.created_at).format("DD-MM-YYYY; HH:mm:ss")}</Table.Cell>
                             <Table.Cell>
                                 {country?.status == 1 ? (
                                     <span className="text-appGreen">
@@ -202,7 +203,7 @@ const CreateModal = ({ open, setOpen }) => {
                             onSelect={(code) => setSelected(code)}
                         />
                     </div>
-                    <div className="grid w-full md:grid-cols-2">
+                    <div className="grid w-full gap-4 md:grid-cols-2">
                         <div className="form-group w-full">
                             <label htmlFor=""> Distance type</label>
                             <select
@@ -322,7 +323,7 @@ const UpdateModal = ({ country, open, setOpen }) => {
                             onSelect={(code) => setSelected(code)}
                         />
                     </div>
-                    <div className="grid  justify-center md:grid-cols-2">
+                    <div className="grid gap-4 justify-center md:grid-cols-2">
                         <div className="form-group w-full">
                             <label htmlFor=""> Distance type</label>
                             <select

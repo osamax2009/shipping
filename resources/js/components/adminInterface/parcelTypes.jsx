@@ -4,6 +4,7 @@ import { Button, Modal, Table } from "@nextui-org/react";
 import { BsPencilFill, BsTrash } from "react-icons/bs";
 
 import { toast } from "react-toastify";
+import dayjs from "dayjs";
 
 const ParcelTypes = () => {
     const [parcelTypes, setParcelTypes] = useState();
@@ -26,7 +27,8 @@ const ParcelTypes = () => {
         <div>
             <div className="flex justify-end py-4">
                 <Button color={"success"} onPress={handleOpenCreate}>
-                    new Parcel Type
+                    Add Parcel Type
+                    
                 </Button>
             </div>
             <Table>
@@ -43,7 +45,11 @@ const ParcelTypes = () => {
                             <Table.Cell> {parcel.id} </Table.Cell>
                             <Table.Cell>{parcel.label}</Table.Cell>
                             <Table.Cell> {parcel.value} </Table.Cell>
-                            <Table.Cell>{parcel.created_at}</Table.Cell>
+                            <Table.Cell>
+                                {dayjs(parcel?.created_at).format(
+                                    "DD-MM-YYYY; HH:mm:ss"
+                                )}
+                            </Table.Cell>
                             <Table.Cell>
                                 <ParcelLine parcel={parcel} />
                             </Table.Cell>
@@ -122,8 +128,8 @@ const CreateModal = ({ open, setOpen }) => {
         };
 
         const res = await postWithAxios("/api/staticdata-save", dataToSend);
-        
-        if (res.message == "Static Data has been save successfully") {
+
+        if (res.message == "Static Data has been save successfully.") {
             setOpen(false);
             window.location.reload();
             toast(res.message, {
@@ -132,7 +138,7 @@ const CreateModal = ({ open, setOpen }) => {
             });
         }
 
-        if (res.message !== "Static Data has been save successfully") {
+        if (res.message !== "Static Data has been save successfully.") {
             toast(res.message, {
                 type: "error",
                 hideProgressBar: true,
@@ -210,8 +216,8 @@ const UpdateModal = ({ parcel, open, setOpen }) => {
         };
 
         const res = await postWithAxios("/api/staticdata-save", dataToSend);
-        
-        if (res.message == "Static Data has been save successfully") {
+
+        if (res.message == "Static Data has been save successfully.") {
             setOpen(false);
             window.location.reload();
             toast(res.message, {
@@ -220,7 +226,7 @@ const UpdateModal = ({ parcel, open, setOpen }) => {
             });
         }
 
-        if (res.message !== "Static Data has been save successfully") {
+        if (res.message !== "Static Data has been save successfully.") {
             toast(res.message, {
                 type: "error",
                 hideProgressBar: true,
@@ -286,6 +292,21 @@ const UpdateModal = ({ parcel, open, setOpen }) => {
 };
 
 const DeleteModal = ({ parcel, open, setOpen }) => {
+    const deleteParcel = async () => {
+        const url = "/api/staticdata-delete/" + parcel?.id;
+
+        const res = postWithAxios(url);
+
+        if (res.message) {
+            toast(res.message, {
+                type: "success",
+                hideProgressBar: true,
+            });
+
+            window.location.reload();
+        }
+    };
+
     return (
         <Modal open={open} closeButton onClose={() => setOpen(false)}>
             <Modal.Header>

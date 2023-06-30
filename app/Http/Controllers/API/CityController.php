@@ -41,7 +41,7 @@ class CityController extends Controller
             }
         }
 
-        $city = $city->orderBy('name','asc')->paginate($per_page);
+        $city = $city->orderBy('id','asc')->paginate($per_page);
         $items = CityResource::collection($city);
 
         $response = [

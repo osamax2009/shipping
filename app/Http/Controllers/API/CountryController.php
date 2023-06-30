@@ -38,7 +38,7 @@ class CountryController extends Controller
             }
         }
 
-        $country = $country->orderBy('name','asc')->paginate($per_page);
+        $country = $country->orderBy('id','asc')->paginate($per_page);
         $items = CountryResource::collection($country);
 
         $response = [

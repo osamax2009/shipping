@@ -32,7 +32,7 @@ class StaticDataController extends Controller
             }
         }
 
-        $staticdata = $staticdata->orderBy('label','asc')->paginate($per_page);
+        $staticdata = $staticdata->orderBy('id','asc')->paginate($per_page);
         $items = StaticDataResource::collection($staticdata);
 
         $response = [

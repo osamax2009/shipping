@@ -158,7 +158,7 @@ export const OrderStatus = [
 
     {
         label : "Departed",
-        value : "departed"
+        value : "courier_departed"
     },
 
    

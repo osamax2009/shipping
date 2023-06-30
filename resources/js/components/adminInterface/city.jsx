@@ -5,6 +5,9 @@ import { BsEye, BsPencilFill, BsTrash } from "react-icons/bs";
 import ReactFlagsSelect from "react-flags-select";
 import countryList from "react-select-country-list";
 import { toast } from "react-toastify";
+import dayjs, { Dayjs } from "dayjs";
+import { useContext } from "react";
+import { AppSettingsContext } from "../contexts/appSettings";
 
 const City = () => {
     const [cities, setCities] = useState();
@@ -48,7 +51,7 @@ const City = () => {
             <Table>
                 <Table.Header>
                     <Table.Column>Id</Table.Column>
-                    <Table.Column>city Name</Table.Column>
+                    <Table.Column>City Name</Table.Column>
                     <Table.Column>Distance type</Table.Column>
                     <Table.Column>Created Date</Table.Column>
                     <Table.Column>Status</Table.Column>
@@ -60,7 +63,7 @@ const City = () => {
                             <Table.Cell> {city?.id} </Table.Cell>
                             <Table.Cell>{city?.name}</Table.Cell>
                             <Table.Cell> {city?.country_name} </Table.Cell>
-                            <Table.Cell>{city?.created_at}</Table.Cell>
+                            <Table.Cell>{dayjs(city?.created_at).format("DD-MM-YYYY; HH:mm:ss")}</Table.Cell>
                             <Table.Cell>
                                 {city?.status == 1 ? (
                                     <span className="text-appGreen">
@@ -174,6 +177,7 @@ const CityLine = ({
 
 const CreateModal = ({ open, setOpen, countries }) => {
     const [cityInfos, setCityInfos] = useState();
+    const {appSettings, setAppSettings} = useContext(AppSettingsContext)
 
     const createCity = async () => {
         const res = await postWithAxios("/api/city-save", cityInfos);
@@ -267,11 +271,12 @@ const CreateModal = ({ open, setOpen, countries }) => {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor=""> Minimum Distance</label>
+                        <label htmlFor=""> Minimum Distance ({appSettings?.distance_unit}) </label>
                         <input
                             type="text"
                             className="form-control"
                             value={cityInfos?.min_distance}
+                            defaultValue={10}
                             onChange={(e) =>
                                 setCityInfos({
                                     ...cityInfos,
@@ -282,11 +287,12 @@ const CreateModal = ({ open, setOpen, countries }) => {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor=""> Minimum Distance</label>
+                        <label htmlFor=""> Minimum Weight ({appSettings?.weight}) </label>
                         <input
                             type="text"
                             className="form-control"
                             value={cityInfos?.min_weight}
+                            defaultValue={1}
                             onChange={(e) =>
                                 setCityInfos({
                                     ...cityInfos,

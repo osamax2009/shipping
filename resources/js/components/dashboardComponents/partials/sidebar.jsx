@@ -50,7 +50,7 @@ const Sidebar = () => {
     const adminRoutes = [
         {
             title: "Dashboard",
-            path: "#",
+            path: "dashboard",
             icon: <RiDashboardFill />,
         },
 
@@ -61,13 +61,13 @@ const Sidebar = () => {
         },
 
         {
-            title: "city",
+            title: "City",
             path: "/admin/city",
             icon: <BsBuilding />,
         },
 
         {
-            title: "vehicle",
+            title: "Vehicles",
             path: "/admin/vehicle",
             icon: <RiEBikeFill />,
         },
@@ -97,7 +97,7 @@ const Sidebar = () => {
         },
 
         {
-            title: "All Orders",
+            title: "Orders",
             path: "/admin/orders",
             icon: <BsListCheck />,
         },

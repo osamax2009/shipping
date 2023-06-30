@@ -3,6 +3,7 @@ import { getWithAxios, postWithAxios } from "../api/axios";
 import { Button, Modal, Radio, Table } from "@nextui-org/react";
 import { BsPencilFill, BsTrash } from "react-icons/bs";
 import { toast } from "react-toastify";
+import dayjs from "dayjs";
 
 
 const ExtraCharges = () => {
@@ -28,7 +29,7 @@ const ExtraCharges = () => {
         <div>
             <div className="flex justify-end py-4">
                 <Button color={"success"} onPress={handleOpenCreate}>
-                    new ExtraCharge Type
+                    Add Extra Charge
                 </Button>
             </div>
             <Table>
@@ -54,7 +55,7 @@ const ExtraCharges = () => {
                             <Table.Cell> {extraCharge.city_name} </Table.Cell>
 
                             <Table.Cell>{extraCharge.charges}</Table.Cell>
-                            <Table.Cell>{extraCharge.created_at}</Table.Cell>
+                            <Table.Cell>{dayjs(extraCharge?.created_at).format("DD-MM-YYYY; HH:mm:ss")}</Table.Cell>
                             <Table.Cell>
                                 {extraCharge.status == 1 ? (
                                     <span className="text-green-700">

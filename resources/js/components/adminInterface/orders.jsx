@@ -1,14 +1,15 @@
 import { Avatar, Button, Loading, Modal, Table } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { getWithAxios, postWithAxios } from "../api/axios";
-import { BsPencilFill, BsTrash } from "react-icons/bs";
-import { useNavigate } from "react-router-dom";
+import { BsEye, BsPencilFill, BsTrash } from "react-icons/bs";
+import { Link, useNavigate } from "react-router-dom";
 import { OrderStatus } from "../shared/constancy";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { toast } from "react-toastify";
 import dayjs, { Dayjs } from "dayjs";
 import { useContext } from "react";
 import { UserContext } from "../contexts/userContext";
+import { FormControl, MenuItem, Select } from "@mui/material";
 
 const Orders = () => {
     const [orders, setOrders] = useState();
@@ -69,12 +70,12 @@ const Orders = () => {
 
     return (
         <div className="">
-            <div className="flex flex-wrap justify-between">
-                <div className="text-xl font-bold text-appGreen">Orders</div>
-                <div>
-                    <form onSubmit={goOnorderPage}>
-                        <div className="flex gap-2 px-2">
-                            <label htmlFor=""> Order Id</label>
+            <div className="text-xl font-bold text-appGreen">Orders</div>
+            <div className="flex w-full items-center justify-end">
+                <div>Order Id</div>
+                <div className="">
+                    <form onSubmit={goOnorderPage} className="w-full">
+                        <div className="flex w-full justify-end gap-2 px-2">
                             <input
                                 type="text"
                                 value={orderId}
@@ -89,7 +90,7 @@ const Orders = () => {
                 </div>
             </div>
             <Filter filter={filter} setFilter={setFilter} />
-            <div className="text-sm w-full overflow-x-scroll">
+            <div className="text-sm w-full">
                 <Table
                     aria-label="New orders table"
                     css={{
@@ -112,21 +113,41 @@ const Orders = () => {
                     <Table.Body>
                         {orders?.map((order, index) => (
                             <Table.Row key={index}>
-                                <Table.Cell>{order?.id}</Table.Cell>
+                                <Table.Cell>
+                                    <Link
+                                        className="underline"
+                                        to={
+                                            "/admin/orderdetail/order_Id/" +
+                                            order?.id
+                                        }
+                                    >
+                                        #{order?.id}
+                                    </Link>
+                                </Table.Cell>
                                 <Table.Cell>{order?.client_name}</Table.Cell>
                                 <Table.Cell>
                                     {order?.delivery_man_name}
                                 </Table.Cell>
                                 <Table.Cell>
-                                    {order?.pickup_point.date}
+                                    {dayjs(order?.pickup_point.date).format(
+                                        "DD-MM-YYYY; HH:mm:ss"
+                                    )}
                                 </Table.Cell>
                                 <Table.Cell>
-                                    {order?.pickup_point.address}
+                                    <div className="truncate w-[80px]">
+                                        {order?.pickup_point.address}
+                                    </div>
                                 </Table.Cell>
                                 <Table.Cell>
-                                    {order?.delivery_point.address}
+                                    <div className="truncate w-[80px]">
+                                        {order?.delivery_point.address}
+                                    </div>
                                 </Table.Cell>
-                                <Table.Cell>{order?.date}</Table.Cell>
+                                <Table.Cell>
+                                    {dayjs(order?.date).format(
+                                        "DD-MM-YYYY; HH:mm:ss"
+                                    )}
+                                </Table.Cell>
                                 <Table.Cell>
                                     <Status order={order} />
                                 </Table.Cell>
@@ -175,18 +196,33 @@ const Orders = () => {
 export default Orders;
 
 const OrderLine = ({ order, setOpenDelete, setSelectedOrder }) => {
+    const navigate = useNavigate();
     const handleOpenDelete = () => {
         setSelectedOrder(order);
         setOpenDelete(true);
     };
 
+    const handleOpenDetails = () => {
+        const url = "/admin/orderdetail/order_Id/" + order?.id;
+        navigate(url);
+    };
+
     return (
-        <Button
-            auto
-            onPress={handleOpenDelete}
-            color={"error"}
-            icon={<BsTrash />}
-        ></Button>
+        <div className="flex flex-wrap gap-4">
+            <Button
+                auto
+                onPress={handleOpenDetails}
+                color={"success"}
+                icon={<BsEye />}
+            ></Button>
+
+            <Button
+                auto
+                onPress={handleOpenDelete}
+                color={"error"}
+                icon={<BsTrash />}
+            ></Button>
+        </div>
     );
 };
 
@@ -194,32 +230,44 @@ const Status = ({ order }) => {
     return (
         <div className="text-center  font-bold text-sm ">
             {order?.status == "draft" && (
-                <div className="text-gray-600 px-3 py-2 rounded-lg bg-gray-300">
-                    {order?.status}
+                <div className="text-gray-600 px-2 py-2 rounded-lg bg-gray-300">
+                    Draft
                 </div>
             )}
 
             {order?.status == "create" && (
-                <div className="text-green-600 px-3 py-2 rounded-lg bg-green-300">
-                    {order?.status}
+                <div className="text-green-600 px-2 py-2 rounded-lg bg-green-300">
+                    Created
                 </div>
             )}
 
             {order?.status == "courier_assigned" && (
-                <div className="text-green-600 px-3 py-2 rounded-lg bg-green-300">
-                    {order?.status}
+                <div className="text-green-600 px-2 py-2 rounded-lg bg-green-300">
+                    Assigned
                 </div>
             )}
 
-            {order?.status == "accepted" && (
+            {order?.status == "active" && (
                 <div className="text-green-600 px-3 py-2 rounded-lg bg-green-300">
-                    {order?.status}*
+                    Active
                 </div>
             )}
 
             {order?.status == "cancelled" && (
                 <div className="text-red-600 px-3 py-2 rounded-lg bg-red-400">
-                    {order?.status}*
+                    Cancelled*
+                </div>
+            )}
+
+            {order?.status == "departed" && (
+                <div className="text-red-600 px-3 py-2 rounded-lg bg-red-400">
+                    Departed*
+                </div>
+            )}
+
+            {order?.status == "departed" && (
+                <div className="text-red-600 px-3 py-2 rounded-lg bg-red-400">
+                    Departed*
                 </div>
             )}
         </div>
@@ -228,31 +276,49 @@ const Status = ({ order }) => {
 
 const Filter = ({ filter, setFilter }) => {
     return (
-        <div className="flex flex-wrap justify-between py-4">
+        <div className="flex flex-wrap gap-4 justify-between py-4">
             <div>
                 <div className="flex items-center gap-3">
-                    <div className="font-bold">Status</div>
-                    <div>
-                        <select
-                            name=""
-                            id=""
-                            value={filter.status}
-                            onChange={(e) =>
-                                setFilter({ ...filter, status: e.target.value })
-                            }
-                        >
-                            {OrderStatus.map((status, index) => (
-                                <option key={index} value={status.value}>
-                                    {" "}
-                                    {status.label}{" "}
-                                </option>
-                            ))}
-                        </select>
+                    <div className="font-bold">Status </div>
+                    <div className="py-4 font-bold">
+                        <div className="w-full">
+                            <FormControl sx={{ m: 1 }} className="w-full">
+                                <Select
+                                    inputProps={{
+                                        "aria-label": "Without label",
+                                    }}
+                                    value={filter.status}
+                                    displayEmpty
+                                    onChange={(e) =>
+                                        setFilter({
+                                            ...filter,
+                                            status: e.target.value,
+                                        })
+                                    }
+                                >
+                                    {/*  <MenuItem
+                                               
+                                                defaultChecked
+                                                value={""}
+                                            >
+                                                All
+                                            </MenuItem> */}
+                                    {OrderStatus?.map((status, index) => (
+                                        <MenuItem
+                                            key={index}
+                                            value={status.value}
+                                        >
+                                            {status.label}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3">
                 <div className="font-bold">Date </div>
                 <div className="flex items-center gap-6">
                     <DatePicker
@@ -298,7 +364,6 @@ const Assign = ({ order, setSelectedOrder, setOpenUpdate }) => {
         }
     };
 
-    
     const cancelOrder = async () => {
         const dataToSeend = {
             id: order?.id,
@@ -337,30 +402,20 @@ const Assign = ({ order, setSelectedOrder, setOpenUpdate }) => {
                         {" "}
                         Assign
                     </Button>
-                ) : order?.status == "courier_assigned" ? (
-                    <div className="font-bold text-orange-600 ">Assigned*</div>
-                ) : order?.status == "accepted" ? (
-                    <div className="font-bold text-green-600 ">Accepted*</div>
                 ) : order?.status == "cancelled" ? (
+                    <div className="font-bold text-red-600 ">
+                        Order cancelled
+                    </div>
+                ) : (
                     <Button
                         auto
                         onPress={handleStatus}
-                        color={"success"}
+                        color={"secondary"}
                         className="mx-6"
                     >
                         {" "}
-                        Assign
+                        Transfer
                     </Button>
-                ) : order?.status == "departed" ? (
-                    <div className="font-bold text-green-600 ">Departed*</div>
-                ) : order?.status == "active" ? (
-                    <div className="font-bold text-green-600 ">Pick Up*</div>
-                ) : order?.status == "arrived" ? (
-                    <div className="font-bold text-green-600 ">Arrived*</div>
-                ) : order?.status == "delivered" ? (
-                    <div className="font-bold text-gray-600 ">Delivered*</div>
-                ) : (
-                    <div className="text-green-500">{order?.status}</div>
                 )
             ) : null}
 
@@ -371,7 +426,7 @@ const Assign = ({ order, setSelectedOrder, setOpenUpdate }) => {
                     <Button
                         auto
                         onPress={handleAutoAssign}
-                        color={"success"}
+                        color={"secondary"}
                         className="mx-6"
                     >
                         {" "}
@@ -404,34 +459,34 @@ const Assign = ({ order, setSelectedOrder, setOpenUpdate }) => {
                     <div className="font-bold text-green-600 ">Pick Up*</div>
                 ) : order?.status == "departed" ? (
                     <Button
-                    auto
-                    onPress={handleStatus}
-                    color={"success"}
-                    className="mx-6"
-                >
-                    {" "}
-                    Arrived
-                </Button>
+                        auto
+                        onPress={handleStatus}
+                        color={"success"}
+                        className="mx-6"
+                    >
+                        {" "}
+                        Arrived
+                    </Button>
                 ) : order?.status == "active" ? (
                     <Button
-                    auto
-                    onPress={handleStatus}
-                    color={"success"}
-                    className="mx-6"
-                >
-                    {" "}
-                    Departed
-                </Button>
+                        auto
+                        onPress={handleStatus}
+                        color={"success"}
+                        className="mx-6"
+                    >
+                        {" "}
+                        Departed
+                    </Button>
                 ) : order?.status == "arrived" ? (
                     <Button
-                    auto
-                    onPress={handleStatus}
-                    color={"success"}
-                    className="mx-6"
-                >
-                    {" "}
-                    Delivered
-                </Button>
+                        auto
+                        onPress={handleStatus}
+                        color={"success"}
+                        className="mx-6"
+                    >
+                        {" "}
+                        Delivered
+                    </Button>
                 ) : order?.status == "delivered" ? (
                     <div className="font-bold text-gray-600 ">Delivered*</div>
                 ) : (
@@ -441,6 +496,67 @@ const Assign = ({ order, setSelectedOrder, setOpenUpdate }) => {
 
             <div></div>
         </div>
+    );
+};
+
+const AssignButton = ({order, deliverManId, setOpen}) => {
+
+    const handleAssignOrder = async () => {
+
+        if (order?.status == "create") {
+            const dataToSend = {
+                id: order?.id,
+                type: "courier_assigned",
+                delivery_man_id: deliverManId,
+                status: "courier_assigned",
+            };
+
+            const res = await postWithAxios("/api/order-action", dataToSend);
+            console.log("create   ", res)
+
+
+            if (res.message == "Order has been assigned successfully.") {
+                setOpen(false);
+                toast(res.message, {
+                    type: "info",
+                    hideProgressBar: true,
+                });
+                
+            }
+        } else {
+            const dataToSend = {
+                id: order?.id,
+                type: "courier_assigned",
+                delivery_man_id : deliverManId,
+                status: "courier_assigned",
+            };
+
+            const res = await postWithAxios("/api/order-action", dataToSend);
+            console.log("transfer", res)
+
+            if (res.message) {
+                setOpen(false);
+                toast(res.message, {
+                    type: "info",
+                    hideProgressBar: true,
+                });
+              
+            }
+        }
+    };
+    return (
+       <div>
+         <Button
+            auto
+            color={"success"}
+            onPress={() => {
+                handleAssignOrder;
+            }}
+        >
+            {order?.id} {deliverManId}
+            {order?.status == "create" ? "Assign Order" : "Transfer Order"}
+        </Button>
+       </div>
     );
 };
 
@@ -456,66 +572,16 @@ const UpdateModal = ({ order, open, setOpen }) => {
         const res = await getWithAxios("/api/user-list", dataToSend);
 
         setDelivers(res.data);
-        console.log(res.data);
+        //  console.log(res.data);
     };
 
-    const handleAssignOrder = async () => {
-        if (order?.status == "create") {
-            const dataToSend = {
-                id: order?.id,
-                type: "courier_assigned",
-                delivery_man_id: deliverId,
-                status: "courier_assigned",
-            };
+    
 
-            const res = await postWithAxios("/api/order-action", dataToSend);
 
-            if (res.message == "Order has been assigned successfully.") {
-                setOpen(false);
-                toast(res.message, {
-                    type: "info",
-                    hideProgressBar: true,
-                });
-                setDeliverId(null);
-            }
-        }
-
-        /*  if (order?.status == "courrier_assigned") {
-            const dataToSend = {
-                id: order?.id,
-                type: "courier_assigned",
-                delivery_man_id: deliverId,
-                status: "courier_assigned",
-            };
-            const res = await postWithAxios("/api/order-action", dataToSend);
-
-            if (res.message == "Order has been assigned successfully.") {
-                setOpen(false);
-                toast(res.message, {
-                    type: "success",
-                    hideProgressBar: true,
-                });
-                setDeliverId(null);
-            }
-
-            if (res.message != "Order has been assigned successfully.") {
-                setOpen(false);
-                toast(res.message, {
-                    type: "error",
-                    hideProgressBar: true,
-                });
-                setDeliverId(null);
-            }
-        } */
-    };
     useEffect(() => {
         getDelivers();
     }, []);
 
-    useEffect(() => {
-        handleAssignOrder();
-        // setDeliverId(null);
-    }, [deliverId]);
 
     return (
         <Modal
@@ -526,36 +592,47 @@ const UpdateModal = ({ order, open, setOpen }) => {
         >
             <Modal.Header>
                 <div className="text-lg font-bold text-appGreen">
-                    Assign order
+                    {order?.status == "create"
+                        ? "Assign order"
+                        : "Transfer order"}
                 </div>
             </Modal.Header>
             <Modal.Body>
                 <div className="h-[80vh]">
-                    {delivers?.map((deliver, index) => (
-                        <div key={index}>
-                            <div className="flex flex-wrap gap-2 py-4 items-center justify-between">
-                                <Avatar
-                                    src={deliver.profile_image}
-                                    size={"md"}
-                                />
-                                <div className="flex flex-col gap-2 text-sm font-bold">
-                                    <div>{deliver.name}</div>
-                                    <div className="font-light">
-                                        {deliver.contact_number}
-                                    </div>
-                                </div>
-                                <div>
-                                    <Button
-                                        auto
-                                        color={"success"}
-                                        onPress={() => setDeliverId(deliver.id)}
-                                    >
-                                        assign
-                                    </Button>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
+                    <Table>
+                        <Table.Header>
+                            <Table.Column> </Table.Column>
+                            <Table.Column> </Table.Column>
+                            <Table.Column> </Table.Column>
+                        </Table.Header>
+                        <Table.Body>
+                            {delivers?.map((deliver, index) => (
+                                <Table.Row key={index}>
+                                    <Table.Cell>
+                                        <Avatar
+                                            src={deliver.profile_image}
+                                            size={"md"}
+                                        />
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <div className="flex flex-col gap-2 text-sm font-bold">
+                                            <div>{deliver.name}</div>
+                                            <div className="font-light">
+                                                {deliver.contact_number}
+                                            </div>
+                                        </div>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <AssignButton
+                                            deliverManId={deliver.id}
+                                            order={order}
+                                            setOpen={setOpen}
+                                        />
+                                    </Table.Cell>
+                                </Table.Row>
+                            ))}
+                        </Table.Body>
+                    </Table>
                 </div>
             </Modal.Body>
         </Modal>

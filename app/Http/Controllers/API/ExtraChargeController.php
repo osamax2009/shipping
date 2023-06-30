@@ -38,7 +38,7 @@ class ExtraChargeController extends Controller
             }
         }
 
-        $extra_charge = $extra_charge->orderBy('title','asc')->paginate($per_page);
+        $extra_charge = $extra_charge->orderBy('id','asc')->paginate($per_page);
         $items = ExtraChargeResource::collection($extra_charge);
 
         $response = [

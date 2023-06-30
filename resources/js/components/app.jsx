@@ -40,6 +40,8 @@ import WithdrawRequest from "./adminInterface/withdrawRequestList";
 import DeliveryPerson from "./adminInterface/deliveryPerson";
 import VerifyDocuments from "./adminInterface/verifyDocuments";
 import { AppSettingsContextProvider } from "./contexts/appSettings";
+import Dashboard from "./adminInterface/dashboard";
+import PaymentSetup from "./adminInterface/paymentSetup";
 
 const router = createBrowserRouter([
     /*   Common routes */
@@ -167,6 +169,12 @@ const router = createBrowserRouter([
         element: <AdminDashboardLayout />,
         //loader: <Loading />,
         children: [
+
+            {
+                path: "dashboard",
+                element: <Dashboard />,
+            },
+
             {
                 path: "profile",
                 element: <Profile />,
@@ -210,6 +218,11 @@ const router = createBrowserRouter([
             {
                 path: "paymentgateway",
                 element: <PaymentGateway />,
+            },
+
+            {
+                path: "paymentsetup",
+                element: <PaymentSetup />,
             },
 
             {

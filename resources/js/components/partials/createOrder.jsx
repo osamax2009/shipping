@@ -1,7 +1,14 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { parcelTypes } from "../shared/constancy";
-import { Button, Input, Loading, Modal, Radio } from "@nextui-org/react";
+import {
+    Button,
+    Checkbox,
+    Input,
+    Loading,
+    Modal,
+    Radio,
+} from "@nextui-org/react";
 import { toast } from "react-toastify";
 import { IoAlarmOutline } from "react-icons/io5";
 import { charges, haversine_distance } from "../shared/distanceCalculator";
@@ -15,6 +22,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { TimePicker } from "@mui/x-date-pickers";
 import { FormControl, MenuItem, Select } from "@mui/material";
 import { MuiTelInput } from "mui-tel-input";
+import { AppSettingsContext } from "../contexts/appSettings";
 
 const AdminCreateOrder = () => {
     const [from, setFrom] = useState();
@@ -45,13 +53,20 @@ const AdminCreateOrder = () => {
     const [price, setPrice] = useState();
     const [country, setCountry] = useState(user?.country_id);
     const [city, setCity] = useState(user?.city_id);
-
+    const [vehicles, setVehicles] = useState();
+    const [vehicleId, setVehicleId] = useState();
     const { user, setUser } = useContext(UserContext);
+    const { appSettings, setAppSettings } = useContext(AppSettingsContext);
 
     const navigate = useNavigate();
 
     const handleDeliverNow = () => {
         deliverNow ? setDeliverNow(false) : setDeliverNow(true);
+    };
+
+    const getVehicles = async () => {
+        const res = await getWithAxios("/api/vehicle-list");
+        setVehicles(res.data);
     };
 
     const handleOpen = () => {
@@ -160,6 +175,7 @@ const AdminCreateOrder = () => {
                 parent_order_id: "",
                 total_amount: price,
                 save_user_address: user?.id,
+                vehicle_id: vehicleId,
             },
         };
 
@@ -189,6 +205,10 @@ const AdminCreateOrder = () => {
         //  console.log(deliveryLocationDetails)
     }, [to]);
 
+    useEffect(() => {
+        getVehicles();
+    }, []);
+
     return (
         <div className="">
             <div className="text-appGreen text-lg mt-4 font-bold">
@@ -196,10 +216,10 @@ const AdminCreateOrder = () => {
             </div>
             <div>
                 <div className="flex flex-wrap items-center justify-end gap-12">
-                    <div className="flex h-full  gap-4 w-fit justify-between items-center font-bold text-lg text-orange-700  py-2 px-6 rounded-xl border-2 mt-4 border-gray-400">
+                    {/*  <div className="flex h-full  gap-4 w-fit justify-between items-center font-bold text-lg text-orange-700  py-2 px-6 rounded-xl border-2 mt-4 border-gray-400">
                         <span>Price</span>{" "}
                         <span>${deliveryLocationDetails ? price : 0}</span>
-                    </div>
+                    </div> */}
                     <div className="flex items-center h-full">
                         <Button
                             auto
@@ -232,7 +252,7 @@ const AdminCreateOrder = () => {
                             />
                             <div className="font-bold text-lg text-gray-400">
                                 {" "}
-                                Deliver now
+                                Express
                             </div>
                         </div>
                     </button>
@@ -417,26 +437,80 @@ const AdminCreateOrder = () => {
                 />
             </div>
 
-            <div className="py-4 font-bold">
-                <div>Payment collect from</div>
+            <div className="grid gap-4 items-center md:grid-cols-3">
+                <div className="py-4 font-bold">
+                    <div>Payment collect from</div>
+                    <div>
+                        <FormControl sx={{ m: 1 }} className="w-full">
+                            <Select
+                                inputProps={{ "aria-label": "Without label" }}
+                                value={receivePaymentFrom}
+                                label="Age"
+                                onChange={(e) =>
+                                    setReceivePaymentFrom(e.target.value)
+                                }
+                            >
+                                <MenuItem defaultChecked value={"on_pickup"}>
+                                    On Pickup
+                                </MenuItem>
+                                <MenuItem defaultChecked value={"on_delivery"}>
+                                    On Delivery
+                                </MenuItem>
+                            </Select>
+                        </FormControl>
+                    </div>
+                </div>
                 <div>
-                    <FormControl sx={{ m: 1 }} className="w-full">
-                        <Select
-                            inputProps={{ "aria-label": "Without label" }}
-                            value={receivePaymentFrom}
-                            label="Age"
-                            onChange={(e) =>
-                                setReceivePaymentFrom(e.target.value)
-                            }
-                        >
-                            <MenuItem defaultChecked value={"on_pickup"}>
-                                On Pickup
-                            </MenuItem>
-                            <MenuItem defaultChecked value={"on_delivery"}>
-                                On Delivery
-                            </MenuItem>
-                        </Select>
-                    </FormControl>
+                    {appSettings?.is_vehicle_in_order == "1" && (
+                        <div className="py-4 font-bold">
+                            <div>Vehicle</div>
+                            <div>
+                                <FormControl sx={{ m: 1 }} className="w-full">
+                                    <Select
+                                        inputProps={{
+                                            "aria-label": "Without label",
+                                        }}
+                                        value={vehicleId}
+                                        label="Age"
+                                        onChange={(e) =>
+                                            setVehicleId(e.target.value)
+                                        }
+                                    >
+                                        {vehicles?.map((vehicle, index) => (
+                                            <MenuItem
+                                                key={index}
+                                                defaultChecked
+                                                value={vehicle.id}
+                                            >
+                                                {vehicle.title}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </div>
+                        </div>
+                    )}
+                </div>
+                <div className="py-2 px-6">
+                    <div className="font-bold text-lg py-4">
+                        Extra Charges
+                    </div>
+                    <div className="flex flex-wrap gap-4 items-center">
+                        <div>
+                            <Checkbox defaultSelected label="Express Delivery" />
+                            <div> ( + {appSettings?.currency}40) </div>
+                        </div>
+
+                        <div>
+                            <Checkbox defaultSelected label="Add Insurance" />
+                            <div> ( + {appSettings?.currency}20) </div>
+                        </div>
+
+                        <div>
+                            <Checkbox defaultSelected label="Add Insurance" />
+                            <div> ( + {appSettings?.currency}20) </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -925,18 +999,20 @@ const QuoteModal = ({
                             inputProps={{
                                 required: true,
                             }}
-                            country={"ca"}
+                            country={"pk"}
                             inputStyle={{}}
                             onChange={(e) => setPickNumber(e)}
                         />
                     </div>
                     <div className="form-group">
                         <div>Delivery Contact Number</div>
-                        <PhoneInput
-                            inputProps={{
+                        <MuiTelInput
+                            /* inputProps={{
                                 required: true,
-                            }}
-                            country={"ca"}
+                            }} */
+                            /*   country={"pk"} */
+                            defaultCountry="pk"
+                            forceCallingCode
                             value={deliveryNumber}
                             onChange={(e) => setDeliveryNumber(e)}
                         />
@@ -1053,7 +1129,6 @@ const ParcelType = ({ value, setValue }) => {
                     ))}
                 </Select>
             </FormControl>
-           
         </div>
     );
 };
@@ -1164,13 +1239,18 @@ const PositionInformations = ({
                     setSelected={setSelected}
                 />
                 <div>
-                    <div>{title} Contact Number</div>
-                    <PhoneInput
+                    <div className="py-2">
+                        {title} Contact Number {phoneValue}{" "}
+                    </div>
+                    <MuiTelInput
                         value={phoneValue}
-                        inputProps={{
+                        /* inputProps={{
                             required: true,
-                        }}
-                        country={"ca"}
+                        }} */
+                        /*  country={"pk"} */
+                        className="!outline-none focus:!outline-none w-full"
+                        forceCallingCode
+                        defaultCountry="IN"
                         onChange={(e) => setPhoneValue(e)}
                     />
                 </div>

@@ -8,12 +8,17 @@ import { BsPencilFill } from "react-icons/bs";
 const PaymentGateway = () => {
     const [payments, setPayments] = useState();
     const [openCreate, setOpenCreate] = useState();
+    const navigate = useNavigate()
 
     const getPayments = async () => {
         const res = await getWithAxios("/api/paymentgateway-list");
         setPayments(res.data);
         console.log(res.data);
     };
+
+    const goToSetup = () => {
+        navigate('/admin/paymentsetup')
+    } 
 
     useEffect(() => {
         if (!openCreate) {
@@ -24,6 +29,11 @@ const PaymentGateway = () => {
     return (
         <div className="">
             <div className="font-bold py-4">Payment Gateway</div>
+            <div className="flex justify-end py-4">
+                <Button color={"success"} onPress={goToSetup}>
+                   Setup
+                </Button>
+            </div>
             <div>
                 <Table>
                     <Table.Header>
