@@ -49,9 +49,7 @@ const PaymentGateway = () => {
                             <Table.Row key={index}>
                                 <Table.Cell> {payment.id} </Table.Cell>
                                 <Table.Cell>
-                                    {payment.type == "stripe"
-                                        ? "Visa/Master Card"
-                                        : null}
+                                    {payment.title}
                                 </Table.Cell>
                                 <Table.Cell>
                                     <Image
@@ -104,7 +102,8 @@ const PaymentLine = ({ payment }) => {
     const navigate = useNavigate();
 
     const handleOpenUpdate = () => {
-        navigate("/admin/paymentsetup");
+        const url = "/admin/paymentsetup/payment_type/" + payment?.type
+        navigate(url);
     };
 
     return (

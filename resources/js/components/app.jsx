@@ -226,6 +226,12 @@ const router = createBrowserRouter([
             },
 
             {
+                path: "paymentsetup/payment_type/:payment_type",
+                element: <PaymentSetup />,
+            },
+
+
+            {
                 path: "documents",
                 element: <Document />,
             },

@@ -5,10 +5,12 @@ import { BsPencilFill, BsTrash } from "react-icons/bs";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
 
-
 const ExtraCharges = () => {
     const [extraCharges, setExtraCharges] = useState();
+    const [selectedExtraCharges, setSelectedExtraCharges] = useState();
     const [openCreate, setOpenCreate] = useState(false);
+    const [openUpdate, setOpenUpdate] = useState(false);
+    const [openDelete, setOpenDelete] = useState(false);
 
     const getExtraCharges = async () => {
         const res = await getWithAxios("/api/extracharge-list");
@@ -20,10 +22,10 @@ const ExtraCharges = () => {
     };
 
     useEffect(() => {
-        if (!openCreate) {
+        if (!openCreate && !openUpdate && !openDelete) {
             getExtraCharges();
         }
-    }, [openCreate]);
+    }, [openCreate, openUpdate, openDelete]);
 
     return (
         <div>
@@ -46,18 +48,22 @@ const ExtraCharges = () => {
                 <Table.Body>
                     {extraCharges?.map((extraCharge, index) => (
                         <Table.Row key={index}>
-                            <Table.Cell> {extraCharge.id} </Table.Cell>
-                            <Table.Cell>{extraCharge.title}</Table.Cell>
+                            <Table.Cell> {extraCharge?.id} </Table.Cell>
+                            <Table.Cell>{extraCharge?.title}</Table.Cell>
                             <Table.Cell>
                                 {" "}
-                                {extraCharge.country_name}{" "}
+                                {extraCharge?.country_name}{" "}
                             </Table.Cell>
-                            <Table.Cell> {extraCharge.city_name} </Table.Cell>
+                            <Table.Cell> {extraCharge?.city_name} </Table.Cell>
 
-                            <Table.Cell>{extraCharge.charges}</Table.Cell>
-                            <Table.Cell>{dayjs(extraCharge?.created_at).format("DD-MM-YYYY; HH:mm:ss")}</Table.Cell>
+                            <Table.Cell>{extraCharge?.charges}</Table.Cell>
                             <Table.Cell>
-                                {extraCharge.status == 1 ? (
+                                {dayjs(extraCharge?.created_at).format(
+                                    "DD-MM-YYYY; HH:mm:ss"
+                                )}
+                            </Table.Cell>
+                            <Table.Cell>
+                                {extraCharge?.status == 1 ? (
                                     <span className="text-green-700">
                                         Enabled
                                     </span>
@@ -68,7 +74,14 @@ const ExtraCharges = () => {
                                 )}
                             </Table.Cell>
                             <Table.Cell>
-                                <ExtraChargeLine extraCharge={extraCharge} />
+                                <ExtraChargeLine
+                                    extraCharge={extraCharge}
+                                    setOpenDelete={setOpenDelete}
+                                    setOpenUpdate={setOpenUpdate}
+                                    setSelectedExtraCharges={
+                                        setSelectedExtraCharges
+                                    }
+                                />
                             </Table.Cell>
                         </Table.Row>
                     ))}
@@ -83,21 +96,35 @@ const ExtraCharges = () => {
             </Table>
 
             <CreateModal open={openCreate} setOpen={setOpenCreate} />
+            <UpdateModal
+                oldExtraCharge={selectedExtraCharges}
+                open={openUpdate}
+                setOpen={setOpenUpdate}
+            />
+            <DeleteModal
+                extraCharge={selectedExtraCharges}
+                open={openDelete}
+                setOpen={setOpenDelete}
+            />
         </div>
     );
 };
 export default ExtraCharges;
 
-const ExtraChargeLine = ({ extraCharge }) => {
-    const [openUpdate, setOpenUpdate] = useState(false);
-    const [openDelete, setOpenDelete] = useState(false);
-
+const ExtraChargeLine = ({
+    setOpenUpdate,
+    setOpenDelete,
+    setSelectedExtraCharges,
+    extraCharge,
+}) => {
     const handleOpenUpdate = () => {
         setOpenUpdate(true);
+        setSelectedExtraCharges(extraCharge);
     };
 
     const handleOpenDelete = () => {
         setOpenDelete(true);
+        setSelectedExtraCharges(extraCharge);
     };
 
     return (
@@ -116,18 +143,6 @@ const ExtraChargeLine = ({ extraCharge }) => {
                     icon={<BsTrash />}
                 ></Button>
             </div>
-            <div>
-                <UpdateModal
-                    oldExtraCharge={extraCharge}
-                    open={openUpdate}
-                    setOpen={setOpenUpdate}
-                />
-                <DeleteModal
-                    extraCharge={extraCharge}
-                    open={openDelete}
-                    setOpen={setOpenDelete}
-                />
-            </div>
         </div>
     );
 };
@@ -139,6 +154,10 @@ const CountryAndCity = ({ country, setCountry, city, setCity }) => {
     const getCountries = async () => {
         const res = await getWithAxios("/api/country-list");
         setCountries(res.data);
+
+        if (!country) {
+            setCountry(res.data[0].id);
+l        }
     };
 
     const getCities = async () => {
@@ -157,14 +176,34 @@ const CountryAndCity = ({ country, setCountry, city, setCity }) => {
         getCountries();
     }, []);
 
+    /*  useEffect(() => {
+        if (countries) {
+            setCountry(countries[0]);
+        }
+    }, [countries]); */
+
+    /* useEffect(() => {
+       console.log(country)
+    }, [country]); */
+
+    /*   useEffect(() => {
+        console.log(city)
+     }, [city]); */
+
     useEffect(() => {
         getCities();
     }, [country]);
 
+    /*  useEffect(() => {
+        if (cities) {
+            setCity(cities[0]);
+        }
+    }, [cities]); */
+
     return (
         <div className="grid gap-4 w-full z-40 font-bold md:grid-cols-2">
             <div className="grid">
-                <div>Country</div>
+                <div>Country </div>
                 <div>
                     <div className="w-full">
                         <select
@@ -175,13 +214,7 @@ const CountryAndCity = ({ country, setCountry, city, setCity }) => {
                             onChange={(e) => setCountry(e.target.value)}
                         >
                             {countries?.map((country, index) => (
-                                <option
-                                    key={index}
-                                    defaultChecked={
-                                        country.id == 2 ? true : false
-                                    }
-                                    value={country.id}
-                                >
+                                <option key={index} value={country.id}>
                                     {" "}
                                     {country.name}{" "}
                                 </option>
@@ -203,11 +236,7 @@ const CountryAndCity = ({ country, setCountry, city, setCity }) => {
                             onChange={(e) => setCity(e.target.value)}
                         >
                             {cities?.map((city, index) => (
-                                <option
-                                    key={index}
-                                    defaultChecked={city.id == 1 ? true : false}
-                                    value={city.id}
-                                >
+                                <option key={index} value={city.id}>
                                     {" "}
                                     {city.name}{" "}
                                 </option>
@@ -233,16 +262,16 @@ const CreateModal = ({ open, setOpen }) => {
 
     const handleCreate = async () => {
         const dataToSend = {
-            title: extraCharge.title,
+            title: extraCharge?.title,
             charges_type: checked,
-            charges: extraCharge.charge,
+            charges: extraCharge?.charge,
             country_id: country,
             city_id: city,
             status: "1",
         };
         const res = await postWithAxios("/api/extracharge-save", dataToSend);
 
-        console.log(res.message)
+        console.log(res.message);
 
         if (res.message == "Extra charge has been save successfully.") {
             setOpen(false);
@@ -268,7 +297,7 @@ const CreateModal = ({ open, setOpen }) => {
         >
             <Modal.Header>
                 <div className="text-lg font-bold text-appGreen">
-                    Add Extra charge
+                    Add Extra charge 
                 </div>
             </Modal.Header>
             <Modal.Body>
@@ -282,13 +311,13 @@ const CreateModal = ({ open, setOpen }) => {
 
                     <div className="form-group w-full ">
                         <label htmlFor="ExtraCharge name">
-                            Title {extraCharge.title}{" "}
+                            Title{" "}
                         </label>
                         <input
                             required
                             type="text"
                             className="form-control w-full"
-                            value={extraCharge.title}
+                            value={extraCharge?.title}
                             onChange={(e) =>
                                 setExtraCharge({
                                     ...extraCharge,
@@ -303,7 +332,7 @@ const CreateModal = ({ open, setOpen }) => {
                             required
                             type="text"
                             className="form-control w-full"
-                            value={extraCharge.charge}
+                            value={extraCharge?.charge}
                             onChange={(e) =>
                                 setExtraCharge({
                                     ...extraCharge,
@@ -347,27 +376,25 @@ const CreateModal = ({ open, setOpen }) => {
 };
 
 const UpdateModal = ({ oldExtraCharge, open, setOpen }) => {
-    const [extraCharge, setExtraCharge] = useState({
-        title: oldExtraCharge?.title,
-        charge_type: oldExtraCharge?.charges_type,
-        charge: oldExtraCharge?.charges,
-    });
+    const [extraCharge, setExtraCharge] = useState({ oldExtraCharge });
+
     const [city, setCity] = useState(oldExtraCharge?.city_id);
     const [country, setCountry] = useState(oldExtraCharge?.country_id);
     const [checked, setChecked] = useState(oldExtraCharge?.charges_type);
 
     const handleCreate = async () => {
         const dataToSend = {
-            title: extraCharge.title,
-            charges_type: checked,
-            charges: extraCharge.charge,
+            id: extraCharge?.id,
+            title: extraCharge?.title,
+            charges_type: extraCharge?.charges_type,
+            charges: extraCharge?.charges,
             country_id: country,
             city_id: city,
             status: "1",
         };
         const res = await postWithAxios("/api/extracharge-save", dataToSend);
 
-        if (res.message == "Static Data has been save successfully.") {
+        if (res.message == "Extra charge has been updated successfully.") {
             setOpen(false);
             toast(res.message, {
                 type: "success",
@@ -375,13 +402,21 @@ const UpdateModal = ({ oldExtraCharge, open, setOpen }) => {
             });
         }
 
-        if (res.message !== "Static Data has been save successfully.") {
+        if (res.message !== "Extra charge has been updated successfully.") {
             toast(res.message, {
                 type: "error",
                 hideProgressBar: true,
             });
         }
     };
+
+    useEffect(() => {
+        setExtraCharge(oldExtraCharge);
+        setCountry(oldExtraCharge?.country_id)
+        setCity(oldExtraCharge?.city_id)
+    }, [oldExtraCharge]);
+
+
     return (
         <Modal
             open={open}
@@ -391,7 +426,7 @@ const UpdateModal = ({ oldExtraCharge, open, setOpen }) => {
         >
             <Modal.Header>
                 <div className="text-lg font-bold text-appGreen">
-                    Add Extra charge
+                    Update Extra charge
                 </div>
             </Modal.Header>
             <Modal.Body>
@@ -403,13 +438,13 @@ const UpdateModal = ({ oldExtraCharge, open, setOpen }) => {
                         setCountry={setCountry}
                     />
 
-                    <div className="form-group w-full ">
+                    <div className="form-group w-full py-4 ">
                         <label htmlFor="ExtraCharge name">Title</label>
                         <input
                             required
                             type="text"
                             className="form-control w-full"
-                            value={extraCharge.title}
+                            value={extraCharge?.title}
                             onChange={(e) =>
                                 setExtraCharge({
                                     ...extraCharge,
@@ -424,19 +459,21 @@ const UpdateModal = ({ oldExtraCharge, open, setOpen }) => {
                             required
                             type="text"
                             className="form-control w-full"
-                            value={extraCharge.charge}
+                            value={extraCharge?.charges}
                             onChange={(e) =>
                                 setExtraCharge({
                                     ...extraCharge,
-                                    charge: e.target.value,
+                                    charges: e.target.value,
                                 })
                             }
                         />
                     </div>
                     <Radio.Group
                         isRequired
-                        value={checked}
-                        onChange={setChecked}
+                        value={extraCharge?.charges_type}
+                        onChange={(e) =>
+                            setExtraCharge({ ...extraCharge, charges_type: e })
+                        }
                     >
                         <Radio value="fixed">Fixed</Radio>
                         <Radio value="percentage">Percentage</Radio>
@@ -467,22 +504,21 @@ const UpdateModal = ({ oldExtraCharge, open, setOpen }) => {
 };
 
 const DeleteModal = ({ extraCharge, open, setOpen }) => {
-
     const handleDlete = async () => {
-        const url = "/api/extracharge-delete/" + extraCharge?.id
-        const res = await postWithAxios(url)
-        setOpen(false)
+        const url = "/api/extracharge-delete/" + extraCharge?.id;
+        const res = await postWithAxios(url);
+        setOpen(false);
         toast(res.message, {
-            type : "success",
-            hideProgressBar : true
-        })
-    }
+            type: "success",
+            hideProgressBar: true,
+        });
+    };
     return (
         <Modal open={open} closeButton onClose={() => setOpen(false)}>
             <Modal.Header>
                 {" "}
                 <div className="text-lg font-bold text-appGreen">
-                    Delete ExtraCharge 
+                    Delete ExtraCharge
                 </div>
             </Modal.Header>
             <Modal.Body>
@@ -501,7 +537,12 @@ const DeleteModal = ({ extraCharge, open, setOpen }) => {
                             Cancel
                         </Button>
 
-                        <Button auto color={"warning"} onPress={handleDlete} className="text-black">
+                        <Button
+                            auto
+                            color={"warning"}
+                            onPress={handleDlete}
+                            className="text-black"
+                        >
                             Delete
                         </Button>
                     </div>

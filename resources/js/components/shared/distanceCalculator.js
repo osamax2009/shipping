@@ -27,7 +27,7 @@ export function haversine_distance(pickLoc, deliverLoc) {
     return res;
 }
 
-export function charges(distance, weight, service) {
+export function charges(distance, weight, service, city) {
     if (
         service == "court_document" ||
         service == "envelopes" ||
@@ -35,15 +35,15 @@ export function charges(distance, weight, service) {
     ) {
         let dCharge = 0;
         let dWeight = 0;
-        let fixCharge = 7
+        let fixCharge = city?.fixed_charges
         let th;
         let gst;
         let pst;
         let ttc;
 
 
-        distance > 10 ? dCharge = (distance - 10) * 0.5 : null ;
-        weight > 5 ? dWeight= (weight- 5 ) * 0.5 : null; 
+        distance > city?.min_distance ? dCharge = (distance - city?.min_distance) * city?.per_distance_charges : null ;
+        weight > city?.min_weight ? dWeight= (weight- city?.min_weight ) * city?.per_weight_charges : null; 
         th = dCharge + dWeight + fixCharge;
         gst = th * 0.06;
         pst = th * 0.05;

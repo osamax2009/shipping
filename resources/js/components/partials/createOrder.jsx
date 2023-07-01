@@ -55,6 +55,12 @@ const AdminCreateOrder = () => {
     const [city, setCity] = useState(user?.city_id);
     const [vehicles, setVehicles] = useState();
     const [vehicleId, setVehicleId] = useState();
+    const [extraCharges, setExtraCharges] = useState({
+        express : true,
+        insurance : true,
+        packaging : true
+    })
+
     const { user, setUser } = useContext(UserContext);
     const { appSettings, setAppSettings } = useContext(AppSettingsContext);
 
@@ -160,7 +166,7 @@ const AdminCreateOrder = () => {
                 client_id: user?.id,
                 date: currentDate,
                 country_id: country,
-                city_id: city,
+                city_id: city?.id,
                 pickup_point: pickupDPoint(),
                 delivery_point: deliveryPoint(),
                 extra_charges: [],
@@ -171,7 +177,7 @@ const AdminCreateOrder = () => {
                 status: "create",
                 payment_type: "",
                 payment_status: "",
-                fixed_charges: 3.8,
+                fixed_charges: city?.fixed_charges,
                 parent_order_id: "",
                 total_amount: price,
                 save_user_address: user?.id,
@@ -212,7 +218,7 @@ const AdminCreateOrder = () => {
     return (
         <div className="">
             <div className="text-appGreen text-lg mt-4 font-bold">
-                Create Order
+                Create Order {price}
             </div>
             <div>
                 <div className="flex flex-wrap items-center justify-end gap-12">
@@ -224,7 +230,7 @@ const AdminCreateOrder = () => {
                         <Button
                             auto
                             color={"success"}
-                            onPress={handleOrder}
+                            onPress={handleOpen}
                             className=""
                         >
                             save
@@ -492,12 +498,13 @@ const AdminCreateOrder = () => {
                     )}
                 </div>
                 <div className="py-2 px-6">
-                    <div className="font-bold text-lg py-4">
-                        Extra Charges
-                    </div>
+                    <div className="font-bold text-lg py-4">Extra Charges</div>
                     <div className="flex flex-wrap gap-4 items-center">
                         <div>
-                            <Checkbox defaultSelected label="Express Delivery" />
+                            <Checkbox
+                                defaultSelected
+                                label="Express Delivery"
+                            />
                             <div> ( + {appSettings?.currency}40) </div>
                         </div>
 
@@ -540,6 +547,8 @@ const AdminCreateOrder = () => {
                 setDistance={setDistance}
                 receivePaymentFrom={receivePaymentFrom}
                 setReceivePaymentFrom={setReceivePaymentFrom}
+                handleOrder={handleOrder}
+                city={city}
             />
         </div>
     );
@@ -794,6 +803,8 @@ const QuoteModal = ({
     setDistance,
     receivePaymentFrom,
     setReceivePaymentFrom,
+    handleOrder,
+    city
 }) => {
     const deliveryCharges = 3.8;
     const [inProcess, setInProcess] = useState();
@@ -808,7 +819,7 @@ const QuoteModal = ({
     };
 
     const calculateTotalCharge = () => {
-        const brut = charges(distance, weight, service) + deliveryCharges;
+        const brut = charges(distance, weight, service,city) + deliveryCharges;
         const result = Math.round(brut * 100) / 100;
         setPrice(result);
     };
@@ -828,236 +839,58 @@ const QuoteModal = ({
             onClose={() => setOpen(false)}
             closeButton
             preventClose
-            width="70vw"
             className="overflow-y-scroll"
         >
             <Modal.Header>
                 <div className="text-lg text-appGreen font-bold">
-                    Order Total charges
+                   Order Summary
                 </div>
             </Modal.Header>
             <Modal.Body>
-                <div className="font-bold">Parcel Type : {service?.label}</div>
-                <div className="font-bold">
-                    Pick Point : {from?.formatted_address}
-                </div>
-
-                <div className="font-bold">
-                    Delivery Point : {to?.formatted_address}
-                </div>
-
-                <div className="font-bold">
-                    Weight : {weight ? weight : null} kg
-                </div>
-
-                <div className="text-end text-2xl font-bold text-orange-700">
-                    $ Total price = {price ? price : "calculating..."}
-                </div>
-                <div className="text-lg">Additional informations</div>
-
-                <div>
-                    <Radio.Group
-                        defaultValue="now"
-                        orientation="horizontal"
-                        onChange={handleDeliverNow}
-                        color="success"
-                    >
-                        <Radio value="now">Deliver now</Radio>
-                        <Radio value="schedule">Schedule</Radio>
-                    </Radio.Group>
-                </div>
-                {!deliverNow && (
-                    <div className="grid gap-4 px-2 pt-4 md:grid-cols-2">
-                        <div className="p-2 bg-gray-100/25">
-                            <div className="font-bold mb-4 text-md">
-                                Pick Time
-                            </div>
-                            <div className="grid p-4 border-2 border-gray-400 ">
-                                <div className="grid gap-2 font-bold">
-                                    <div className="">Date</div>
-                                    <Input
-                                        status="secondary"
-                                        required
-                                        className="w-full"
-                                        type="date"
-                                        placeholder="from"
-                                        value={schedule.pickDate}
-                                        onChange={(e) =>
-                                            setSchedule({
-                                                ...schedule,
-                                                pickDate: e.target.value,
-                                            })
-                                        }
-                                    />
-                                </div>
-
-                                <div className="grid gap-2 font-bold">
-                                    <div>From</div>
-                                    <Input
-                                        required
-                                        className="w-full"
-                                        type="time"
-                                        status="secondary"
-                                        placeholder="from"
-                                        value={schedule.pickFrom}
-                                        onChange={(e) =>
-                                            setSchedule({
-                                                ...schedule,
-                                                pickFrom: e.target.value,
-                                            })
-                                        }
-                                    />
-                                </div>
-                                <div className="grid gap-2 font-bold">
-                                    <div>To</div>
-                                    <Input
-                                        required
-                                        className="w-full"
-                                        type="time"
-                                        status="secondary"
-                                        placeholder="to"
-                                        value={schedule.pickTo}
-                                        onChange={(e) =>
-                                            setSchedule({
-                                                ...schedule,
-                                                pickTo: e.target.value,
-                                            })
-                                        }
-                                    />
-                                </div>
-                            </div>
+                <div className="grid gap-6">
+                    <div className="flex justify-between">
+                        <div>
+                            Delivery charges
                         </div>
-
-                        <div className="p-2 bg-gray-100/25">
-                            <div className="mb-4 text-center font-bold text-xl">
-                                Deliver Time
-                            </div>
-                            <div className="grid">
-                                <div className="grid gap-2 font-bold">
-                                    <div>Date</div>
-                                    <Input
-                                        status="secondary"
-                                        required
-                                        className="w-full"
-                                        type="date"
-                                        placeholder="from"
-                                        value={schedule.deliverDate}
-                                        onChange={(e) =>
-                                            setSchedule({
-                                                ...schedule,
-                                                deliverDate: e.target.value,
-                                            })
-                                        }
-                                    />
-                                </div>
-
-                                <div className="grid gap-2 font-bold">
-                                    <div>From</div>
-                                    <Input
-                                        required
-                                        className="w-full"
-                                        type="time"
-                                        status="secondary"
-                                        placeholder="from"
-                                        value={schedule.deliverFrom}
-                                        onChange={(e) =>
-                                            setSchedule({
-                                                ...schedule,
-                                                deliverFrom: e.target.value,
-                                            })
-                                        }
-                                    />
-                                </div>
-                                <div className="grid gap-2 font-bold">
-                                    <div>To</div>
-                                    <Input
-                                        required
-                                        className="w-full"
-                                        type="time"
-                                        status="secondary"
-                                        placeholder="to"
-                                        value={schedule.deliverTo}
-                                        onChange={(e) =>
-                                            setSchedule({
-                                                ...schedule,
-                                                deliverTo: e.target.value,
-                                            })
-                                        }
-                                    />
-                                </div>
-                            </div>
+                        <div>
+                            {price}
                         </div>
                     </div>
-                )}
 
-                <div className="grid gap-4 md:grid-cols-2">
-                    <div className="form-group">
-                        <div>Pickup Contact Number</div>
+                    <div className="flex justify-between">
+                        <div className="font-bold">
+                            Delivery charges
+                        </div>
+                        <div>
+                            {price}
+                        </div>
+                    </div>
 
-                        <PhoneInput
-                            value={pickNumber}
-                            inputProps={{
-                                required: true,
-                            }}
-                            country={"pk"}
-                            inputStyle={{}}
-                            onChange={(e) => setPickNumber(e)}
-                        />
+                    <div className="flex justify-between font-bold">
+                        <div>
+                           Total
+                        </div>
+                        <div>
+                            {price}
+                        </div>
                     </div>
-                    <div className="form-group">
-                        <div>Delivery Contact Number</div>
-                        <MuiTelInput
-                            /* inputProps={{
-                                required: true,
-                            }} */
-                            /*   country={"pk"} */
-                            defaultCountry="pk"
-                            forceCallingCode
-                            value={deliveryNumber}
-                            onChange={(e) => setDeliveryNumber(e)}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <div>Pickup description</div>
-                        <textarea
-                            rows="2"
-                            className="form-control w-full resize-none"
-                            value={pickDescription}
-                            onChange={(e) => setPickDescription(e.target.value)}
-                        ></textarea>
-                    </div>
-                    <div className="form-group">
-                        <div>Delivery description</div>
-                        <textarea
-                            rows="2"
-                            className="form-control w-full resize-none"
-                            value={deliveryDescription}
-                            onChange={(e) =>
-                                setDeliveryDescription(e.target.value)
-                            }
-                        ></textarea>
-                    </div>
-                </div>
-                <div className="py-6">
-                    <div className="text-black text-xl font-bold">
-                        Collect payment from
-                    </div>
-                    <select
-                        className="form-control"
-                        value={receivePaymentFrom}
-                        onChange={(e) => setReceivePaymentFrom(e.target.value)}
-                    >
-                        <option value="on_pickup">On PickUp</option>
-                        <option value="on_delivery">On Delivery</option>
-                    </select>
-                </div>
-
-                <div className="flex gap-4 justify-end">
-                    <Button auto color={"success"} onPress={handleCreateOrder}>
-                        Save order
-                    </Button>
                 </div>
             </Modal.Body>
+            <Modal.Footer>
+                <div className="flex w-full gap-4 justify-end">
+                    <Button css={{ backgroundColor : "white" }} onPress={() => setOpen(false)} className="border border-gray-200" >
+                        <div className="font-bold text-gray-400">
+                            Cancel
+                        </div>
+                    </Button>
+
+                    <Button color={"success"} onPress={handleOrder}>
+                        <div className="font-bold">
+                            Create
+                        </div>
+                    </Button>
+                </div>
+            </Modal.Footer>
         </Modal>
     );
 };
@@ -1160,6 +993,9 @@ const CountryAndCity = ({ country, setCountry, city, setCity }) => {
 
     useEffect(() => {
         getCities();
+        if (cities?.length > 0) {
+            setCity(cities[0]);
+        }
     }, [country]);
 
     return (
@@ -1202,11 +1038,7 @@ const CountryAndCity = ({ country, setCountry, city, setCity }) => {
                             onChange={(e) => setCity(e.target.value)}
                         >
                             {cities?.map((city, index) => (
-                                <MenuItem
-                                    key={index}
-                                    defaultChecked={city.id == 1 ? true : false}
-                                    value={city.id}
-                                >
+                                <MenuItem key={index} value={city}>
                                     {" "}
                                     {city.name}{" "}
                                 </MenuItem>
