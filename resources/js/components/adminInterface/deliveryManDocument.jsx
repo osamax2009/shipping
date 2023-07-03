@@ -14,7 +14,7 @@ const DeliveryManDocument = () => {
     const getDeliveryManDocuments = async () => {
         const res = await getWithAxios("/api/delivery-man-document-list");
         setDeliveryManDocuments(res.data);
-        console.log(res.data);
+       
     };
 
     useEffect(() => {
@@ -94,13 +94,15 @@ export default DeliveryManDocument;
 const DeliveryManDocumentLine = ({ document }) => {
     const [doc, setDoc] = useState();
     const {user, setUser} = useContext(UserContext)
+    const [status, setStatus] = useState()
 
-    const handleStatus = async () => {
-        setDoc({ ...doc, status: e.target.value });
+    const handleStatus = async (e) => {
+        
+        setStatus(e.target.value);
 
         const data = {
             id : doc?.id,
-            status : doc?.status,
+            status : status,
             is_verified : 1,
             delivery_man_id : user?.id
 
@@ -116,7 +118,8 @@ const DeliveryManDocumentLine = ({ document }) => {
 
     useEffect(() => {
         setDoc(document);
-        console.log(doc)
+        setStatus(document?.status)
+        console.log(document)
     }, [document]);
 
     return (
@@ -125,7 +128,7 @@ const DeliveryManDocumentLine = ({ document }) => {
                 name=""
                 id=""
                 className="form-control w-fit"
-                value={doc?.status}
+                value={status}
                 onChange={handleStatus}
             >
                 <option value="pending">Pending</option>
