@@ -4,10 +4,8 @@ import { parcelTypes } from "../shared/constancy";
 import {
     Button,
     Checkbox,
-    Input,
-    Loading,
     Modal,
-    Radio,
+   
 } from "@nextui-org/react";
 import { toast } from "react-toastify";
 import { IoAlarmOutline } from "react-icons/io5";
@@ -55,10 +53,11 @@ const AdminCreateOrder = () => {
     const [city, setCity] = useState(user?.city_id);
     const [vehicles, setVehicles] = useState();
     const [vehicleId, setVehicleId] = useState();
-    const [extraCharges, setExtraCharges] = useState({
-        express : true,
-        insurance : true,
-        packaging : true
+    const [extraCharges, setExtraCharges] = useState()
+    const [orderExtraCharges, setOrderExtraCharges] = useState({
+        express : "",
+        insurance : "",
+        packaging : ""
     })
 
     const { user, setUser } = useContext(UserContext);
@@ -85,6 +84,12 @@ const AdminCreateOrder = () => {
             setOpen(true);
         }
     };
+
+    const getExtraCharges = async() => {
+        const res = await getWithAxios("/api/extracharge-list")
+        setExtraCharges(res.data)
+        console.log(res)
+    }
 
     const getPlaceDetails = async (placeId, placeDetailSetter) => {
         const dataToSend = {
@@ -213,6 +218,7 @@ const AdminCreateOrder = () => {
 
     useEffect(() => {
         getVehicles();
+        getExtraCharges()
     }, []);
 
     return (
@@ -500,15 +506,25 @@ const AdminCreateOrder = () => {
                 <div className="py-2 px-6">
                     <div className="font-bold text-lg py-4">Extra Charges</div>
                     <div className="flex flex-wrap gap-4 items-center">
-                        <div>
-                            <Checkbox
-                                defaultSelected
-                                label="Express Delivery"
-                            />
-                            <div> ( + {appSettings?.currency}40) </div>
-                        </div>
+                        {
+                            extraCharges?.map((extraCharge, index) => {
+                                if (extraCharge.title !== "GST" && extraCharge.title !== "PST")
+                                {
+                                    return  <div key={index}>
+                                    <Checkbox
+                                        defaultSelected
+                                        label={extraCharge.title}
+                                        value={extraCharge.charges}
+                                        onChange={e => setOrderExtraCharges({...orderExtraCharges, e})}
+                                    />
+                                    <div> ( + {appSettings?.currency} {extraCharge.charges}) </div>
+                                </div>
+                                }
+                            })
+                        }
+                       
 
-                        <div>
+                        {/* <div>
                             <Checkbox defaultSelected label="Add Insurance" />
                             <div> ( + {appSettings?.currency}20) </div>
                         </div>
@@ -516,7 +532,7 @@ const AdminCreateOrder = () => {
                         <div>
                             <Checkbox defaultSelected label="Add Insurance" />
                             <div> ( + {appSettings?.currency}20) </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>
@@ -555,6 +571,7 @@ const AdminCreateOrder = () => {
 };
 
 export default AdminCreateOrder;
+
 
 const CityGetter = ({ selected, setSelected }) => {
     const [expanded, setExpanded] = useState(false);
@@ -615,164 +632,6 @@ const CityGetter = ({ selected, setSelected }) => {
                     ))}
                 </div>
             ) : null}
-        </div>
-    );
-};
-
-const Services = ({ selected, setSelected }) => {
-    const [expanded, setExpanded] = useState(false);
-    const divRef = useRef(null);
-
-    const handleSelection = (parcel) => {
-        setSelected(parcel);
-    };
-
-    const handleFocus = () => {
-        if (expanded) {
-            divRef.current.classList.add("ring-1");
-            divRef.current.classList.add("ring-blue-700");
-        } else {
-            divRef.current.classList.remove("ring-1");
-            divRef.current.classList.remove("ring-blue-700");
-        }
-    };
-    useEffect(() => {
-        handleFocus();
-    }, [expanded]);
-
-    useEffect(() => {
-        setExpanded(false);
-    }, [selected]);
-
-    useEffect(() => {
-        document.addEventListener("click", (evt) => {
-            const flyoutEl = divRef.current;
-            let targetEl = evt.target; // clicked element
-            do {
-                if (targetEl == flyoutEl) {
-                    // This is a click inside, does nothing, just return.
-
-                    return;
-                }
-                // Go up the DOM
-                targetEl = targetEl.parentNode;
-            } while (targetEl);
-            // This is a click outside.
-            setExpanded(false);
-        });
-    }, []);
-
-    return (
-        <div
-            ref={divRef}
-            onMouseDown={() => setExpanded(true)}
-            className="relative w-full cursor-pointer"
-        >
-            <div className="pl-3 pt-2">
-                <span className="uppercase font-bold text-black text-xl">
-                    Service
-                </span>
-            </div>
-
-            <div
-                type="text"
-                onBlur={() => setExpanded(false)}
-                placeholder="tape to search"
-                className="rounded-lg  text-lg border-0 w-full font-bold  focus:outline-none pl-3 pb-3 pt-1"
-            >
-                {selected ? (
-                    <div className="flex gap-2 pt-1">
-                        <div>{selected.icon}</div>
-                        <div>{selected.label}</div>
-                    </div>
-                ) : (
-                    <div className="text-lg font-bold text-gray-600">
-                        select a service
-                    </div>
-                )}
-            </div>
-            {expanded && (
-                <div className="bg-white max-h-[290px] z-10 shadow absolute top-24 left-0 right-0 border rounded-lg overflow-hidden overflow-y-scroll ">
-                    {parcelTypes?.map((parcel, index) => (
-                        <div
-                            key={index}
-                            onMouseDown={() => setSelected(parcel)}
-                            className="flex cursor-pointer gap-2 py-2 px-4"
-                        >
-                            <div>{parcel.icon}</div>
-                            <div>{parcel.label}</div>
-                        </div>
-                    ))}
-                </div>
-            )}
-        </div>
-    );
-};
-
-const WeightGetter = ({ selected, setSelected }) => {
-    const [expanded, setExpanded] = useState(false);
-    const divRef = useRef(null);
-    const inputRef = useRef(null);
-
-    const handleFocus = () => {
-        if (expanded) {
-            divRef.current.classList.add("ring-1");
-            divRef.current.classList.add("ring-blue-700");
-            inputRef.current.focus();
-        } else {
-            divRef.current.classList.remove("ring-1");
-            divRef.current.classList.remove("ring-blue-700");
-            inputRef.current.blur();
-        }
-    };
-    useEffect(() => {
-        handleFocus();
-    }, [expanded]);
-
-    useEffect(() => {
-        document.addEventListener("click", (evt) => {
-            const flyoutEl = divRef.current;
-            let targetEl = evt.target; // clicked element
-            do {
-                if (targetEl == flyoutEl) {
-                    // This is a click inside, does nothing, just return.
-
-                    return;
-                }
-                // Go up the DOM
-                targetEl = targetEl.parentNode;
-            } while (targetEl);
-            // This is a click outside.
-            setExpanded(false);
-        });
-    }, []);
-
-    return (
-        <div
-            ref={divRef}
-            onMouseDown={() => setExpanded(true)}
-            className="relative w-full cursor-pointer"
-        >
-            <div className="pl-3 pt-2">
-                <span className="uppercase font-bold text-black text-xl">
-                    Weight
-                </span>
-            </div>
-
-            <div
-                type="text"
-                onBlur={() => setExpanded(false)}
-                placeholder="tape to search"
-                className="rounded-lg  text-lg border-0 w-full font-bold  focus:outline-none pl-3 pb-3 pt-1"
-            >
-                <input
-                    ref={inputRef}
-                    type="number"
-                    className="outine-none cursor-pointer border-none focus:border-none focus:outiline-none pl-3 font-bold"
-                    value={selected}
-                    onChange={(e) => setSelected(e.target.value)}
-                />
-            </div>
         </div>
     );
 };
@@ -884,7 +743,7 @@ const QuoteModal = ({
                         </div>
                     </Button>
 
-                    <Button color={"success"} onPress={handleOrder}>
+                    <Button color={"success"} onPress={handleCreateOrder}>
                         <div className="font-bold">
                             Create
                         </div>

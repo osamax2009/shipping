@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Foundation\Application;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Storage;
@@ -36,6 +37,13 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 
 Route::get('/storage-link-exist', function () {
     return config('filesystems.links');
+});
+
+
+Route::get("/storage/{folder}/{name}", function(Request $request)
+{
+    $path = "public/" . $request -> folder . "/" . $request->name;
+    return Storage::get($path);
 });
 
 Route::fallback(function()

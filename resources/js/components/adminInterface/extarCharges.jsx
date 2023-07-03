@@ -128,21 +128,19 @@ const ExtraChargeLine = ({
     };
 
     return (
-        <div>
-            <div className="flex flex-wrap gap-2">
-                <Button
-                    auto
-                    onPress={handleOpenUpdate}
-                    color={"success"}
-                    icon={<BsPencilFill />}
-                ></Button>
-                <Button
-                    auto
-                    onPress={handleOpenDelete}
-                    color={"error"}
-                    icon={<BsTrash />}
-                ></Button>
-            </div>
+        <div className="flex flex-wrap gap-2">
+            <Button
+                auto
+                onPress={handleOpenUpdate}
+                color={"success"}
+                icon={<BsPencilFill />}
+            ></Button>
+            <Button
+                auto
+                onPress={handleOpenDelete}
+                color={"error"}
+                icon={<BsTrash />}
+            ></Button>
         </div>
     );
 };
@@ -157,7 +155,8 @@ const CountryAndCity = ({ country, setCountry, city, setCity }) => {
 
         if (!country) {
             setCountry(res.data[0].id);
-l        }
+            l;
+        }
     };
 
     const getCities = async () => {
@@ -297,7 +296,7 @@ const CreateModal = ({ open, setOpen }) => {
         >
             <Modal.Header>
                 <div className="text-lg font-bold text-appGreen">
-                    Add Extra charge 
+                    Add Extra charge
                 </div>
             </Modal.Header>
             <Modal.Body>
@@ -310,9 +309,7 @@ const CreateModal = ({ open, setOpen }) => {
                     />
 
                     <div className="form-group w-full ">
-                        <label htmlFor="ExtraCharge name">
-                            Title{" "}
-                        </label>
+                        <label htmlFor="ExtraCharge name">Title </label>
                         <input
                             required
                             type="text"
@@ -412,10 +409,9 @@ const UpdateModal = ({ oldExtraCharge, open, setOpen }) => {
 
     useEffect(() => {
         setExtraCharge(oldExtraCharge);
-        setCountry(oldExtraCharge?.country_id)
-        setCity(oldExtraCharge?.city_id)
+        setCountry(oldExtraCharge?.country_id);
+        setCity(oldExtraCharge?.city_id);
     }, [oldExtraCharge]);
-
 
     return (
         <Modal
@@ -494,7 +490,7 @@ const UpdateModal = ({ oldExtraCharge, open, setOpen }) => {
                             onPress={handleCreate}
                             className="text-black"
                         >
-                            Create
+                            Update
                         </Button>
                     </div>
                 </div>

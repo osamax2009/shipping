@@ -3,6 +3,8 @@ import { getWithAxios, postWithAxios } from "../api/axios";
 import { Button, Image, Modal, Radio, Table } from "@nextui-org/react";
 import { BsPencilFill, BsTrash } from "react-icons/bs";
 import { toast } from "react-toastify";
+import ImageUploader from "../partials/imageUploader";
+import { data } from "jquery";
 
 const Vehicle = () => {
     const [vehicles, setVehicles] = useState();
@@ -30,7 +32,7 @@ const Vehicle = () => {
         <div>
             <div className="flex justify-end py-4">
                 <Button color={"success"} onPress={handleOpenCreate}>
-                   Add Vehicles
+                    Add Vehicles
                 </Button>
             </div>
             <Table>
@@ -65,11 +67,15 @@ const Vehicle = () => {
                                 )}
                             </Table.Cell>
                             <Table.Cell>
-                                <Image
-                                    src={vehicle.image}
-                                    width={80}
-                                    height={60}
-                                />
+                                <div>
+                                    {vehicle.image}
+                                    <Image
+                                        src={"/storage/17/Logistics-rafiki.png"}
+                                        width={80}
+                                        height={60}
+                                        alt={vehicle.image}
+                                    />
+                                </div>
                             </Table.Cell>
 
                             <Table.Cell>
@@ -236,7 +242,7 @@ const CountryAndCity = ({ country, setCountry, city, setCity }) => {
 const CreateModal = ({ open, setOpen }) => {
     const [vehicle, setVehicle] = useState({
         title: "",
-        type: "",
+        type: "all",
         city_ids: "",
         size: "",
         capacity: "",
@@ -244,9 +250,19 @@ const CreateModal = ({ open, setOpen }) => {
         status: "1",
         vehicle_image: "",
     });
+    const [images, setImages] = useState([]);
 
     const handleCreate = async () => {
-        const res = await postWithAxios("/api/vehicle-save", vehicle);
+        var data = new FormData();
+        data.append("title", vehicle?.title);
+        data.append("type", vehicle?.type);
+        data.append("city_ids", vehicle?.city_ids);
+        data.append("size", vehicle?.size);
+        data.append("capacity", vehicle?.capacity);
+        data.append("status", vehicle?.status);
+        data.append("vehicle_image", images[0]);
+
+        const res = await postWithAxios("/api/vehicle-save", data);
 
         if (res.message == "Vehicle has been save successfully.") {
             setOpen(false);
@@ -358,17 +374,11 @@ const CreateModal = ({ open, setOpen }) => {
                         />
                     </div>
 
-                    <div className="form-group">
-                        <label htmlFor=""> Vehicle Image</label>
-                        <input
-                            type="file"
-                            onChange={(e) =>
-                                setVehicle({
-                                    ...vehicle,
-                                    image: e.target.value,
-                                })
-                            }
-                            className="form-control"
+                    <div>
+                        <ImageUploader
+                            images={images}
+                            setImages={setImages}
+                            oldImagePath={null}
                         />
                     </div>
 
@@ -398,14 +408,24 @@ const CreateModal = ({ open, setOpen }) => {
 };
 
 const UpdateModal = ({ oldVehicle, open, setOpen }) => {
-
     const [vehicle, setVehicle] = useState(oldVehicle);
+    const [images, setImages] = useState([]);
 
     const handleCreate = async () => {
-        console.log("veehicle", vehicle);
-        console.log("OldVehicle", oldVehicle);
-
-        const res = await postWithAxios("/api/vehicle-save", vehicle);
+        var data = new FormData();
+        data.append("id", vehicle?.id);
+        data.append("title", vehicle?.title);
+        data.append("type", vehicle?.type);
+        data.append("city_ids", vehicle?.city_ids);
+        data.append("size", vehicle?.size);
+        data.append("capacity", vehicle?.capacity);
+        data.append("status", vehicle?.status);
+     
+        if (images?.length > 0) {
+            data.append("vehicle_image", images[0]);
+        } 
+       
+        const res = await postWithAxios("/api/vehicle-save", data);
 
         if (res.message == "Vehicle has been save successfully.") {
             setOpen(false);
@@ -425,8 +445,8 @@ const UpdateModal = ({ oldVehicle, open, setOpen }) => {
     };
 
     useEffect(() => {
-        setVehicle(oldVehicle)
-    },[oldVehicle])
+        setVehicle(oldVehicle);
+    }, [oldVehicle]);
     return (
         <Modal
             open={open}
@@ -523,16 +543,10 @@ const UpdateModal = ({ oldVehicle, open, setOpen }) => {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor=""> Vehicle Image</label>
-                        <input
-                            type="file"
-                            onChange={(e) =>
-                                setVehicle({
-                                    ...vehicle,
-                                    image: e.target.value,
-                                })
-                            }
-                            className="form-control"
+                        <ImageUploader
+                            images={images}
+                            setImages={setImages}
+                            oldImagePath={vehicle?.vehicle_image}
                         />
                     </div>
 

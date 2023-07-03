@@ -15,7 +15,8 @@ const City = () => {
     const [openCreate, setOpenCreate] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
     const [openUpdate, setOpenUpdate] = useState(false);
-    const [selectedCity, setSelectedCity] = useState()
+    const [openSee, setOpenSee] = useState(false);
+    const [selectedCity, setSelectedCity] = useState();
 
     const getCities = async () => {
         const res = await getWithAxios("/api/city-list");
@@ -32,10 +33,10 @@ const City = () => {
     };
 
     useEffect(() => {
-        if (!openCreate && !openDelete && !openUpdate) {
+        if (!openCreate && !openDelete && !openUpdate && !openSee) {
             getCities();
         }
-    }, [openCreate, openDelete, openUpdate]);
+    }, [openCreate, openDelete, openUpdate, openSee]);
 
     useEffect(() => {
         getCountries();
@@ -63,7 +64,11 @@ const City = () => {
                             <Table.Cell> {city?.id} </Table.Cell>
                             <Table.Cell>{city?.name}</Table.Cell>
                             <Table.Cell> {city?.country_name} </Table.Cell>
-                            <Table.Cell>{dayjs(city?.created_at).format("DD-MM-YYYY; HH:mm:ss")}</Table.Cell>
+                            <Table.Cell>
+                                {dayjs(city?.created_at).format(
+                                    "DD-MM-YYYY; HH:mm:ss"
+                                )}
+                            </Table.Cell>
                             <Table.Cell>
                                 {city?.status == 1 ? (
                                     <span className="text-appGreen">
@@ -79,13 +84,10 @@ const City = () => {
                             <Table.Cell>
                                 <CityLine
                                     city={city}
-
                                     setSelectedCity={setSelectedCity}
-                                    
                                     setOpenDelete={setOpenDelete}
-                                    
                                     setOpenUpdate={setOpenUpdate}
-                                    
+                                    setOpenSee={setOpenSee}
                                 />
                             </Table.Cell>
                         </Table.Row>
@@ -117,38 +119,40 @@ const City = () => {
                 open={openDelete}
                 setOpen={setOpenDelete}
             />
+
+            <SeeModal city={selectedCity} open={openSee} setOpen={setOpenSee} />
         </div>
     );
 };
 export default City;
 
 const CityLine = ({
-    city,   
-    setOpenDelete, 
+    city,
+    setOpenDelete,
     setOpenUpdate,
-    setSelectedCity
+    setSelectedCity,
+    setOpenSee,
 }) => {
-    const [openSee, setOpenSee] = useState(false);
-
     const handleOpenUpdate = () => {
-        const value = city
-        setSelectedCity(value)
-        
+        const value = city;
+        setSelectedCity(value);
+
         setOpenUpdate(true);
     };
 
     const handleOpenDelete = () => {
-        setSelectedCity(city)
+        setSelectedCity(city);
         setOpenDelete(true);
     };
 
     const handleOpenSee = () => {
+        setSelectedCity(city);
         setOpenSee(true);
     };
 
     return (
         <div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-4">
                 <Button
                     auto
                     onPress={handleOpenUpdate}
@@ -168,16 +172,13 @@ const CityLine = ({
                     icon={<BsEye />}
                 ></Button>
             </div>
-            <div>
-                <SeeModal city={city} open={openSee} setOpen={setOpenSee} />
-            </div>
         </div>
     );
 };
 
 const CreateModal = ({ open, setOpen, countries }) => {
     const [cityInfos, setCityInfos] = useState();
-    const {appSettings, setAppSettings} = useContext(AppSettingsContext)
+    const { appSettings, setAppSettings } = useContext(AppSettingsContext);
 
     const createCity = async () => {
         const res = await postWithAxios("/api/city-save", cityInfos);
@@ -271,7 +272,10 @@ const CreateModal = ({ open, setOpen, countries }) => {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor=""> Minimum Distance ({appSettings?.distance_unit}) </label>
+                        <label htmlFor="">
+                            {" "}
+                            Minimum Distance ({appSettings?.distance_unit}){" "}
+                        </label>
                         <input
                             type="text"
                             className="form-control"
@@ -287,7 +291,10 @@ const CreateModal = ({ open, setOpen, countries }) => {
                     </div>
 
                     <div className="form-group">
-                        <label htmlFor=""> Minimum Weight ({appSettings?.weight}) </label>
+                        <label htmlFor="">
+                            {" "}
+                            Minimum Weight ({appSettings?.weight}){" "}
+                        </label>
                         <input
                             type="text"
                             className="form-control"
@@ -391,9 +398,8 @@ const CreateModal = ({ open, setOpen, countries }) => {
 };
 
 const UpdateModal = ({ city, open, setOpen, countries }) => {
-  
     const [cityInfos, setCityInfos] = useState(city);
-    console.log(city)
+
     const updateCity = async () => {
         const res = await postWithAxios("/api/city-save", cityInfos);
         if (res.message) {
@@ -406,8 +412,8 @@ const UpdateModal = ({ city, open, setOpen, countries }) => {
     };
 
     useEffect(() => {
-        setCityInfos(city)
-    }, [city])
+        setCityInfos(city);
+    }, [city]);
     return (
         <Modal
             open={open}
@@ -464,7 +470,7 @@ const UpdateModal = ({ city, open, setOpen, countries }) => {
                         <input
                             type="text"
                             className="form-control"
-                            value={cityInfos?.ficed_charges}
+                            value={cityInfos?.fixed_charges}
                             onChange={(e) =>
                                 setCityInfos({
                                     ...cityInfos,
@@ -621,8 +627,8 @@ const DeleteModal = ({ city, open, setOpen }) => {
         });
     };
     useEffect(() => {
-        setCityInfos(city)
-    }, [city])
+        setCityInfos(city);
+    }, [city]);
     return (
         <Modal open={open} closeButton onClose={() => setOpen(false)}>
             <Modal.Header>
@@ -664,7 +670,7 @@ const DeleteModal = ({ city, open, setOpen }) => {
 
 const SeeModal = ({ city, open, setOpen }) => {
     return (
-        <Modal open={open} onClose={() => setOpen(true)} closeButton>
+        <Modal open={open} onClose={() => setOpen(false)} closeButton>
             <Modal.Header>
                 <div className="text-lg">{city?.name}</div>
             </Modal.Header>

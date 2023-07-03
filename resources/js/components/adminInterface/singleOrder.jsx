@@ -245,42 +245,16 @@ const SingleOrder = () => {
                     {!active && (
                         <div className="grid gap-4 font-bold bg-white text-black py-4 px-6 rounded-b-lg">
                             <ul class="steps steps-vertical">
-                                {history[0] && (
+                                {history?.map((h, index) => (
                                     <li
                                         data-content="✓"
                                         className="step step-success"
+                                        index={index}
                                     >
                                         {" "}
-                                        <Content history={history[0]} />{" "}
+                                        <Content history={h} />{" "}
                                     </li>
-                                )}
-                                {history[1] && (
-                                    <li
-                                        data-content="✓"
-                                        className="step step-success"
-                                    >
-                                        {" "}
-                                        <Content history={history[1]} />{" "}
-                                    </li>
-                                )}
-                                {history[2] && (
-                                    <li
-                                        data-content="✓"
-                                        className="step step-success"
-                                    >
-                                        {" "}
-                                        <Content history={history[2]} />{" "}
-                                    </li>
-                                )}
-                                {history[3] && (
-                                    <li
-                                        data-content="✓"
-                                        className="step step-success"
-                                    >
-                                        {" "}
-                                        <Content history={history[3]} />{" "}
-                                    </li>
-                                )}
+                                ))}
                             </ul>
                         </div>
                     )}

@@ -42,6 +42,15 @@ import VerifyDocuments from "./adminInterface/verifyDocuments";
 import { AppSettingsContextProvider } from "./contexts/appSettings";
 import Dashboard from "./adminInterface/dashboard";
 import PaymentSetup from "./adminInterface/paymentSetup";
+import Stripe from "./adminInterface/paymentGateway/stripe";
+import Razorpay from "./adminInterface/paymentGateway/razorpay";
+import Paystack from "./adminInterface/paymentGateway/paystack";
+import Flutterwave from "./adminInterface/paymentGateway/flutterwave";
+import Paypal from "./adminInterface/paymentGateway/paypal";
+import Paytabs from "./adminInterface/paymentGateway/paytabs";
+import Mercadopago from "./adminInterface/paymentGateway/mercadopago";
+import Paytm from "./adminInterface/paymentGateway/paytm";
+import Myfatoorah from "./adminInterface/paymentGateway/myfatoorah";
 
 const router = createBrowserRouter([
     /*   Common routes */
@@ -226,8 +235,47 @@ const router = createBrowserRouter([
             },
 
             {
-                path: "paymentsetup/payment_type/:payment_type",
-                element: <PaymentSetup />,
+                path: "paymentsetup/payment_type/stripe",
+                element: <Stripe />,
+            },
+            {
+                path: "paymentsetup/payment_type/razorpay",
+                element: <Razorpay />,
+            },
+
+            {
+                path: "paymentsetup/payment_type/paystack",
+                element: <Paystack />,
+            },
+
+            {
+                path: "paymentsetup/payment_type/flutterwave",
+                element: <Flutterwave />,
+            },
+
+            {
+                path: "paymentsetup/payment_type/paypal",
+                element: <Paypal />,
+            },
+
+            {
+                path: "paymentsetup/payment_type/paytabs",
+                element: <Paytabs />,
+            },
+
+            {
+                path: "paymentsetup/payment_type/mercadopago",
+                element: <Mercadopago />,
+            },
+
+            {
+                path: "paymentsetup/payment_type/paytm",
+                element: <Paytm />,
+            },
+
+            {
+                path: "paymentsetup/payment_type/myfatoorah",
+                element: <Myfatoorah />,
             },
 
 
