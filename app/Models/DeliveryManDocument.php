@@ -12,7 +12,7 @@ class DeliveryManDocument extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia, SoftDeletes;
 
-    protected $fillable = [ 'delivery_man_id', 'document_id', 'is_verified' ];
+    protected $fillable = [ 'delivery_man_id', 'document_id', 'is_verified', 'status' ];
 
     protected $casts = [
         'delivery_man_id' => 'integer',

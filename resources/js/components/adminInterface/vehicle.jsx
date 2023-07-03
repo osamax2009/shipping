@@ -68,7 +68,6 @@ const Vehicle = () => {
                             </Table.Cell>
                             <Table.Cell>
                                 <div>
-                                    {vehicle.image}
                                     <Image
                                         src={"/storage/17/Logistics-rafiki.png"}
                                         width={80}
@@ -420,11 +419,11 @@ const UpdateModal = ({ oldVehicle, open, setOpen }) => {
         data.append("size", vehicle?.size);
         data.append("capacity", vehicle?.capacity);
         data.append("status", vehicle?.status);
-     
+
         if (images?.length > 0) {
             data.append("vehicle_image", images[0]);
-        } 
-       
+        }
+
         const res = await postWithAxios("/api/vehicle-save", data);
 
         if (res.message == "Vehicle has been save successfully.") {

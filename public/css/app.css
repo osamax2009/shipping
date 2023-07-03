@@ -3262,6 +3262,15 @@ html {
 .h-screen {
   height: 100vh;
 }
+.h-\[\] {
+  height: ;
+}
+.h-\[85vh\] {
+  height: 85vh;
+}
+.h-\[65vh\] {
+  height: 65vh;
+}
 .max-h-\[290px\] {
   max-height: 290px;
 }
