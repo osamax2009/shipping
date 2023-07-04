@@ -13,6 +13,7 @@ import { AiOutlineFileSearch } from "react-icons/ai";
 import { Button } from "@nextui-org/react";
 import { UserContext } from "../contexts/userContext";
 import { toast } from "react-toastify";
+import ReactPDF, { Document, Page, Text, View } from "@react-pdf/renderer";
 
 const SingleOrder = () => {
     const [order, setOrder] = useState();
@@ -63,7 +64,7 @@ const SingleOrder = () => {
 
             if (res.data.id) {
                 setOrder(res.data);
-                console.log(res.order_history);
+               // console.log(res.order_history);
                 setHistory(res.order_history);
                 const id = {
                     id: res.data.client_id,
@@ -73,6 +74,14 @@ const SingleOrder = () => {
             }
         }
     };
+
+    const downloadInvoice = async () => {
+        const res = await getWithAxios("/get-invoice-from-backend", {
+            id : params.order_id
+        })
+
+        console.log(res)
+    }
 
     const handleTab = () => {
         !active ? setActive(true) : setActive(false);
@@ -95,7 +104,7 @@ const SingleOrder = () => {
                 >
                     Back
                 </Link>
-                <Button auto color={"success"}>
+                <Button auto onPress={downloadInvoice} color={"success"}>
                     <div className="flex items-center justify-center font-bold text-lg gap-2">
                         <BsDownload className="text-2xl" />
                         invoice
@@ -289,6 +298,7 @@ const SingleOrder = () => {
                     </div>
                 </div>
             </div>
+            
         </div>
     );
 };
@@ -311,3 +321,32 @@ const Content = ({ history }) => {
         </div>
     );
 };
+
+const Invoicepdf = () => {
+    return(
+        <Document>
+            <Page size={'A4'} >
+                <View>
+                    <Text>
+                        <div className="flex justify-between text-black px-4 font-bold ">
+                            <div className="text-blue-600 text-xl">
+                                Invoice
+                            </div>
+                            <div>
+                                <div>
+                                Roberts Private Limited
+                                </div>
+                                <div>
+                                Sarah Street 9, Beijing, Ahmedabad
+                                </div>
+                                <div>
+                                +91 9845345665
+                                </div>
+                            </div>
+                        </div>
+                    </Text>
+                </View>
+            </Page>
+        </Document>
+    )
+}
