@@ -33,7 +33,7 @@ const UpdateModal = ({ order, open, setOpen }) => {
         >
             <Modal.Header>
                 <div className="text-lg font-bold text-appGreen">
-                    {order?.status == "create"
+                    {order?.status == "create" || order?.status == "draft" 
                         ? "Assign order"
                         : "Transfer order"}
                 </div>

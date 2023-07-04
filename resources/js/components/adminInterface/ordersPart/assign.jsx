@@ -114,7 +114,7 @@ const Assign = ({ order, setSelectedOrder, setOpenUpdate, setOpenCancel }) => {
                         color={"success"}
                         className="mx-6"
                     >
-                        create
+                        Assign
                     </Button>
                 ) : order?.status == "create" ? (
                     <Button
