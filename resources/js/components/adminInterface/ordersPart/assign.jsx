@@ -28,9 +28,9 @@ const Assign = ({ order, setSelectedOrder, setOpenUpdate, setOpenCancel }) => {
                 hideProgressBar: true,
             });
 
-          
 
-             setOpen(false)
+            setOpenUpdate("null")
+            setOpenUpdate(false)
         }
     }
 
@@ -45,8 +45,8 @@ const Assign = ({ order, setSelectedOrder, setOpenUpdate, setOpenCancel }) => {
             };
 
             const res = await postWithAxios("/api/order-action", dataToSend);
+            console.log(res)
 
-            setOpen(false);
             toast(res.message, {
                 type: "info",
                 hideProgressBar: true,
@@ -54,7 +54,8 @@ const Assign = ({ order, setSelectedOrder, setOpenUpdate, setOpenCancel }) => {
 
           
 
-             setOpen(false)
+            setOpenUpdate("null")
+            setOpenUpdate(false)
         }
     }
 
@@ -167,7 +168,7 @@ const Assign = ({ order, setSelectedOrder, setOpenUpdate, setOpenCancel }) => {
                                 Active
                         </Button>
                     </div>
-                ) :  order?.status == "departed" ? (
+                ) :  order?.status == "courier_departed" ? (
                     <Button
                         auto
                         onPress={handleStatus}
@@ -199,7 +200,7 @@ const Assign = ({ order, setSelectedOrder, setOpenUpdate, setOpenCancel }) => {
                         Cancel
                     </Button>
                     </div>
-                ) : order?.status == "arrived" ? (
+                ) : order?.status == "courier_arrived" ? (
                     <Button
                         auto
                         onPress={handleStatus}
@@ -209,11 +210,12 @@ const Assign = ({ order, setSelectedOrder, setOpenUpdate, setOpenCancel }) => {
                         {" "}
                         Delivered
                     </Button>
-                ) : order?.status == "delivered" ? (
+                ) : order?.status == "courier_delivered" ? (
                     <div className="font-bold text-gray-600 ">Delivered*</div>
-                ) : (
-                    <div className="text-green-500">{order?.status}</div>
-                )
+                ) : order?.status == "cancelled" ? (
+                    <div className="text-red-600 py-2 px-4 font-bold text-center">Order cancelled</div>
+                ) :                    <div className="text-red-600 py-2 px-4 font-bold text-center"> {order?.status} </div>
+
             ) : null}
 
             <div></div>

@@ -44,12 +44,12 @@ const ImageUploader = ({ images, setImages, oldImagePath}) => {
                         className="border border-white w-64 h-64 outline-none"
                         src={imageURLS[0]}
                     />
-                ) : (
+                ) : oldImagePath != "" ? (
                     <img
                         className="border border-white w-64 h-64 outline-none"
                         src={oldImagePath}
                     />
-                )}
+                ) : <div className="py-8"></div> }
             </div>
         </div>
     );

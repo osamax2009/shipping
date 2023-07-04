@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getWithAxios, postWithAxios } from "../api/axios";
-import { Button, Modal, Table } from "@nextui-org/react";
+import { Button, Loading, Modal, Table } from "@nextui-org/react";
 import { BsPencilFill, BsTrash } from "react-icons/bs";
 
 import { toast } from "react-toastify";
@@ -28,42 +28,45 @@ const ParcelTypes = () => {
             <div className="flex justify-end py-4">
                 <Button color={"success"} onPress={handleOpenCreate}>
                     Add Parcel Type
-                    
                 </Button>
             </div>
-            <Table>
-                <Table.Header>
-                    <Table.Column>Id</Table.Column>
-                    <Table.Column>Label</Table.Column>
-                    <Table.Column>Value</Table.Column>
-                    <Table.Column>Created</Table.Column>
-                    <Table.Column>Actions</Table.Column>
-                </Table.Header>
-                <Table.Body>
-                    {parcelTypes?.map((parcel, index) => (
-                        <Table.Row key={index}>
-                            <Table.Cell> {parcel.id} </Table.Cell>
-                            <Table.Cell>{parcel.label}</Table.Cell>
-                            <Table.Cell> {parcel.value} </Table.Cell>
-                            <Table.Cell>
-                                {dayjs(parcel?.created_at).format(
-                                    "DD-MM-YYYY; HH:mm:ss"
-                                )}
-                            </Table.Cell>
-                            <Table.Cell>
-                                <ParcelLine parcel={parcel} />
-                            </Table.Cell>
-                        </Table.Row>
-                    ))}
-                </Table.Body>
-                <Table.Pagination
-                    shadow
-                    noMargin
-                    align="center"
-                    rowsPerPage={6}
-                    onPageChange={(page) => console.log({ page })}
-                />
-            </Table>
+            {parcelTypes ? (
+                <Table>
+                    <Table.Header>
+                        <Table.Column>Id</Table.Column>
+                        <Table.Column>Label</Table.Column>
+                        <Table.Column>Value</Table.Column>
+                        <Table.Column>Created</Table.Column>
+                        <Table.Column>Actions</Table.Column>
+                    </Table.Header>
+                    <Table.Body>
+                        {parcelTypes?.map((parcel, index) => (
+                            <Table.Row key={index}>
+                                <Table.Cell> {parcel.id} </Table.Cell>
+                                <Table.Cell>{parcel.label}</Table.Cell>
+                                <Table.Cell> {parcel.value} </Table.Cell>
+                                <Table.Cell>
+                                    {dayjs(parcel?.created_at).format(
+                                        "DD-MM-YYYY; HH:mm:ss"
+                                    )}
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <ParcelLine parcel={parcel} />
+                                </Table.Cell>
+                            </Table.Row>
+                        ))}
+                    </Table.Body>
+                    <Table.Pagination
+                        shadow
+                        noMargin
+                        align="center"
+                        rowsPerPage={6}
+                        onPageChange={(page) => console.log({ page })}
+                    />
+                </Table>
+            ) : (
+                <Loading type="points" />
+            )}
 
             <CreateModal open={openCreate} setOpen={setOpenCreate} />
         </div>

@@ -36,6 +36,8 @@ class PaymentGatewayController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
+        
+        $data["test_value"] = json_decode($request->test_value,true);
 
         $result = PaymentGateway::updateOrCreate(['id' => $request->id], $data);
         uploadMediaFile($result,$request->gateway_logo,'gateway_logo');

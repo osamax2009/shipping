@@ -45,12 +45,12 @@ const FileUploader = ({ files, setFiles, oldFilePath}) => {
                         className="border border-white w-64 h-64 outline-none"
                         src={filesURLS[0]}
                     />
-                ) : (
+                ) : oldFilePath != "" ? (
                     <img
                         className="border border-white w-64 h-64 outline-none"
                         src={oldFilePath}
                     />
-                )}
+                ): <div className="py-8"></div> }
             </div>
         </div>
     );

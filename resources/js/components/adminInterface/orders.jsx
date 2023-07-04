@@ -95,93 +95,99 @@ const Orders = () => {
             </div>
             <Filter filter={filter} setFilter={setFilter} />
             <div className="text-sm w-full">
-                <Table
-                    aria-label="New orders table"
-                    css={{
-                        height: "auto",
-                        minWidth: "100%",
-                    }}
-                >
-                    <Table.Header>
-                        <Table.Column>Order Id</Table.Column>
-                        <Table.Column>Customer Name</Table.Column>
-                        <Table.Column>Delivery Person</Table.Column>
-                        <Table.Column>PickUp Date</Table.Column>
-                        <Table.Column>PickUp Address</Table.Column>
-                        <Table.Column>Delivery Address</Table.Column>
-                        <Table.Column>Create Date</Table.Column>
-                        <Table.Column>Status</Table.Column>
-                        <Table.Column>Assign</Table.Column>
-                        <Table.Column>Actions</Table.Column>
-                    </Table.Header>
-                    <Table.Body>
-                        {orders?.map((order, index) => (
-                            <Table.Row key={index}>
-                                <Table.Cell>
-                                    <Link
-                                        className="underline"
-                                        to={
-                                            "/admin/orderdetail/order_Id/" +
-                                            order?.id
-                                        }
-                                    >
-                                        #{order?.id}
-                                    </Link>
-                                </Table.Cell>
-                                <Table.Cell>{order?.client_name}</Table.Cell>
-                                <Table.Cell>
-                                    {order?.delivery_man_name}
-                                </Table.Cell>
-                                <Table.Cell>
-                                    {dayjs(order?.pickup_point.date).format(
-                                        "DD-MM-YYYY; HH:mm:ss"
-                                    )}
-                                </Table.Cell>
-                                <Table.Cell>
-                                    <div className="truncate w-[80px]">
-                                        {order?.pickup_point.address}
-                                    </div>
-                                </Table.Cell>
-                                <Table.Cell>
-                                    <div className="truncate w-[80px]">
-                                        {order?.delivery_point.address}
-                                    </div>
-                                </Table.Cell>
-                                <Table.Cell>
-                                    {dayjs(order?.date).format(
-                                        "DD-MM-YYYY; HH:mm:ss"
-                                    )}
-                                </Table.Cell>
-                                <Table.Cell>
-                                    <Status order={order} />
-                                </Table.Cell>
-                                <Table.Cell>
-                                    <Assign
-                                        order={order}
-                                        setOpenUpdate={setOpenUpdate}
-                                        setSelectedOrder={setSelectedOrder}
-                                        setOpenCancel={setOpenCancel}
-                                    />
-                                </Table.Cell>
+                {orders ? (
+                    <Table
+                        aria-label="New orders table"
+                        css={{
+                            height: "auto",
+                            minWidth: "100%",
+                        }}
+                    >
+                        <Table.Header>
+                            <Table.Column>Order Id</Table.Column>
+                            <Table.Column>Customer Name</Table.Column>
+                            <Table.Column>Delivery Person</Table.Column>
+                            <Table.Column>PickUp Date</Table.Column>
+                            <Table.Column>PickUp Address</Table.Column>
+                            <Table.Column>Delivery Address</Table.Column>
+                            <Table.Column>Create Date</Table.Column>
+                            <Table.Column>Status</Table.Column>
+                            <Table.Column>Assign</Table.Column>
+                            <Table.Column>Actions</Table.Column>
+                        </Table.Header>
+                        <Table.Body>
+                            {orders?.map((order, index) => (
+                                <Table.Row key={index}>
+                                    <Table.Cell>
+                                        <Link
+                                            className="underline"
+                                            to={
+                                                "/admin/orderdetail/order_Id/" +
+                                                order?.id
+                                            }
+                                        >
+                                            #{order?.id}
+                                        </Link>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {order?.client_name}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {order?.delivery_man_name}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {dayjs(order?.pickup_point.date).format(
+                                            "DD-MM-YYYY; HH:mm:ss"
+                                        )}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <div className="truncate w-[80px]">
+                                            {order?.pickup_point.address}
+                                        </div>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <div className="truncate w-[80px]">
+                                            {order?.delivery_point.address}
+                                        </div>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {dayjs(order?.date).format(
+                                            "DD-MM-YYYY; HH:mm:ss"
+                                        )}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <Status order={order} />
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <Assign
+                                            order={order}
+                                            setOpenUpdate={setOpenUpdate}
+                                            setSelectedOrder={setSelectedOrder}
+                                            setOpenCancel={setOpenCancel}
+                                        />
+                                    </Table.Cell>
 
-                                <Table.Cell>
-                                    <OrderLine
-                                        order={order}
-                                        setSelectedOrder={setSelectedOrder}
-                                        setOpenDelete={setOpenDelete}
-                                    />
-                                </Table.Cell>
-                            </Table.Row>
-                        ))}
-                    </Table.Body>
-                    <Table.Pagination
-                        shadow
-                        noMargin
-                        align="center"
-                        rowsPerPage={7}
-                        onPageChange={(page) => console.log({ page })}
-                    />
-                </Table>
+                                    <Table.Cell>
+                                        <OrderLine
+                                            order={order}
+                                            setSelectedOrder={setSelectedOrder}
+                                            setOpenDelete={setOpenDelete}
+                                        />
+                                    </Table.Cell>
+                                </Table.Row>
+                            ))}
+                        </Table.Body>
+                        <Table.Pagination
+                            shadow
+                            noMargin
+                            align="center"
+                            rowsPerPage={7}
+                            onPageChange={(page) => console.log({ page })}
+                        />
+                    </Table>
+                ) : (
+                    <Loading type="points" />
+                )}
             </div>
             <UpdateModal
                 order={selectedOrder}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getWithAxios, postWithAxios } from "../api/axios";
-import { Button, Modal, Radio, Table } from "@nextui-org/react";
+import { Button, Loading, Modal, Radio, Table } from "@nextui-org/react";
 import { BsPencilFill, BsTrash } from "react-icons/bs";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
@@ -34,66 +34,73 @@ const ExtraCharges = () => {
                     Add Extra Charge
                 </Button>
             </div>
-            <Table>
-                <Table.Header>
-                    <Table.Column>Id</Table.Column>
-                    <Table.Column>Title</Table.Column>
-                    <Table.Column>Country Name</Table.Column>
-                    <Table.Column>City Name</Table.Column>
-                    <Table.Column>Charge</Table.Column>
-                    <Table.Column>Created</Table.Column>
-                    <Table.Column>Status</Table.Column>
-                    <Table.Column>Actions</Table.Column>
-                </Table.Header>
-                <Table.Body>
-                    {extraCharges?.map((extraCharge, index) => (
-                        <Table.Row key={index}>
-                            <Table.Cell> {extraCharge?.id} </Table.Cell>
-                            <Table.Cell>{extraCharge?.title}</Table.Cell>
-                            <Table.Cell>
-                                {" "}
-                                {extraCharge?.country_name}{" "}
-                            </Table.Cell>
-                            <Table.Cell> {extraCharge?.city_name} </Table.Cell>
+            {extraCharges ? (
+                <Table>
+                    <Table.Header>
+                        <Table.Column>Id</Table.Column>
+                        <Table.Column>Title</Table.Column>
+                        <Table.Column>Country Name</Table.Column>
+                        <Table.Column>City Name</Table.Column>
+                        <Table.Column>Charge</Table.Column>
+                        <Table.Column>Created</Table.Column>
+                        <Table.Column>Status</Table.Column>
+                        <Table.Column>Actions</Table.Column>
+                    </Table.Header>
+                    <Table.Body>
+                        {extraCharges?.map((extraCharge, index) => (
+                            <Table.Row key={index}>
+                                <Table.Cell> {extraCharge?.id} </Table.Cell>
+                                <Table.Cell>{extraCharge?.title}</Table.Cell>
+                                <Table.Cell>
+                                    {" "}
+                                    {extraCharge?.country_name}{" "}
+                                </Table.Cell>
+                                <Table.Cell>
+                                    {" "}
+                                    {extraCharge?.city_name}{" "}
+                                </Table.Cell>
 
-                            <Table.Cell>{extraCharge?.charges}</Table.Cell>
-                            <Table.Cell>
-                                {dayjs(extraCharge?.created_at).format(
-                                    "DD-MM-YYYY; HH:mm:ss"
-                                )}
-                            </Table.Cell>
-                            <Table.Cell>
-                                {extraCharge?.status == 1 ? (
-                                    <span className="text-green-700">
-                                        Enabled
-                                    </span>
-                                ) : (
-                                    <span className="text-red-700">
-                                        Disabled
-                                    </span>
-                                )}
-                            </Table.Cell>
-                            <Table.Cell>
-                                <ExtraChargeLine
-                                    extraCharge={extraCharge}
-                                    setOpenDelete={setOpenDelete}
-                                    setOpenUpdate={setOpenUpdate}
-                                    setSelectedExtraCharges={
-                                        setSelectedExtraCharges
-                                    }
-                                />
-                            </Table.Cell>
-                        </Table.Row>
-                    ))}
-                </Table.Body>
-                <Table.Pagination
-                    shadow
-                    noMargin
-                    align="center"
-                    rowsPerPage={6}
-                    onPageChange={(page) => console.log({ page })}
-                />
-            </Table>
+                                <Table.Cell>{extraCharge?.charges}</Table.Cell>
+                                <Table.Cell>
+                                    {dayjs(extraCharge?.created_at).format(
+                                        "DD-MM-YYYY; HH:mm:ss"
+                                    )}
+                                </Table.Cell>
+                                <Table.Cell>
+                                    {extraCharge?.status == 1 ? (
+                                        <span className="text-green-700">
+                                            Enabled
+                                        </span>
+                                    ) : (
+                                        <span className="text-red-700">
+                                            Disabled
+                                        </span>
+                                    )}
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <ExtraChargeLine
+                                        extraCharge={extraCharge}
+                                        setOpenDelete={setOpenDelete}
+                                        setOpenUpdate={setOpenUpdate}
+                                        setSelectedExtraCharges={
+                                            setSelectedExtraCharges
+                                        }
+                                    />
+                                </Table.Cell>
+                            </Table.Row>
+                        ))}
+                    </Table.Body>
+                    <Table.Pagination
+                        shadow
+                        noMargin
+                        align="center"
+                        rowsPerPage={6}
+                        onPageChange={(page) => console.log({ page })}
+                    />
+                </Table>
+            ) : (
+                <Loading type="points" />
+            )}
 
             <CreateModal open={openCreate} setOpen={setOpenCreate} />
             <UpdateModal

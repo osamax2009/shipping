@@ -51,6 +51,7 @@ import Paytabs from "./adminInterface/paymentGateway/paytabs";
 import Mercadopago from "./adminInterface/paymentGateway/mercadopago";
 import Paytm from "./adminInterface/paymentGateway/paytm";
 import Myfatoorah from "./adminInterface/paymentGateway/myfatoorah";
+import { ThemeProvider } from "next-themes";
 
 const router = createBrowserRouter([
     /*   Common routes */
@@ -178,7 +179,6 @@ const router = createBrowserRouter([
         element: <AdminDashboardLayout />,
         //loader: <Loading />,
         children: [
-
             {
                 path: "dashboard",
                 element: <Dashboard />,
@@ -278,7 +278,6 @@ const router = createBrowserRouter([
                 element: <Myfatoorah />,
             },
 
-
             {
                 path: "documents",
                 element: <Document />,
@@ -329,14 +328,16 @@ const router = createBrowserRouter([
 if (document.getElementById("page-top")) {
     const Index = ReactDOM.createRoot(document.getElementById("page-top"));
     Index.render(
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <UserContextProvider>
-                <AppSettingsContextProvider>
-                    <React.StrictMode>
-                        <RouterProvider router={router} />
-                    </React.StrictMode>
-                </AppSettingsContextProvider>
-            </UserContextProvider>
-        </LocalizationProvider>
+        <ThemeProvider>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <UserContextProvider>
+                    <AppSettingsContextProvider>
+                        <React.StrictMode>
+                            <RouterProvider router={router} />
+                        </React.StrictMode>
+                    </AppSettingsContextProvider>
+                </UserContextProvider>
+            </LocalizationProvider>
+        </ThemeProvider>
     );
 }

@@ -59,7 +59,7 @@ const VerifyDocument = () => {
                             <Table.Column>Document Name</Table.Column>
                             <Table.Column>Document</Table.Column>
                             <Table.Column>Created</Table.Column>
-                            <Table.Column>Actions</Table.Column>
+                           {/*  <Table.Column>Actions</Table.Column> */}
                         </Table.Header>
                         <Table.Body>
                             {userDocuments?.map((userDocument, index) => (
@@ -75,6 +75,7 @@ const VerifyDocument = () => {
                                         {userDocument.document_name}
                                     </Table.Cell>
                                     <Table.Cell>
+                                        <div className="flex justify-start">
                                         <Image
                                             src={
                                                 userDocument.delivery_man_document
@@ -82,6 +83,7 @@ const VerifyDocument = () => {
                                             width={80}
                                             height={60}
                                         />
+                                        </div>
                                     </Table.Cell>
 
                                     <Table.Cell>
@@ -90,9 +92,10 @@ const VerifyDocument = () => {
                                         )}
                                     </Table.Cell>
 
-                                    <Table.Cell>
-                                        {/*  <userDocumentLine userDocument={userDocument} /> */}
-                                    </Table.Cell>
+                                   {/*  <Table.Cell>
+                                          <userDocumentLine userDocument={userDocument} />
+                                    </Table.Cell> */}
+                                    
                                 </Table.Row>
                             ))}
                         </Table.Body>

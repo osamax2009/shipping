@@ -1,12 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { parcelTypes } from "../shared/constancy";
-import {
-    Button,
-    Checkbox,
-    Modal,
-   
-} from "@nextui-org/react";
+import { Button, Checkbox, Modal } from "@nextui-org/react";
 import { toast } from "react-toastify";
 import { IoAlarmOutline } from "react-icons/io5";
 import { charges, haversine_distance } from "../shared/distanceCalculator";
@@ -53,12 +48,8 @@ const AdminCreateOrder = () => {
     const [city, setCity] = useState(user?.city_id);
     const [vehicles, setVehicles] = useState();
     const [vehicleId, setVehicleId] = useState();
-    const [extraCharges, setExtraCharges] = useState()
-    const [orderExtraCharges, setOrderExtraCharges] = useState({
-        express : "",
-        insurance : "",
-        packaging : ""
-    })
+    const [extraCharges, setExtraCharges] = useState();
+    const [orderExtraCharges, setOrderExtraCharges] = useState(0);
 
     const { user, setUser } = useContext(UserContext);
     const { appSettings, setAppSettings } = useContext(AppSettingsContext);
@@ -85,11 +76,20 @@ const AdminCreateOrder = () => {
         }
     };
 
-    const getExtraCharges = async() => {
-        const res = await getWithAxios("/api/extracharge-list")
-        setExtraCharges(res.data)
-        console.log(res)
-    }
+    const getExtraCharges = async () => {
+        const res = await getWithAxios("/api/extracharge-list");
+        setExtraCharges(res.data);
+
+        let value = 0;
+
+        res.data.map((extraCharge) => {    
+            if (extraCharge.title !== "GST" && extraCharge.title !== "PST") {
+                value = value + extraCharge?.charges;
+            }          
+        });
+
+        setOrderExtraCharges(value);
+    };
 
     const getPlaceDetails = async (placeId, placeDetailSetter) => {
         const dataToSend = {
@@ -184,7 +184,7 @@ const AdminCreateOrder = () => {
                 payment_status: "",
                 fixed_charges: city?.fixed_charges,
                 parent_order_id: "",
-                total_amount: price,
+                total_amount: price + orderExtraCharges,
                 save_user_address: user?.id,
                 vehicle_id: vehicleId,
             },
@@ -218,20 +218,20 @@ const AdminCreateOrder = () => {
 
     useEffect(() => {
         getVehicles();
-        getExtraCharges()
+        getExtraCharges();
     }, []);
+
+    useEffect(() => {
+        console.log(orderExtraCharges);
+    }, [orderExtraCharges]);
 
     return (
         <div className="">
             <div className="text-appGreen text-lg mt-4 font-bold">
-                Create Order {price}
+                Create Order
             </div>
             <div>
                 <div className="flex flex-wrap items-center justify-end gap-12">
-                    {/*  <div className="flex h-full  gap-4 w-fit justify-between items-center font-bold text-lg text-orange-700  py-2 px-6 rounded-xl border-2 mt-4 border-gray-400">
-                        <span>Price</span>{" "}
-                        <span>${deliveryLocationDetails ? price : 0}</span>
-                    </div> */}
                     <div className="flex items-center h-full">
                         <Button
                             auto
@@ -506,33 +506,23 @@ const AdminCreateOrder = () => {
                 <div className="py-2 px-6">
                     <div className="font-bold text-lg py-4">Extra Charges</div>
                     <div className="flex flex-wrap gap-4 items-center">
-                        {
-                            extraCharges?.map((extraCharge, index) => {
-                                if (extraCharge.title !== "GST" && extraCharge.title !== "PST")
-                                {
-                                    return  <div key={index}>
-                                    <Checkbox
-                                        defaultSelected
-                                        label={extraCharge.title}
-                                        value={extraCharge.charges}
-                                        onChange={e => setOrderExtraCharges({...orderExtraCharges, e})}
+                        {extraCharges?.map((extraCharge, index) => {
+                            if (
+                                extraCharge.title !== "GST" &&
+                                extraCharge.title !== "PST"
+                            ) {
+                                return (
+                                    <ExtraChargeCheckbox
+                                        key={index}
+                                        extraCharge={extraCharge}
+                                        orderExtraCharges={orderExtraCharges}
+                                        setOrderExtraCharges={
+                                            setOrderExtraCharges
+                                        }
                                     />
-                                    <div> ( + {appSettings?.currency} {extraCharge.charges}) </div>
-                                </div>
-                                }
-                            })
-                        }
-                       
-
-                        {/* <div>
-                            <Checkbox defaultSelected label="Add Insurance" />
-                            <div> ( + {appSettings?.currency}20) </div>
-                        </div>
-
-                        <div>
-                            <Checkbox defaultSelected label="Add Insurance" />
-                            <div> ( + {appSettings?.currency}20) </div>
-                        </div> */}
+                                );
+                            }
+                        })}
                     </div>
                 </div>
             </div>
@@ -565,6 +555,7 @@ const AdminCreateOrder = () => {
                 setReceivePaymentFrom={setReceivePaymentFrom}
                 handleOrder={handleOrder}
                 city={city}
+                orderExtraCharges={orderExtraCharges}
             />
         </div>
     );
@@ -572,6 +563,44 @@ const AdminCreateOrder = () => {
 
 export default AdminCreateOrder;
 
+const ExtraChargeCheckbox = ({
+    extraCharge,
+    setOrderExtraCharges,
+    orderExtraCharges,
+}) => {
+    const [checked, setChecked] = useState(true);
+    const { appSettings, setAppSettings } = useContext(AppSettingsContext);
+
+    const calculateExtraCharges = () => {
+       
+        if (!checked) {
+            setOrderExtraCharges( orderExtraCharges + extraCharge?.charges);
+        } else {
+            setOrderExtraCharges(orderExtraCharges - extraCharge?.charges);
+        }
+
+        setChecked(!checked)
+    };
+
+  /*   useEffect(() => {
+        calculateExtraCharges();
+    }, []); */
+
+    return (
+        <div>
+            <Checkbox
+                label={extraCharge.title}
+                value={checked}
+                isSelected={checked}
+                onChange={calculateExtraCharges}
+            />
+            <div>
+                {" "}
+                ( + {appSettings?.currency} {extraCharge.charges}){" "}
+            </div>
+        </div>
+    );
+};
 
 const CityGetter = ({ selected, setSelected }) => {
     const [expanded, setExpanded] = useState(false);
@@ -663,10 +692,12 @@ const QuoteModal = ({
     receivePaymentFrom,
     setReceivePaymentFrom,
     handleOrder,
-    city
+    orderExtraCharges,
+    city,
 }) => {
-    const deliveryCharges = 3.8;
+    //  const deliveryCharges = 3.8;
     const [inProcess, setInProcess] = useState();
+    const {appSettings, setAppSettings} = useContext(AppSettingsContext)
 
     const handleDeliverNow = () => {
         deliverNow ? setDeliverNow(false) : setDeliverNow(true);
@@ -678,7 +709,7 @@ const QuoteModal = ({
     };
 
     const calculateTotalCharge = () => {
-        const brut = charges(distance, weight, service,city) + deliveryCharges;
+        const brut = charges(distance, weight, city);
         const result = Math.round(brut * 100) / 100;
         setPrice(result);
     };
@@ -690,7 +721,7 @@ const QuoteModal = ({
 
     useEffect(() => {
         showPrice();
-    }, [from, to, weight, service]);
+    }, [from, to, weight, service, city]);
 
     return (
         <Modal
@@ -702,51 +733,39 @@ const QuoteModal = ({
         >
             <Modal.Header>
                 <div className="text-lg text-appGreen font-bold">
-                   Order Summary
+                    Order Summary
                 </div>
             </Modal.Header>
             <Modal.Body>
                 <div className="grid gap-6">
                     <div className="flex justify-between">
-                        <div>
-                            Delivery charges
-                        </div>
-                        <div>
-                            {price}
-                        </div>
+                        <div>Delivery charges</div>
+                        <div>{price} {appSettings?.currency} </div>
                     </div>
 
                     <div className="flex justify-between">
-                        <div className="font-bold">
-                            Delivery charges
-                        </div>
-                        <div>
-                            {price}
-                        </div>
+                        <div className="font-bold">Extra Charges </div>
+                        <div>{orderExtraCharges}  {appSettings?.currency} </div>
                     </div>
 
                     <div className="flex justify-between font-bold">
-                        <div>
-                           Total
-                        </div>
-                        <div>
-                            {price}
-                        </div>
+                        <div>Total</div>
+                        <div>{price + orderExtraCharges}  {appSettings?.currency}</div>
                     </div>
                 </div>
             </Modal.Body>
             <Modal.Footer>
                 <div className="flex w-full gap-4 justify-end">
-                    <Button css={{ backgroundColor : "white" }} onPress={() => setOpen(false)} className="border border-gray-200" >
-                        <div className="font-bold text-gray-400">
-                            Cancel
-                        </div>
+                    <Button
+                        css={{ backgroundColor: "white" }}
+                        onPress={() => setOpen(false)}
+                        className="border border-gray-200"
+                    >
+                        <div className="font-bold text-gray-400">Cancel</div>
                     </Button>
 
                     <Button color={"success"} onPress={handleCreateOrder}>
-                        <div className="font-bold">
-                            Create
-                        </div>
+                        <div className="font-bold">Create</div>
                     </Button>
                 </div>
             </Modal.Footer>

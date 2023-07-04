@@ -3,14 +3,18 @@ import { useState, useContext, useEffect } from "react";
 import { BsPerson } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-
+import { MuiTelInput } from "mui-tel-input";
 import { UserContext } from "../contexts/userContext";
-import { postWithAxios } from "../api/axios";
+import { getWithAxios, postWithAxios } from "../api/axios";
+import LocationSetter from "./locationSetter";
 
 const UpdateProfil = ({ open, setOpen }) => {
     const { user, setUser } = useContext(UserContext);
 
     const [userInformations, setUserInformations] = useState(user);
+    const [city, setCity] = useState(user?.city_id);
+    const [country, setCountry] = useState(user?.country_id);
+    const [location, setLocation] = useState(user?.address);
 
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
@@ -22,39 +26,52 @@ const UpdateProfil = ({ open, setOpen }) => {
         });
 
     const updateSuccessfull = (user, message) => {
-        setOpen(false)
+        setOpen(false);
         setUser(user);
         notifySuccess(message);
-      //  window.location.reload(true);
+        //  window.location.reload(true);
     };
 
     const updateUserInformations = async () => {
+        let data = userInformations
+        delete data['login_type']
+        delete data['profile_image']
+
         const res = await postWithAxios(
             "/api/update-profile",
-            userInformations
+            data
         );
-      
+
         if (res.message == "updated successfully") {
-            updateSuccessfull(res.data, res.message)
+            updateSuccessfull(res.data, res.message);
         }
 
         if (res.message != "updated successfully") {
-            setOpen(false)
-            toast("Invalid data submitted", {
+            setOpen(false);
+            toast(res.message, {
                 hideProgressBar: true,
                 type: "error",
             });
         }
-
-
     };
 
     useEffect(() => {
-        if(open)
-        {
+        if (open) {
             setUserInformations(user);
+            setCity(user?.city_id);
+            setCountry(user?.country_id);
+            setLocation(user?.address)
         }
     }, [open]);
+
+    useEffect(() => {
+        setUserInformations({
+            ...userInformations,
+            city_id: city,
+            country_id: country,
+            address: location,
+        });
+    }, [country, city, location]);
 
     return (
         <Modal
@@ -62,29 +79,27 @@ const UpdateProfil = ({ open, setOpen }) => {
             onClose={() => setOpen(false)}
             closeButton
             preventClose
-           
         >
             <Modal.Header>
-                <div className="text-lg">Update profil informations</div>
+                <div className="text-lg">Update profil</div>
             </Modal.Header>
             <Modal.Body>
-                <div className="w-full ">
+                <div className="w-full h-[65vh] ">
                     <div className="mt-6 w-full ">
                         <div>
                             <div className="grid gap-3 w-full ">
-                                <div className="grid grid-cols-1 gap-4 md:grid-cols-1">
+                                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                     <div className="grid">
                                         <Text
                                             b
-                                            className="text-sm ml-4 mb-2 text-gray-500 "
+                                            className="font-bold  mb-1 text-gray-500 "
                                         >
                                             {" "}
                                             Name
                                         </Text>
                                         <input
-                                        className="form-control"
+                                            className="form-control"
                                             value={userInformations?.name}
-                                          
                                             onChange={(e) =>
                                                 setUserInformations({
                                                     ...userInformations,
@@ -98,14 +113,16 @@ const UpdateProfil = ({ open, setOpen }) => {
                                     <div className="grid">
                                         <Text
                                             b
-                                            className="text-sm ml-4 mb-2 text-gray-500 "
+                                            className="font-bold  mb-1 text-gray-500 "
                                         >
                                             {" "}
                                             Username
                                         </Text>
                                         <input
-                                        className="form-control"
-                                            placeholder={userInformations?.username}
+                                            className="form-control"
+                                            placeholder={
+                                                userInformations?.username
+                                            }
                                             aria-label={"prenoms"}
                                             value={userInformations?.username}
                                             onChange={(e) =>
@@ -117,17 +134,25 @@ const UpdateProfil = ({ open, setOpen }) => {
                                         />
                                     </div>
                                 </div>
-                                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                                <CountryAndCity
+                                    city={city}
+                                    setCity={setCity}
+                                    country={country}
+                                    setCountry={setCountry}
+                                />
+                                <div className="grid grid-cols-1 gap-4">
                                     <div className="grid">
                                         <Text
                                             b
-                                            className="text-sm ml-4 mb-2 text-gray-500 "
+                                            className="font-bold  mb-1 text-gray-500 "
                                         >
                                             Email
                                         </Text>
                                         <input
-                                        className="form-control"
-                                            placeholder={userInformations?.email}
+                                            className="form-control"
+                                            placeholder={
+                                                userInformations?.email
+                                            }
                                             aria-label={"email"}
                                             color={"primary"}
                                             value={userInformations?.email}
@@ -139,64 +164,136 @@ const UpdateProfil = ({ open, setOpen }) => {
                                             }
                                         />
                                     </div>
-                                    <div className="grid">
+                                    <div className="grid relative">
                                         <Text
                                             b
-                                            className="text-sm ml-4 mb-2 text-gray-500 "
+                                            className="font-bold  mb-1 text-gray-500 "
                                         >
                                             Contact
                                         </Text>
-                                        <input
-                                        className="form-control"
-                                            placeholder={userInformations?.contact_number}
-                                            value={userInformations?.contact_number}
+                                        <MuiTelInput
+                                            className="appearance-none"
+                                            forceCallingCode
+                                            defaultCountry="IN"
+                                            placeholder={
+                                                userInformations?.contact_number
+                                            }
+                                            value={
+                                                userInformations?.contact_number
+                                            }
                                             onChange={(e) =>
                                                 setUserInformations({
                                                     ...userInformations,
-                                                    contact_number:
-                                                        e.target.value,
+                                                    contact_number: e,
                                                 })
                                             }
                                         />
                                     </div>
 
-                                    <div className="grid w-full">
+                                    <div className="grid w-full mt-2">
                                         <Text
                                             b
-                                            className="text-sm ml-4 mb-2 text-gray-500 "
+                                            className="font-bold  mb-1 text-gray-500 "
                                         >
                                             Address
                                         </Text>
-                                        <input
-                                        className="form-control"
-                                            placeholder={userInformations?.address}
-                                            value={userInformations?.address}
-                                            onChange={(e) =>
-                                                setUserInformations({
-                                                    ...userInformations,
-                                                    address: e.target.value,
-                                                })
-                                            }
+
+                                        <LocationSetter
+                                            cityName={location}
+                                            setCityName={setLocation}
                                         />
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div className="flex justify-end items-center mt-4 w-full gap-4">
-                            <Button
-                                auto
-                                type={null}
-                                color={'success'}
-                                onPress={updateUserInformations}
-                            >
-                                <p className="text-white">Save changes</p>
-                            </Button>
-                        </div>
                     </div>
                 </div>
             </Modal.Body>
+            <Modal.Footer>
+                <div className="flex justify-end items-center mt-4 w-full gap-4">
+                    <Button
+                        auto
+                        type={null}
+                        color={"success"}
+                        onPress={updateUserInformations}
+                    >
+                        <p className="text-white">Save changes</p>
+                    </Button>
+                </div>
+            </Modal.Footer>
         </Modal>
     );
 };
 
 export default UpdateProfil;
+
+const CountryAndCity = ({ country, setCountry, city, setCity }) => {
+    const [cities, setCities] = useState(null);
+    const [countries, setCountries] = useState(null);
+
+    const getCountries = async () => {
+        const res = await getWithAxios("/api/country-list");
+        setCountries(res.data);
+    };
+
+    const getCities = async () => {
+        if (country) {
+            const res = await getWithAxios("/api/city-list", {
+                country_id: country,
+            });
+            setCities(res.data);
+        } else {
+            const res = await getWithAxios("/api/city-list");
+            setCities(res.data);
+        }
+    };
+
+    useEffect(() => {
+        getCountries();
+        getCities();
+    }, []);
+
+    useEffect(() => {}, []);
+
+    return (
+        <div className="grid gap-4 font-bold md:grid-cols-2">
+            <div className="grid">
+                <div>Country </div>
+                <div>
+                    <select
+                        className="form-control w-full"
+                        value={country}
+                        label="Age"
+                        onChange={(e) => setCountry(e.target.value)}
+                    >
+                        {countries?.map((country, index) => (
+                            <option key={index} value={country.id}>
+                                {" "}
+                                {country.name}{" "}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            </div>
+
+            <div className="grid">
+                <div>City </div>
+                <div>
+                    <select
+                        className="form-control w-full"
+                        value={city}
+                        label="Age"
+                        onChange={(e) => setCity(e.target.value)}
+                    >
+                        {cities?.map((city, index) => (
+                            <option key={index} value={city.id}>
+                                {" "}
+                                {city.name}{" "}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            </div>
+        </div>
+    );
+};

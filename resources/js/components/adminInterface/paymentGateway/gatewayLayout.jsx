@@ -50,41 +50,16 @@ const GatewayLayout = ({ title, type, fields }) => {
         data.append("type", current?.type);
         data.append("is_test", current?.is_test); 
         data.append("live_value", current?.live_value);
+        data.append("test_value", JSON.stringify(current?.test_value));
 
         if (images[0]) {
             data.append("gateway_logo", images[0]);
         }
 
-        console.log(current?.test_value)
-        console.log(data.get('value'))
+      //  console.log(current?.test_value)
+      //  console.log(data.get('value'))
 
         const res = await postWithAxios("/api/paymentgateway-save", data);
-
-        const gateways = await getWithAxios("/api/paymentgateway-list");
-
-        let id = null
-
-        gateways.data.map((i) => {
-            if (i.type == current?.type) {
-                return id = i.id;
-            }
-        });
-
-        const dataToSend = {
-            id : id,
-            value : current?.test_value
-
-        }
-
-        console.log(dataToSend)
-
-        const value = await  postWithAxios("/api/paymentgateway-save", dataToSend);
-
-        
-        toast(value.message, {
-            type: "info",
-            hideProgressBar: true,
-        });
 
         toast(res.message, {
             type: "info",

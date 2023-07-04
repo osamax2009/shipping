@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getWithAxios, postWithAxios } from "../api/axios";
-import { Button, Modal, Table } from "@nextui-org/react";
+import { Button, Loading, Modal, Table } from "@nextui-org/react";
 import { BsEye, BsPencilFill, BsTrash } from "react-icons/bs";
 import ReactFlagsSelect from "react-flags-select";
 import countryList from "react-select-country-list";
@@ -49,58 +49,62 @@ const City = () => {
                     new city
                 </Button>
             </div>
-            <Table>
-                <Table.Header>
-                    <Table.Column>Id</Table.Column>
-                    <Table.Column>City Name</Table.Column>
-                    <Table.Column>Distance type</Table.Column>
-                    <Table.Column>Created Date</Table.Column>
-                    <Table.Column>Status</Table.Column>
-                    <Table.Column>Actions</Table.Column>
-                </Table.Header>
-                <Table.Body>
-                    {cities?.map((city, index) => (
-                        <Table.Row key={index}>
-                            <Table.Cell> {city?.id} </Table.Cell>
-                            <Table.Cell>{city?.name}</Table.Cell>
-                            <Table.Cell> {city?.country_name} </Table.Cell>
-                            <Table.Cell>
-                                {dayjs(city?.created_at).format(
-                                    "DD-MM-YYYY; HH:mm:ss"
-                                )}
-                            </Table.Cell>
-                            <Table.Cell>
-                                {city?.status == 1 ? (
-                                    <span className="text-appGreen">
-                                        Enabled
-                                    </span>
-                                ) : (
-                                    <span className="text-red-200">
-                                        Disabled
-                                    </span>
-                                )}
-                            </Table.Cell>
+            {cities ? (
+                <Table>
+                    <Table.Header>
+                        <Table.Column>Id</Table.Column>
+                        <Table.Column>City Name</Table.Column>
+                        <Table.Column>Distance type</Table.Column>
+                        <Table.Column>Created Date</Table.Column>
+                        <Table.Column>Status</Table.Column>
+                        <Table.Column>Actions</Table.Column>
+                    </Table.Header>
+                    <Table.Body>
+                        {cities?.map((city, index) => (
+                            <Table.Row key={index}>
+                                <Table.Cell> {city?.id} </Table.Cell>
+                                <Table.Cell>{city?.name}</Table.Cell>
+                                <Table.Cell> {city?.country_name} </Table.Cell>
+                                <Table.Cell>
+                                    {dayjs(city?.created_at).format(
+                                        "DD-MM-YYYY; HH:mm:ss"
+                                    )}
+                                </Table.Cell>
+                                <Table.Cell>
+                                    {city?.status == 1 ? (
+                                        <span className="text-appGreen">
+                                            Enabled
+                                        </span>
+                                    ) : (
+                                        <span className="text-red-200">
+                                            Disabled
+                                        </span>
+                                    )}
+                                </Table.Cell>
 
-                            <Table.Cell>
-                                <CityLine
-                                    city={city}
-                                    setSelectedCity={setSelectedCity}
-                                    setOpenDelete={setOpenDelete}
-                                    setOpenUpdate={setOpenUpdate}
-                                    setOpenSee={setOpenSee}
-                                />
-                            </Table.Cell>
-                        </Table.Row>
-                    ))}
-                </Table.Body>
-                <Table.Pagination
-                    shadow
-                    noMargin
-                    align="center"
-                    rowsPerPage={8}
-                    onPageChange={(page) => console.log({ page })}
-                />
-            </Table>
+                                <Table.Cell>
+                                    <CityLine
+                                        city={city}
+                                        setSelectedCity={setSelectedCity}
+                                        setOpenDelete={setOpenDelete}
+                                        setOpenUpdate={setOpenUpdate}
+                                        setOpenSee={setOpenSee}
+                                    />
+                                </Table.Cell>
+                            </Table.Row>
+                        ))}
+                    </Table.Body>
+                    <Table.Pagination
+                        shadow
+                        noMargin
+                        align="center"
+                        rowsPerPage={8}
+                        onPageChange={(page) => console.log({ page })}
+                    />
+                </Table>
+            ) : (
+                <Loading type="points" />
+            )}
 
             <CreateModal
                 open={openCreate}

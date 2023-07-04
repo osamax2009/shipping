@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getWithAxios, postWithAxios } from "../api/axios";
-import { Button, Modal, Table } from "@nextui-org/react";
+import { Button, Loading, Modal, Table } from "@nextui-org/react";
 import { BsPencilFill, BsTrash } from "react-icons/bs";
 import ReactFlagsSelect from "react-flags-select";
 import countryList from "react-select-country-list";
@@ -36,69 +36,79 @@ const Country = () => {
                     new country
                 </Button>
             </div>
-            <Table>
-                <Table.Header>
-                    <Table.Column>Id</Table.Column>
-                    <Table.Column>Country Name</Table.Column>
-                    <Table.Column>Distance type</Table.Column>
-                    <Table.Column>Weight Type</Table.Column>
-                    <Table.Column>Created Date</Table.Column>
-                    <Table.Column>Status</Table.Column>
-                    <Table.Column>Actions</Table.Column>
-                </Table.Header>
-                <Table.Body>
-                    {countries?.map((country, index) => (
-                        <Table.Row key={index}>
-                            <Table.Cell> {country?.id} </Table.Cell>
-                            <Table.Cell>{country?.name}</Table.Cell>
-                            <Table.Cell> {country?.distance_type} </Table.Cell>
-                            <Table.Cell>{country?.weight_type}</Table.Cell>
-                            <Table.Cell>{dayjs(country?.created_at).format("DD-MM-YYYY; HH:mm:ss")}</Table.Cell>
-                            <Table.Cell>
-                                {country?.status == 1 ? (
-                                    <span className="text-appGreen">
-                                        Enabled
-                                    </span>
-                                ) : (
-                                    <span className="text-red-200">
-                                        Disabled
-                                    </span>
-                                )}
-                            </Table.Cell>
+            {countries ? (
+                <Table>
+                    <Table.Header>
+                        <Table.Column>Id</Table.Column>
+                        <Table.Column>Country Name</Table.Column>
+                        <Table.Column>Distance type</Table.Column>
+                        <Table.Column>Weight Type</Table.Column>
+                        <Table.Column>Created Date</Table.Column>
+                        <Table.Column>Status</Table.Column>
+                        <Table.Column>Actions</Table.Column>
+                    </Table.Header>
+                    <Table.Body>
+                        {countries?.map((country, index) => (
+                            <Table.Row key={index}>
+                                <Table.Cell> {country?.id} </Table.Cell>
+                                <Table.Cell>{country?.name}</Table.Cell>
+                                <Table.Cell>
+                                    {" "}
+                                    {country?.distance_type}{" "}
+                                </Table.Cell>
+                                <Table.Cell>{country?.weight_type}</Table.Cell>
+                                <Table.Cell>
+                                    {dayjs(country?.created_at).format(
+                                        "DD-MM-YYYY; HH:mm:ss"
+                                    )}
+                                </Table.Cell>
+                                <Table.Cell>
+                                    {country?.status == 1 ? (
+                                        <span className="text-appGreen">
+                                            Enabled
+                                        </span>
+                                    ) : (
+                                        <span className="text-red-200">
+                                            Disabled
+                                        </span>
+                                    )}
+                                </Table.Cell>
 
-                            <Table.Cell>
-                                <CountryLine
-                                    country={country}
-                                    setSelectedCountry={setSelectedCountry}
-                                    openDelete={openDelete}
-                                    setOpenDelete={setOpenDelete}
-                                    openUpdate={openUpdate}
-                                    setOpenUpdate={setOpenUpdate}
-                                />
-                            </Table.Cell>
-                        </Table.Row>
-                    ))}
-                </Table.Body>
-                <Table.Pagination
-                    shadow
-                    noMargin
-                    align="center"
-                    rowsPerPage={10}
-                    onPageChange={(page) => console.log({ page })}
-                />
-            </Table>
-
+                                <Table.Cell>
+                                    <CountryLine
+                                        country={country}
+                                        setSelectedCountry={setSelectedCountry}
+                                        openDelete={openDelete}
+                                        setOpenDelete={setOpenDelete}
+                                        openUpdate={openUpdate}
+                                        setOpenUpdate={setOpenUpdate}
+                                    />
+                                </Table.Cell>
+                            </Table.Row>
+                        ))}
+                    </Table.Body>
+                    <Table.Pagination
+                        shadow
+                        noMargin
+                        align="center"
+                        rowsPerPage={10}
+                        onPageChange={(page) => console.log({ page })}
+                    />
+                </Table>
+            ) : (
+                <Loading type="points" />
+            )}
             <CreateModal open={openCreate} setOpen={setOpenCreate} />
             <UpdateModal
-                    country={selectedCountry}
-                    open={openUpdate}
-                    setOpen={setOpenUpdate}
-                />
-                <DeleteModal
-                    country={selectedCountry}
-                    open={openDelete}
-                    setOpen={setOpenDelete}
-                />
+                country={selectedCountry}
+                open={openUpdate}
+                setOpen={setOpenUpdate}
+            />
+            <DeleteModal
+                country={selectedCountry}
+                open={openDelete}
+                setOpen={setOpenDelete}
+            />
         </div>
     );
 };
@@ -106,19 +116,18 @@ export default Country;
 
 const CountryLine = ({
     country,
-    
+
     setOpenUpdate,
     setSelectedCountry,
     setOpenDelete,
 }) => {
     const handleOpenUpdate = () => {
-        setSelectedCountry(country)
+        setSelectedCountry(country);
         setOpenUpdate(true);
     };
 
-
     const handleOpenDelete = () => {
-        setSelectedCountry(country)
+        setSelectedCountry(country);
         setOpenDelete(true);
     };
 
@@ -138,9 +147,7 @@ const CountryLine = ({
                     icon={<BsTrash />}
                 ></Button>
             </div>
-            <div>
-                
-            </div>
+            <div></div>
         </div>
     );
 };
@@ -263,13 +270,13 @@ const UpdateModal = ({ country, open, setOpen }) => {
     const [selected, setSelected] = useState(country?.code);
     const [distanceType, setDistanceType] = useState(country?.distance_type);
     const [weightType, setWeightType] = useState(country?.weight_type);
-   
+
     const countriesList = countryList();
 
     const handleUpdate = async () => {
         const countryName = countriesList.getLabel(selected);
         const dataToSend = {
-            id : country?.id,
+            id: country?.id,
             name: countryName,
             code: selected,
             status: 1,
@@ -296,10 +303,10 @@ const UpdateModal = ({ country, open, setOpen }) => {
         }
     };
     useEffect(() => {
-        setDistanceType(country?.distance_type)
-        setWeightType(country?.weight_type)
-        setSelected(country?.code)
-    },[country])
+        setDistanceType(country?.distance_type);
+        setWeightType(country?.weight_type);
+        setSelected(country?.code);
+    }, [country]);
     return (
         <Modal
             open={open}
@@ -364,7 +371,12 @@ const UpdateModal = ({ country, open, setOpen }) => {
                             cancel
                         </Button>
 
-                        <Button auto color={"success"} onPress={handleUpdate} className="text-black">
+                        <Button
+                            auto
+                            color={"success"}
+                            onPress={handleUpdate}
+                            className="text-black"
+                        >
                             update
                         </Button>
                     </div>
@@ -375,11 +387,10 @@ const UpdateModal = ({ country, open, setOpen }) => {
 };
 
 const DeleteModal = ({ country, open, setOpen }) => {
-
     const deleteContry = async () => {
-        const url = "/api/country-delete/" + country?.id
+        const url = "/api/country-delete/" + country?.id;
 
-        const res = await postWithAxios(url)
+        const res = await postWithAxios(url);
 
         if (res.message == "Country has been deleted successfully.") {
             setOpen(false);
@@ -396,9 +407,7 @@ const DeleteModal = ({ country, open, setOpen }) => {
                 hideProgressBar: true,
             });
         }
-
-        
-    }
+    };
     return (
         <Modal open={open} closeButton onClose={() => setOpen(false)}>
             <Modal.Header>
@@ -423,7 +432,12 @@ const DeleteModal = ({ country, open, setOpen }) => {
                             Cancel
                         </Button>
 
-                        <Button auto color={"warning"} onPress={deleteContry} className="text-black">
+                        <Button
+                            auto
+                            color={"warning"}
+                            onPress={deleteContry}
+                            className="text-black"
+                        >
                             Delete
                         </Button>
                     </div>

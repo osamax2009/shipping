@@ -145,7 +145,7 @@ const Navbar = () => {
                                             ? "/client/createorder"
                                             : user?.user_type == "admin"
                                             ? "/admin/orders"
-                                            : "/"
+                                            : "/admin/orders"
                                     }
                                 >
                                     Dashboard

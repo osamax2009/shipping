@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getWithAxios, postWithAxios } from "../api/axios";
-import { Button, Image, Modal, Radio, Table } from "@nextui-org/react";
+import { Button, Image, Loading, Modal, Radio, Table } from "@nextui-org/react";
 import { BsPencilFill, BsTrash } from "react-icons/bs";
 import { toast } from "react-toastify";
 import ImageUploader from "../partials/imageUploader";
@@ -35,67 +35,73 @@ const Vehicle = () => {
                     Add Vehicles
                 </Button>
             </div>
-            <Table>
-                <Table.Header>
-                    <Table.Column>Id</Table.Column>
-                    <Table.Column>Vehicle Name</Table.Column>
-                    <Table.Column>Vehicle Size</Table.Column>
-                    <Table.Column>Vehicle Capacity</Table.Column>
-                    <Table.Column>Description</Table.Column>
-                    <Table.Column>Status</Table.Column>
-                    <Table.Column>Vehicle Image</Table.Column>
-                    <Table.Column>Actions</Table.Column>
-                </Table.Header>
-                <Table.Body>
-                    {vehicles?.map((vehicle, index) => (
-                        <Table.Row key={index}>
-                            <Table.Cell> {vehicle.id} </Table.Cell>
-                            <Table.Cell>{vehicle.title}</Table.Cell>
-                            <Table.Cell> {vehicle.size} </Table.Cell>
-                            <Table.Cell> {vehicle.capacity} </Table.Cell>
+            {vehicles ? (
+                <Table>
+                    <Table.Header>
+                        <Table.Column>Id</Table.Column>
+                        <Table.Column>Vehicle Name</Table.Column>
+                        <Table.Column>Vehicle Size</Table.Column>
+                        <Table.Column>Vehicle Capacity</Table.Column>
+                        <Table.Column>Description</Table.Column>
+                        <Table.Column>Status</Table.Column>
+                        <Table.Column>Vehicle Image</Table.Column>
+                        <Table.Column>Actions</Table.Column>
+                    </Table.Header>
+                    <Table.Body>
+                        {vehicles?.map((vehicle, index) => (
+                            <Table.Row key={index}>
+                                <Table.Cell> {vehicle.id} </Table.Cell>
+                                <Table.Cell>{vehicle.title}</Table.Cell>
+                                <Table.Cell> {vehicle.size} </Table.Cell>
+                                <Table.Cell> {vehicle.capacity} </Table.Cell>
 
-                            <Table.Cell>{vehicle.description}</Table.Cell>
-                            <Table.Cell>
-                                {vehicle.status == 1 ? (
-                                    <span className="text-green-700">
-                                        Enabled
-                                    </span>
-                                ) : (
-                                    <span className="text-red-700">
-                                        Disabled
-                                    </span>
-                                )}
-                            </Table.Cell>
-                            <Table.Cell>
-                                <div>
-                                    <Image
-                                        src={"/storage/17/Logistics-rafiki.png"}
-                                        width={80}
-                                        height={60}
-                                        alt={vehicle.image}
+                                <Table.Cell>{vehicle.description}</Table.Cell>
+                                <Table.Cell>
+                                    {vehicle.status == 1 ? (
+                                        <span className="text-green-700">
+                                            Enabled
+                                        </span>
+                                    ) : (
+                                        <span className="text-red-700">
+                                            Disabled
+                                        </span>
+                                    )}
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <div className="flex justify-start w-full">
+                                        <Image
+                                            src={
+                                                "/storage/17/Logistics-rafiki.png"
+                                            }
+                                            width={80}
+                                            height={60}
+                                            alt={vehicle.image}
+                                        />
+                                    </div>
+                                </Table.Cell>
+
+                                <Table.Cell>
+                                    <VehicleLine
+                                        setOpenDelete={setOpenDelete}
+                                        setOpenUpdate={setOpenUpdate}
+                                        setSelected={setSelected}
+                                        vehicle={vehicle}
                                     />
-                                </div>
-                            </Table.Cell>
-
-                            <Table.Cell>
-                                <VehicleLine
-                                    setOpenDelete={setOpenDelete}
-                                    setOpenUpdate={setOpenUpdate}
-                                    setSelected={setSelected}
-                                    vehicle={vehicle}
-                                />
-                            </Table.Cell>
-                        </Table.Row>
-                    ))}
-                </Table.Body>
-                <Table.Pagination
-                    shadow
-                    noMargin
-                    align="center"
-                    rowsPerPage={6}
-                    onPageChange={(page) => console.log({ page })}
-                />
-            </Table>
+                                </Table.Cell>
+                            </Table.Row>
+                        ))}
+                    </Table.Body>
+                    <Table.Pagination
+                        shadow
+                        noMargin
+                        align="center"
+                        rowsPerPage={6}
+                        onPageChange={(page) => console.log({ page })}
+                    />
+                </Table>
+            ) : (
+                <Loading type="points" />
+            )}
 
             <CreateModal open={openCreate} setOpen={setOpenCreate} />
             <UpdateModal

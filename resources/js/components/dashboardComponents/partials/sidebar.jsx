@@ -50,7 +50,7 @@ const Sidebar = () => {
     const adminRoutes = [
         {
             title: "Dashboard",
-            path: "dashboard",
+            path: "/admin/dashboard",
             icon: <RiDashboardFill />,
         },
 
@@ -188,7 +188,7 @@ const Sidebar = () => {
 
     return (
         <aside
-            className="main-sidebar elevation-0 sidebar-dark-teal bg-appGreen pb-6"
+            className="main-sidebar elevation-0 sidebar-dark-teal bg-appGreen pb-6 dark:bg-slate-900"
             id="accordionSidebar"
         >
             {/* Sidebar - Brand  */}
