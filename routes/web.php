@@ -52,7 +52,9 @@ Route::get("/get-invoice-from-backend", function(Request $request)
 {
     $order = Order::whereId($request->id)->first();
 
-    $pdf =  PDF::loadView('invoice', [])->setPaper("a4", "lanscape");
+    $pdf =  PDF::loadView('invoice', [
+        'order' => $order
+    ])->setPaper("a4", "lanscape");
 
     return $pdf->stream("invoice.pdf");
 });

@@ -207,6 +207,42 @@ const AppSettings = () => {
                     </div>
                     <div>
                         <div className="grid gap-6 p-4 border ">
+                            <div className="py-2 font-bold">Distance Setting</div>
+                            <div className="form-group">
+                                <label htmlFor=""> Distance</label>
+                                <input
+                                    className="form-control"
+                                   // value={appSettings?.distance}
+                                    defaultValue={appSettings?.distance}
+                                    onBlur={(e) =>
+                                        setAppSettings({
+                                            ...appSettings,
+                                            distance : e.target.value,
+                                        })
+                                    }
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor=""> Distance Unit </label>
+                                <select
+                                    className="form-control"
+                                    value={appSettings?.distance_unit}
+                                    defaultValue={appSettings?.distance_unit}
+                                    onChange={(e) =>
+                                        setAppSettings({
+                                            ...appSettings,
+                                            distance_unit: e.target.value,
+                                        })
+                                    }
+                                >
+                                    <option value="km">Km</option>
+                                    <option value="mile">Mile</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div className="grid gap-6 p-4 border ">
                             <div className="py-4 font-bold">
                                 Currency Setting
                             </div>
