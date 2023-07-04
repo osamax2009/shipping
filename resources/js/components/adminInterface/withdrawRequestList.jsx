@@ -2,6 +2,7 @@ import { Image, Loading, Table } from "@nextui-org/react";
 import { useState } from "react";
 import { getWithAxios } from "../api/axios";
 import { useEffect } from "react";
+import dayjs from "dayjs";
 
 const WithdrawRequest = () => {
     const [withdrawRequests, setWithdrawRequests] = useState();
@@ -9,6 +10,7 @@ const WithdrawRequest = () => {
 
     const getWithdrawRequests = async () => {
         const res = await getWithAxios("/api/withdrawrequest-list");
+       
         setWithdrawRequests(res.data);
     };
 
@@ -26,11 +28,13 @@ const WithdrawRequest = () => {
                     <Table>
                         <Table.Header>
                             <Table.Column>Id</Table.Column>
-                            <Table.Column>WithdrawRequest Method</Table.Column>
-                            <Table.Column>Image</Table.Column>
-                            <Table.Column>Mode</Table.Column>
+                            <Table.Column>Name</Table.Column>
+                            <Table.Column>Amount</Table.Column>
+                            <Table.Column>Available Balance</Table.Column>
+                            <Table.Column>Created</Table.Column>
                             <Table.Column>Status</Table.Column>
                             <Table.Column>Actions</Table.Column>
+                            <Table.Column>Bank Details</Table.Column>
                         </Table.Header>
                         <Table.Body>
                             {withdrawRequests?.map((withdrawRequest, index) => (
@@ -40,34 +44,37 @@ const WithdrawRequest = () => {
                                         {withdrawRequest.id}{" "}
                                     </Table.Cell>
                                     <Table.Cell>
-                                        {WithdrawRequest.type == "stripe"
-                                            ? "Visa/Master Card"
-                                            : null}
+                                        {withdrawRequest.user_name}
                                     </Table.Cell>
                                     <Table.Cell>
-                                        <Image
-                                            src={WithdrawRequest.gateway_logo}
-                                            width={80}
-                                            height={60}
-                                        />
+                                        {withdrawRequest.amount}
                                     </Table.Cell>
                                     <Table.Cell>
-                                        {" "}
-                                        {withdrawRequest.is_test == 1
-                                            ? "Test"
-                                            : "live"}{" "}
+                                        {withdrawRequest.wallet_balance}
                                     </Table.Cell>
 
                                     <Table.Cell>
-                                        {withdrawRequest.status == 1 ? (
+                                        {dayjs(withdrawRequest.created_at).format("DD-MM-YYYY; HH:mm:ss")}
+                                    </Table.Cell>
+                                    
+                                    <Table.Cell>
+                                        {withdrawRequest.status == "requested" ? (
+                                            <span className="text-purple-700">
+                                               {withdrawRequest.status}
+                                            </span>
+                                        ) : withdrawRequest.status == "approved" ? (
                                             <span className="text-green-700">
-                                                Enabled
+                                                {withdrawRequest.status}
                                             </span>
                                         ) : (
                                             <span className="text-red-700">
-                                                Disabled
+                                               {withdrawRequest.status}
                                             </span>
                                         )}
+                                    </Table.Cell>
+
+                                    <Table.Cell>
+                                        {/*  <WithdrawRequestLine withdrawRequest={withdrawRequest} /> */}
                                     </Table.Cell>
 
                                     <Table.Cell>
@@ -93,3 +100,11 @@ const WithdrawRequest = () => {
 };
 
 export default WithdrawRequest;
+
+const ActionsLine = () => {
+    return(
+        <div>
+            
+        </div>
+    )
+}

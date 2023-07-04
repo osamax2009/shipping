@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { getWithAxios, postWithAxios } from "../api/axios";
-import { Button, Modal, Table } from "@nextui-org/react";
+import { Button, Loading, Modal, Table } from "@nextui-org/react";
 import { BsPencilFill, BsTrash } from "react-icons/bs";
 
 import { toast } from "react-toastify";
+import dayjs from "dayjs";
 
 const ParcelTypes = () => {
     const [parcelTypes, setParcelTypes] = useState();
@@ -26,38 +27,46 @@ const ParcelTypes = () => {
         <div>
             <div className="flex justify-end py-4">
                 <Button color={"success"} onPress={handleOpenCreate}>
-                    new Parcel Type
+                    Add Parcel Type
                 </Button>
             </div>
-            <Table>
-                <Table.Header>
-                    <Table.Column>Id</Table.Column>
-                    <Table.Column>Label</Table.Column>
-                    <Table.Column>Value</Table.Column>
-                    <Table.Column>Created</Table.Column>
-                    <Table.Column>Actions</Table.Column>
-                </Table.Header>
-                <Table.Body>
-                    {parcelTypes?.map((parcel, index) => (
-                        <Table.Row key={index}>
-                            <Table.Cell> {parcel.id} </Table.Cell>
-                            <Table.Cell>{parcel.label}</Table.Cell>
-                            <Table.Cell> {parcel.value} </Table.Cell>
-                            <Table.Cell>{parcel.created_at}</Table.Cell>
-                            <Table.Cell>
-                                <ParcelLine parcel={parcel} />
-                            </Table.Cell>
-                        </Table.Row>
-                    ))}
-                </Table.Body>
-                <Table.Pagination
-                    shadow
-                    noMargin
-                    align="center"
-                    rowsPerPage={6}
-                    onPageChange={(page) => console.log({ page })}
-                />
-            </Table>
+            {parcelTypes ? (
+                <Table>
+                    <Table.Header>
+                        <Table.Column>Id</Table.Column>
+                        <Table.Column>Label</Table.Column>
+                        <Table.Column>Value</Table.Column>
+                        <Table.Column>Created</Table.Column>
+                        <Table.Column>Actions</Table.Column>
+                    </Table.Header>
+                    <Table.Body>
+                        {parcelTypes?.map((parcel, index) => (
+                            <Table.Row key={index}>
+                                <Table.Cell> {parcel.id} </Table.Cell>
+                                <Table.Cell>{parcel.label}</Table.Cell>
+                                <Table.Cell> {parcel.value} </Table.Cell>
+                                <Table.Cell>
+                                    {dayjs(parcel?.created_at).format(
+                                        "DD-MM-YYYY; HH:mm:ss"
+                                    )}
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <ParcelLine parcel={parcel} />
+                                </Table.Cell>
+                            </Table.Row>
+                        ))}
+                    </Table.Body>
+                    <Table.Pagination
+                        shadow
+                        noMargin
+                        align="center"
+                        rowsPerPage={6}
+                        onPageChange={(page) => console.log({ page })}
+                    />
+                </Table>
+            ) : (
+                <Loading type="points" />
+            )}
 
             <CreateModal open={openCreate} setOpen={setOpenCreate} />
         </div>
@@ -122,8 +131,8 @@ const CreateModal = ({ open, setOpen }) => {
         };
 
         const res = await postWithAxios("/api/staticdata-save", dataToSend);
-        
-        if (res.message == "Static Data has been save successfully") {
+
+        if (res.message == "Static Data has been save successfully.") {
             setOpen(false);
             window.location.reload();
             toast(res.message, {
@@ -132,7 +141,7 @@ const CreateModal = ({ open, setOpen }) => {
             });
         }
 
-        if (res.message !== "Static Data has been save successfully") {
+        if (res.message !== "Static Data has been save successfully.") {
             toast(res.message, {
                 type: "error",
                 hideProgressBar: true,
@@ -210,8 +219,8 @@ const UpdateModal = ({ parcel, open, setOpen }) => {
         };
 
         const res = await postWithAxios("/api/staticdata-save", dataToSend);
-        
-        if (res.message == "Static Data has been save successfully") {
+
+        if (res.message == "Static Data has been save successfully.") {
             setOpen(false);
             window.location.reload();
             toast(res.message, {
@@ -220,7 +229,7 @@ const UpdateModal = ({ parcel, open, setOpen }) => {
             });
         }
 
-        if (res.message !== "Static Data has been save successfully") {
+        if (res.message !== "Static Data has been save successfully.") {
             toast(res.message, {
                 type: "error",
                 hideProgressBar: true,
@@ -286,6 +295,21 @@ const UpdateModal = ({ parcel, open, setOpen }) => {
 };
 
 const DeleteModal = ({ parcel, open, setOpen }) => {
+    const deleteParcel = async () => {
+        const url = "/api/staticdata-delete/" + parcel?.id;
+
+        const res = postWithAxios(url);
+
+        if (res.message) {
+            toast(res.message, {
+                type: "success",
+                hideProgressBar: true,
+            });
+
+            window.location.reload();
+        }
+    };
+
     return (
         <Modal open={open} closeButton onClose={() => setOpen(false)}>
             <Modal.Header>

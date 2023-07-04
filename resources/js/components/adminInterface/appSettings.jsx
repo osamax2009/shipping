@@ -1,5 +1,5 @@
 import { Image, table } from "@nextui-org/react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { getWithAxios, postWithAxios } from "../api/axios";
 import { useEffect } from "react";
 import { Switch } from "@mui/material";
@@ -10,44 +10,11 @@ import { AppSettingsContext } from "../contexts/appSettings";
 const AppSettings = () => {
     const { appSettings, setAppSettings } = useContext(AppSettingsContext);
 
-    const [active, setactive] = useState(
-        appSettings?.notification_settings.active
-    );
-    const [failed, setfailed] = useState(
-        appSettings?.notification_settings.failed
-    );
-    const [delayed, setdelayed] = useState(
-        appSettings?.notification_settings.delayed
-    );
-    const [cancelled, setcancelled] = useState(
-        appSettings?.notification_settings.cancelled
-    );
-    const [completed, setcompleted] = useState(
-        appSettings?.notification_settings.completed
-    );
-    const [courier_arrived, setcourier_arrived] = useState(
-        appSettings?.notification_settings.courier_arrived
-    );
-    const [courier_assigned, setcourier_assigned] = useState(
-        appSettings?.notification_settings.courier_assigned
-    );
-    const [courier_departed, setcourier_departed] = useState(
-        appSettings?.notification_settings.courier_departed
-    );
-    const [courier_transfer, setcourier_transfer] = useState(
-        appSettings?.notification_settings.courier_transfer
-    );
-    const [courier_picked_up, setcourier_picked_up] = useState(
-        appSettings?.notification_settings.courier_picked_up
-    );
-    const [payment_status_message, setpayment_status_message] = useState(
-        appSettings?.notification_settings.payment_status_message
-    );
-
     const [openCreate, setOpenCreate] = useState("false");
 
-    const getAppSettingss = async () => {
-        
+    const isFirst = useRef(null);
+
+    const UpdateSettings = async () => {
         if (openCreate == "true") {
             const res = await postWithAxios(
                 "/api/update-appsetting",
@@ -65,27 +32,25 @@ const AppSettings = () => {
         if (openCreate == "false") {
             const res = await getWithAxios("/api/get-appsetting");
             setAppSettings(res);
-            setOpenCreate("charged")
-
+            setOpenCreate("charged");
         }
         // console.log(res);
     };
 
-    const updateAppSettings = async () => {};
-
     useEffect(() => {
-        getAppSettingss();
+        if (isFirst.current) {
+            UpdateSettings();
+        }
     }, [appSettings]);
 
     useEffect(() => {
         if (openCreate == "charged" && appSettings) {
             setOpenCreate("true");
         }
-
     }, [appSettings]);
 
     return (
-        <div className="">
+        <div className="" ref={isFirst}>
             <div className="font-bold py-4">App Settings {openCreate} </div>
             <div className="grid gap-8 md:grid-cols-2">
                 <div className="px-6 font-bold border">
@@ -117,127 +82,52 @@ const AppSettings = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {/*  <tr>
-                                <td> Active </td>
-
-                                <td>
-                                    <div className="flex justify-center">
-                                        <input
-                                            type="checkbox"
-                                            className="form-checkbox"
-                                            checked={
-                                                active.IS_ONESIGNAL_NOTIFICATION ==
-                                                1
-                                                    ? true
-                                                    : false
-                                            }
-                                            value={
-                                                active.IS_ONESIGNAL_NOTIFICATION ==
-                                                1
-                                                    ? 0
-                                                    : 1
-                                            }
-                                            onChange={(e) =>
-                                                setactive({
-                                                    ...active,
-                                                    IS_ONESIGNAL_NOTIFICATION:
-                                                        e.target.value,
-                                                })
-                                            }
-                                        />
-                                    </div>
-                                </td>
-                                <td>
-                                    <div className="flex justify-center">
-                                        <input
-                                            type="checkbox"
-                                            className="form-checkbox"
-                                            checked={
-                                                active.IS_FIREBASE_NOTIFICATION ==
-                                                1
-                                                    ? true
-                                                    : false
-                                            }
-                                            value={
-                                                active.IS_FIREBASE_NOTIFICATION ==
-                                                1
-                                                    ? 0
-                                                    : 1
-                                            }
-                                            onChange={(e) =>
-                                                setactive({
-                                                    ...active,
-                                                    IS_FIREBASE_NOTIFICATION:
-                                                        e.target.value,
-                                                })
-                                            }
-                                        />
-                                    </div>
-                                </td>
-                            </tr> */}
-                            {appSettings
+                            <NotificationLine title="Active" label={"active"} />
+                            <NotificationLine
+                                title="Cancelled"
+                                label={"cancelled"}
+                            />{" "}
+                            <NotificationLine
+                                title="Completed"
+                                label={"completed"}
+                            />
+                            <NotificationLine
+                                title="Courier Assigned"
+                                label={"courier_assigned"}
+                            />
+                            <NotificationLine
+                                title="Courier Departed"
+                                label={"courier_departed"}
+                            />
+                            <NotificationLine
+                                title="Courier Picked Up"
+                                label={"courier_picked_up"}
+                            />
+                            <NotificationLine
+                                title="Courier Transfer"
+                                label={"courier_transfer"}
+                            />
+                            <NotificationLine title="Create" label={"create"} />
+                            <NotificationLine
+                                title="Delayed"
+                                label={"delayed"}
+                            />
+                            <NotificationLine title="Failed" label={"failed"} />
+                            <NotificationLine
+                                title="Payment Status message"
+                                label={"payment_status_message"}
+                            />
+                            {/*  {appSettings
                                 ? Object.keys(
-                                      appSettings.notification_settings
-                                  )?.map((setting) => (
-                                      <tr key={setting}>
-                                          <td> {setting} </td>
-
-                                          <td>
-                                              <div className="flex justify-center">
-                                                  <input
-                                                      type="checkbox"
-                                                      className="form-checkbox"
-                                                      checked={
-                                                          appSettings
-                                                              .notification_settings[
-                                                              setting
-                                                          ]
-                                                              .IS_ONESIGNAL_NOTIFICATION ==
-                                                          1
-                                                              ? true
-                                                              : false
-                                                      }
-                                                      value={
-                                                          appSettings
-                                                              .notification_settings[
-                                                              setting
-                                                          ]
-                                                              .IS_ONESIGNAL_NOTIFICATION ==
-                                                          1
-                                                              ? 0
-                                                              : 1
-                                                      }
-                                                  />
-                                              </div>
-                                          </td>
-                                          <td>
-                                              <div className="flex justify-center">
-                                                  <input
-                                                      type="checkbox"
-                                                      className="form-checkbox"
-                                                      checked={
-                                                          appSettings
-                                                              .notification_settings[
-                                                              setting
-                                                          ]
-                                                              .IS_FIREBASE_NOTIFICATION ==
-                                                          1
-                                                              ? true
-                                                              : false
-                                                      }
-                                                      value={
-                                                          appSettings
-                                                              .notification_settings[
-                                                              setting
-                                                          ]
-                                                              .IS_FIREBASE_NOTIFICATION
-                                                      }
-                                                  />
-                                              </div>
-                                          </td>
-                                      </tr>
+                                      appSettings?.notification_settings
+                                  )?.map((key, index) => (
+                                      <NotificationLine
+                                          key={key}
+                                          index = {index}
+                                         
+                                      />
                                   ))
-                                : null}
+                                : null} */}
                         </tbody>
                     </table>
                 </div>
@@ -385,3 +275,94 @@ const AppSettings = () => {
 };
 
 export default AppSettings;
+
+const NotificationLine = ({ label, title }) => {
+    const { appSettings, setAppSettings } = useContext(AppSettingsContext);
+    const [settings, setSettings] = useState(appSettings);
+    const [checked, setChecked] = useState(true);
+    const [checkedF, setCheckedF] = useState(true);
+
+    const handleFirebaseChange = () => {
+        setCheckedF(!checkedF);
+    };
+
+    const handleOnesignalChange = () => {
+        if (checked) {
+            const notifications = appSettings?.notification_settings;
+            notifications[label].IS_ONESIGNAL_NOTIFICATION = 0;
+            // console.log(notifications)
+
+            setAppSettings({
+                ...appSettings,
+                notification_settings: notifications,
+            });
+            // console.log(appSettings)
+        } else {
+            const notifications = appSettings?.notification_settings;
+            notifications[label].IS_ONESIGNAL_NOTIFICATION = 1;
+            // console.log(notifications)
+            setAppSettings({
+                ...appSettings,
+                notification_settings: notifications,
+            });
+            //  console.log(appSettings)
+        }
+
+        setChecked(!checked);
+    };
+
+    useEffect(() => {
+        setSettings(appSettings);
+    }, [appSettings]);
+
+    useEffect(() => {
+        if (
+            appSettings?.notification_settings[label]
+                .IS_ONESIGNAL_NOTIFICATION == 1
+        ) {
+            setChecked(true);
+        } else {
+            setChecked(false);
+        }
+    }, [appSettings]);
+
+    useEffect(() => {
+        if (
+            appSettings?.notification_settings[label]
+                .IS_FIREBASE_NOTIFICATION == 1
+        ) {
+            setCheckedF(true);
+        } else {
+            setCheckedF(false);
+        }
+    }, [appSettings]);
+
+    return (
+        <tr>
+            <td> {title} </td>
+
+            <td>
+                <div className="flex justify-center">
+                    <input
+                        type="checkbox"
+                        className="form-checkbox"
+                        checked={checked}
+                        value={checked}
+                        onChange={handleOnesignalChange}
+                    />
+                </div>
+            </td>
+            <td>
+                <div className="flex justify-center">
+                    <input
+                        type="checkbox"
+                        className="form-checkbox"
+                        checked={checkedF}
+                        value={checkedF}
+                        onChange={handleFirebaseChange}
+                    />
+                </div>
+            </td>
+        </tr>
+    );
+};

@@ -1,4 +1,4 @@
-import { Button, Image, Modal, Table } from "@nextui-org/react";
+import { Button, Image, Loading, Modal, Table } from "@nextui-org/react";
 import { useState } from "react";
 import { getWithAxios, postWithAxios } from "../api/axios";
 import { useEffect } from "react";
@@ -37,56 +37,65 @@ const Document = () => {
                 </Button>
             </div>
             <div>
-                <Table>
-                    <Table.Header>
-                        <Table.Column>Id</Table.Column>
-                        <Table.Column>Name</Table.Column>
-                        <Table.Column>Required</Table.Column>
-                        <Table.Column>Created</Table.Column>
-                        <Table.Column>Status</Table.Column>
-                        <Table.Column>Actions</Table.Column>
-                    </Table.Header>
-                    <Table.Body>
-                        {documents?.map((document, index) => (
-                            <Table.Row key={index}>
-                                <Table.Cell> {document.id} </Table.Cell>
-                                <Table.Cell>{document.name}</Table.Cell>
-                                <Table.Cell>
-                                    {document.is_required == 1 ? "Yes" : "No"}
-                                </Table.Cell>
-                                <Table.Cell> {document.created_at} </Table.Cell>
+                {documents ? (
+                    <Table>
+                        <Table.Header>
+                            <Table.Column>Id</Table.Column>
+                            <Table.Column>Name</Table.Column>
+                            <Table.Column>Required</Table.Column>
+                            <Table.Column>Created</Table.Column>
+                            <Table.Column>Status</Table.Column>
+                            <Table.Column>Actions</Table.Column>
+                        </Table.Header>
+                        <Table.Body>
+                            {documents?.map((document, index) => (
+                                <Table.Row key={index}>
+                                    <Table.Cell> {document.id} </Table.Cell>
+                                    <Table.Cell>{document.name}</Table.Cell>
+                                    <Table.Cell>
+                                        {document.is_required == 1
+                                            ? "Yes"
+                                            : "No"}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {" "}
+                                        {document.created_at}{" "}
+                                    </Table.Cell>
 
-                                <Table.Cell>
-                                    {document.status == 1 ? (
-                                        <span className="text-green-700">
-                                            Enabled
-                                        </span>
-                                    ) : (
-                                        <span className="text-red-700">
-                                            Disabled
-                                        </span>
-                                    )}
-                                </Table.Cell>
+                                    <Table.Cell>
+                                        {document.status == 1 ? (
+                                            <span className="text-green-700">
+                                                Enabled
+                                            </span>
+                                        ) : (
+                                            <span className="text-red-700">
+                                                Disabled
+                                            </span>
+                                        )}
+                                    </Table.Cell>
 
-                                <Table.Cell>
-                                    <DocumentLine
-                                        document={document}
-                                        setOpenUpdate={setOpenUpdate}
-                                        setOpenDelete={setOpenDelete}
-                                        setSelected={setSelected}
-                                    />
-                                </Table.Cell>
-                            </Table.Row>
-                        ))}
-                    </Table.Body>
-                    <Table.Pagination
-                        shadow
-                        noMargin
-                        align="center"
-                        rowsPerPage={6}
-                        onPageChange={(page) => console.log({ page })}
-                    />
-                </Table>
+                                    <Table.Cell>
+                                        <DocumentLine
+                                            document={document}
+                                            setOpenUpdate={setOpenUpdate}
+                                            setOpenDelete={setOpenDelete}
+                                            setSelected={setSelected}
+                                        />
+                                    </Table.Cell>
+                                </Table.Row>
+                            ))}
+                        </Table.Body>
+                        <Table.Pagination
+                            shadow
+                            noMargin
+                            align="center"
+                            rowsPerPage={6}
+                            onPageChange={(page) => console.log({ page })}
+                        />
+                    </Table>
+                ) : (
+                    <Loading type="points" />
+                )}
             </div>
             <CreateModal open={openCreate} setOpen={setOpenCreate} />
             <UpdateModal
@@ -303,7 +312,9 @@ const UpdateModal = ({ open, setOpen, oldDocument }) => {
                             <input
                                 type="checkbox"
                                 className="form-checkbox"
-                                defaultChecked={document?.is_required == 1 ? true : false}
+                                defaultChecked={
+                                    document?.is_required == 1 ? true : false
+                                }
                                 value={document?.is_required == 1 ? 0 : 1}
                                 onChange={(e) =>
                                     setDocument({

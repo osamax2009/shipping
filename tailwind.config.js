@@ -4,6 +4,7 @@ const { withAnimations } = require('animated-tailwindcss')
 
 
 module.exports = withAnimations({
+   
     content: [
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
         './vendor/laravel/jetstream/**/*.blade.php',
@@ -11,6 +12,7 @@ module.exports = withAnimations({
         './resources/views/**/*.blade.php',
         './resources/js/**/*.jsx',
     ],
+    darkMode : "class",
 
     theme: {
         extend: {

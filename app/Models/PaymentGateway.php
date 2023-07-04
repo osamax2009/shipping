@@ -17,6 +17,7 @@ class PaymentGateway extends Model implements HasMedia
         'status' => 'integer',
         'is_test' => 'integer',
     ];
+    
     public function getTestValueAttribute($value)
     {
         $val = isset($value) ? json_decode($value, true) : null;

@@ -1,7 +1,7 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { parcelTypes } from "../shared/constancy";
-import { Button, Input, Loading, Modal, Radio } from "@nextui-org/react";
+import { Button, Checkbox, Modal } from "@nextui-org/react";
 import { toast } from "react-toastify";
 import { IoAlarmOutline } from "react-icons/io5";
 import { charges, haversine_distance } from "../shared/distanceCalculator";
@@ -15,6 +15,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { TimePicker } from "@mui/x-date-pickers";
 import { FormControl, MenuItem, Select } from "@mui/material";
 import { MuiTelInput } from "mui-tel-input";
+import { AppSettingsContext } from "../contexts/appSettings";
 
 const AdminCreateOrder = () => {
     const [from, setFrom] = useState();
@@ -45,13 +46,23 @@ const AdminCreateOrder = () => {
     const [price, setPrice] = useState();
     const [country, setCountry] = useState(user?.country_id);
     const [city, setCity] = useState(user?.city_id);
+    const [vehicles, setVehicles] = useState();
+    const [vehicleId, setVehicleId] = useState();
+    const [extraCharges, setExtraCharges] = useState();
+    const [orderExtraCharges, setOrderExtraCharges] = useState(0);
 
     const { user, setUser } = useContext(UserContext);
+    const { appSettings, setAppSettings } = useContext(AppSettingsContext);
 
     const navigate = useNavigate();
 
     const handleDeliverNow = () => {
         deliverNow ? setDeliverNow(false) : setDeliverNow(true);
+    };
+
+    const getVehicles = async () => {
+        const res = await getWithAxios("/api/vehicle-list");
+        setVehicles(res.data);
     };
 
     const handleOpen = () => {
@@ -63,6 +74,21 @@ const AdminCreateOrder = () => {
         } else {
             setOpen(true);
         }
+    };
+
+    const getExtraCharges = async () => {
+        const res = await getWithAxios("/api/extracharge-list");
+        setExtraCharges(res.data);
+
+        let value = 0;
+
+        res.data.map((extraCharge) => {    
+            if (extraCharge.title !== "GST" && extraCharge.title !== "PST") {
+                value = value + extraCharge?.charges;
+            }          
+        });
+
+        setOrderExtraCharges(value);
     };
 
     const getPlaceDetails = async (placeId, placeDetailSetter) => {
@@ -145,7 +171,7 @@ const AdminCreateOrder = () => {
                 client_id: user?.id,
                 date: currentDate,
                 country_id: country,
-                city_id: city,
+                city_id: city?.id,
                 pickup_point: pickupDPoint(),
                 delivery_point: deliveryPoint(),
                 extra_charges: [],
@@ -156,10 +182,11 @@ const AdminCreateOrder = () => {
                 status: "create",
                 payment_type: "",
                 payment_status: "",
-                fixed_charges: 3.8,
+                fixed_charges: city?.fixed_charges,
                 parent_order_id: "",
-                total_amount: price,
+                total_amount: price + orderExtraCharges,
                 save_user_address: user?.id,
+                vehicle_id: vehicleId,
             },
         };
 
@@ -189,6 +216,15 @@ const AdminCreateOrder = () => {
         //  console.log(deliveryLocationDetails)
     }, [to]);
 
+    useEffect(() => {
+        getVehicles();
+        getExtraCharges();
+    }, []);
+
+    useEffect(() => {
+        console.log(orderExtraCharges);
+    }, [orderExtraCharges]);
+
     return (
         <div className="">
             <div className="text-appGreen text-lg mt-4 font-bold">
@@ -196,15 +232,11 @@ const AdminCreateOrder = () => {
             </div>
             <div>
                 <div className="flex flex-wrap items-center justify-end gap-12">
-                    <div className="flex h-full  gap-4 w-fit justify-between items-center font-bold text-lg text-orange-700  py-2 px-6 rounded-xl border-2 mt-4 border-gray-400">
-                        <span>Price</span>{" "}
-                        <span>${deliveryLocationDetails ? price : 0}</span>
-                    </div>
                     <div className="flex items-center h-full">
                         <Button
                             auto
                             color={"success"}
-                            onPress={handleOrder}
+                            onPress={handleOpen}
                             className=""
                         >
                             save
@@ -232,7 +264,7 @@ const AdminCreateOrder = () => {
                             />
                             <div className="font-bold text-lg text-gray-400">
                                 {" "}
-                                Deliver now
+                                Express
                             </div>
                         </div>
                     </button>
@@ -417,26 +449,81 @@ const AdminCreateOrder = () => {
                 />
             </div>
 
-            <div className="py-4 font-bold">
-                <div>Payment collect from</div>
+            <div className="grid gap-4 items-center md:grid-cols-3">
+                <div className="py-4 font-bold">
+                    <div>Payment collect from</div>
+                    <div>
+                        <FormControl sx={{ m: 1 }} className="w-full">
+                            <Select
+                                inputProps={{ "aria-label": "Without label" }}
+                                value={receivePaymentFrom}
+                                label="Age"
+                                onChange={(e) =>
+                                    setReceivePaymentFrom(e.target.value)
+                                }
+                            >
+                                <MenuItem defaultChecked value={"on_pickup"}>
+                                    On Pickup
+                                </MenuItem>
+                                <MenuItem defaultChecked value={"on_delivery"}>
+                                    On Delivery
+                                </MenuItem>
+                            </Select>
+                        </FormControl>
+                    </div>
+                </div>
                 <div>
-                    <FormControl sx={{ m: 1 }} className="w-full">
-                        <Select
-                            inputProps={{ "aria-label": "Without label" }}
-                            value={receivePaymentFrom}
-                            label="Age"
-                            onChange={(e) =>
-                                setReceivePaymentFrom(e.target.value)
+                    {appSettings?.is_vehicle_in_order == "1" && (
+                        <div className="py-4 font-bold">
+                            <div>Vehicle</div>
+                            <div>
+                                <FormControl sx={{ m: 1 }} className="w-full">
+                                    <Select
+                                        inputProps={{
+                                            "aria-label": "Without label",
+                                        }}
+                                        value={vehicleId}
+                                        label="Age"
+                                        onChange={(e) =>
+                                            setVehicleId(e.target.value)
+                                        }
+                                    >
+                                        {vehicles?.map((vehicle, index) => (
+                                            <MenuItem
+                                                key={index}
+                                                defaultChecked
+                                                value={vehicle.id}
+                                            >
+                                                {vehicle.title}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </div>
+                        </div>
+                    )}
+                </div>
+                <div className="py-2 px-6">
+                    <div className="font-bold text-lg py-4">Extra Charges</div>
+                    <div className="flex flex-wrap gap-4 items-center">
+                        {extraCharges?.map((extraCharge, index) => {
+                            if (
+                                extraCharge.title !== "GST" &&
+                                extraCharge.title !== "PST"
+                            ) {
+                                return (
+                                    <ExtraChargeCheckbox
+                                        key={index}
+                                        extraCharge={extraCharge}
+                                        orderExtraCharges={orderExtraCharges}
+                                        setOrderExtraCharges={
+                                            setOrderExtraCharges
+                                        }
+                                    />
+                                );
                             }
-                        >
-                            <MenuItem defaultChecked value={"on_pickup"}>
-                                On Pickup
-                            </MenuItem>
-                            <MenuItem defaultChecked value={"on_delivery"}>
-                                On Delivery
-                            </MenuItem>
-                        </Select>
-                    </FormControl>
+                        })}
+                    </div>
                 </div>
             </div>
 
@@ -466,12 +553,54 @@ const AdminCreateOrder = () => {
                 setDistance={setDistance}
                 receivePaymentFrom={receivePaymentFrom}
                 setReceivePaymentFrom={setReceivePaymentFrom}
+                handleOrder={handleOrder}
+                city={city}
+                orderExtraCharges={orderExtraCharges}
             />
         </div>
     );
 };
 
 export default AdminCreateOrder;
+
+const ExtraChargeCheckbox = ({
+    extraCharge,
+    setOrderExtraCharges,
+    orderExtraCharges,
+}) => {
+    const [checked, setChecked] = useState(true);
+    const { appSettings, setAppSettings } = useContext(AppSettingsContext);
+
+    const calculateExtraCharges = () => {
+       
+        if (!checked) {
+            setOrderExtraCharges( orderExtraCharges + extraCharge?.charges);
+        } else {
+            setOrderExtraCharges(orderExtraCharges - extraCharge?.charges);
+        }
+
+        setChecked(!checked)
+    };
+
+  /*   useEffect(() => {
+        calculateExtraCharges();
+    }, []); */
+
+    return (
+        <div>
+            <Checkbox
+                label={extraCharge.title}
+                value={checked}
+                isSelected={checked}
+                onChange={calculateExtraCharges}
+            />
+            <div>
+                {" "}
+                ( + {appSettings?.currency} {extraCharge.charges}){" "}
+            </div>
+        </div>
+    );
+};
 
 const CityGetter = ({ selected, setSelected }) => {
     const [expanded, setExpanded] = useState(false);
@@ -536,164 +665,6 @@ const CityGetter = ({ selected, setSelected }) => {
     );
 };
 
-const Services = ({ selected, setSelected }) => {
-    const [expanded, setExpanded] = useState(false);
-    const divRef = useRef(null);
-
-    const handleSelection = (parcel) => {
-        setSelected(parcel);
-    };
-
-    const handleFocus = () => {
-        if (expanded) {
-            divRef.current.classList.add("ring-1");
-            divRef.current.classList.add("ring-blue-700");
-        } else {
-            divRef.current.classList.remove("ring-1");
-            divRef.current.classList.remove("ring-blue-700");
-        }
-    };
-    useEffect(() => {
-        handleFocus();
-    }, [expanded]);
-
-    useEffect(() => {
-        setExpanded(false);
-    }, [selected]);
-
-    useEffect(() => {
-        document.addEventListener("click", (evt) => {
-            const flyoutEl = divRef.current;
-            let targetEl = evt.target; // clicked element
-            do {
-                if (targetEl == flyoutEl) {
-                    // This is a click inside, does nothing, just return.
-
-                    return;
-                }
-                // Go up the DOM
-                targetEl = targetEl.parentNode;
-            } while (targetEl);
-            // This is a click outside.
-            setExpanded(false);
-        });
-    }, []);
-
-    return (
-        <div
-            ref={divRef}
-            onMouseDown={() => setExpanded(true)}
-            className="relative w-full cursor-pointer"
-        >
-            <div className="pl-3 pt-2">
-                <span className="uppercase font-bold text-black text-xl">
-                    Service
-                </span>
-            </div>
-
-            <div
-                type="text"
-                onBlur={() => setExpanded(false)}
-                placeholder="tape to search"
-                className="rounded-lg  text-lg border-0 w-full font-bold  focus:outline-none pl-3 pb-3 pt-1"
-            >
-                {selected ? (
-                    <div className="flex gap-2 pt-1">
-                        <div>{selected.icon}</div>
-                        <div>{selected.label}</div>
-                    </div>
-                ) : (
-                    <div className="text-lg font-bold text-gray-600">
-                        select a service
-                    </div>
-                )}
-            </div>
-            {expanded && (
-                <div className="bg-white max-h-[290px] z-10 shadow absolute top-24 left-0 right-0 border rounded-lg overflow-hidden overflow-y-scroll ">
-                    {parcelTypes?.map((parcel, index) => (
-                        <div
-                            key={index}
-                            onMouseDown={() => setSelected(parcel)}
-                            className="flex cursor-pointer gap-2 py-2 px-4"
-                        >
-                            <div>{parcel.icon}</div>
-                            <div>{parcel.label}</div>
-                        </div>
-                    ))}
-                </div>
-            )}
-        </div>
-    );
-};
-
-const WeightGetter = ({ selected, setSelected }) => {
-    const [expanded, setExpanded] = useState(false);
-    const divRef = useRef(null);
-    const inputRef = useRef(null);
-
-    const handleFocus = () => {
-        if (expanded) {
-            divRef.current.classList.add("ring-1");
-            divRef.current.classList.add("ring-blue-700");
-            inputRef.current.focus();
-        } else {
-            divRef.current.classList.remove("ring-1");
-            divRef.current.classList.remove("ring-blue-700");
-            inputRef.current.blur();
-        }
-    };
-    useEffect(() => {
-        handleFocus();
-    }, [expanded]);
-
-    useEffect(() => {
-        document.addEventListener("click", (evt) => {
-            const flyoutEl = divRef.current;
-            let targetEl = evt.target; // clicked element
-            do {
-                if (targetEl == flyoutEl) {
-                    // This is a click inside, does nothing, just return.
-
-                    return;
-                }
-                // Go up the DOM
-                targetEl = targetEl.parentNode;
-            } while (targetEl);
-            // This is a click outside.
-            setExpanded(false);
-        });
-    }, []);
-
-    return (
-        <div
-            ref={divRef}
-            onMouseDown={() => setExpanded(true)}
-            className="relative w-full cursor-pointer"
-        >
-            <div className="pl-3 pt-2">
-                <span className="uppercase font-bold text-black text-xl">
-                    Weight
-                </span>
-            </div>
-
-            <div
-                type="text"
-                onBlur={() => setExpanded(false)}
-                placeholder="tape to search"
-                className="rounded-lg  text-lg border-0 w-full font-bold  focus:outline-none pl-3 pb-3 pt-1"
-            >
-                <input
-                    ref={inputRef}
-                    type="number"
-                    className="outine-none cursor-pointer border-none focus:border-none focus:outiline-none pl-3 font-bold"
-                    value={selected}
-                    onChange={(e) => setSelected(e.target.value)}
-                />
-            </div>
-        </div>
-    );
-};
-
 const QuoteModal = ({
     from,
     to,
@@ -720,9 +691,13 @@ const QuoteModal = ({
     setDistance,
     receivePaymentFrom,
     setReceivePaymentFrom,
+    handleOrder,
+    orderExtraCharges,
+    city,
 }) => {
-    const deliveryCharges = 3.8;
+    //  const deliveryCharges = 3.8;
     const [inProcess, setInProcess] = useState();
+    const {appSettings, setAppSettings} = useContext(AppSettingsContext)
 
     const handleDeliverNow = () => {
         deliverNow ? setDeliverNow(false) : setDeliverNow(true);
@@ -734,7 +709,7 @@ const QuoteModal = ({
     };
 
     const calculateTotalCharge = () => {
-        const brut = charges(distance, weight, service) + deliveryCharges;
+        const brut = charges(distance, weight, city);
         const result = Math.round(brut * 100) / 100;
         setPrice(result);
     };
@@ -746,7 +721,7 @@ const QuoteModal = ({
 
     useEffect(() => {
         showPrice();
-    }, [from, to, weight, service]);
+    }, [from, to, weight, service, city]);
 
     return (
         <Modal
@@ -754,234 +729,46 @@ const QuoteModal = ({
             onClose={() => setOpen(false)}
             closeButton
             preventClose
-            width="70vw"
             className="overflow-y-scroll"
         >
             <Modal.Header>
                 <div className="text-lg text-appGreen font-bold">
-                    Order Total charges
+                    Order Summary
                 </div>
             </Modal.Header>
             <Modal.Body>
-                <div className="font-bold">Parcel Type : {service?.label}</div>
-                <div className="font-bold">
-                    Pick Point : {from?.formatted_address}
-                </div>
-
-                <div className="font-bold">
-                    Delivery Point : {to?.formatted_address}
-                </div>
-
-                <div className="font-bold">
-                    Weight : {weight ? weight : null} kg
-                </div>
-
-                <div className="text-end text-2xl font-bold text-orange-700">
-                    $ Total price = {price ? price : "calculating..."}
-                </div>
-                <div className="text-lg">Additional informations</div>
-
-                <div>
-                    <Radio.Group
-                        defaultValue="now"
-                        orientation="horizontal"
-                        onChange={handleDeliverNow}
-                        color="success"
-                    >
-                        <Radio value="now">Deliver now</Radio>
-                        <Radio value="schedule">Schedule</Radio>
-                    </Radio.Group>
-                </div>
-                {!deliverNow && (
-                    <div className="grid gap-4 px-2 pt-4 md:grid-cols-2">
-                        <div className="p-2 bg-gray-100/25">
-                            <div className="font-bold mb-4 text-md">
-                                Pick Time
-                            </div>
-                            <div className="grid p-4 border-2 border-gray-400 ">
-                                <div className="grid gap-2 font-bold">
-                                    <div className="">Date</div>
-                                    <Input
-                                        status="secondary"
-                                        required
-                                        className="w-full"
-                                        type="date"
-                                        placeholder="from"
-                                        value={schedule.pickDate}
-                                        onChange={(e) =>
-                                            setSchedule({
-                                                ...schedule,
-                                                pickDate: e.target.value,
-                                            })
-                                        }
-                                    />
-                                </div>
-
-                                <div className="grid gap-2 font-bold">
-                                    <div>From</div>
-                                    <Input
-                                        required
-                                        className="w-full"
-                                        type="time"
-                                        status="secondary"
-                                        placeholder="from"
-                                        value={schedule.pickFrom}
-                                        onChange={(e) =>
-                                            setSchedule({
-                                                ...schedule,
-                                                pickFrom: e.target.value,
-                                            })
-                                        }
-                                    />
-                                </div>
-                                <div className="grid gap-2 font-bold">
-                                    <div>To</div>
-                                    <Input
-                                        required
-                                        className="w-full"
-                                        type="time"
-                                        status="secondary"
-                                        placeholder="to"
-                                        value={schedule.pickTo}
-                                        onChange={(e) =>
-                                            setSchedule({
-                                                ...schedule,
-                                                pickTo: e.target.value,
-                                            })
-                                        }
-                                    />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="p-2 bg-gray-100/25">
-                            <div className="mb-4 text-center font-bold text-xl">
-                                Deliver Time
-                            </div>
-                            <div className="grid">
-                                <div className="grid gap-2 font-bold">
-                                    <div>Date</div>
-                                    <Input
-                                        status="secondary"
-                                        required
-                                        className="w-full"
-                                        type="date"
-                                        placeholder="from"
-                                        value={schedule.deliverDate}
-                                        onChange={(e) =>
-                                            setSchedule({
-                                                ...schedule,
-                                                deliverDate: e.target.value,
-                                            })
-                                        }
-                                    />
-                                </div>
-
-                                <div className="grid gap-2 font-bold">
-                                    <div>From</div>
-                                    <Input
-                                        required
-                                        className="w-full"
-                                        type="time"
-                                        status="secondary"
-                                        placeholder="from"
-                                        value={schedule.deliverFrom}
-                                        onChange={(e) =>
-                                            setSchedule({
-                                                ...schedule,
-                                                deliverFrom: e.target.value,
-                                            })
-                                        }
-                                    />
-                                </div>
-                                <div className="grid gap-2 font-bold">
-                                    <div>To</div>
-                                    <Input
-                                        required
-                                        className="w-full"
-                                        type="time"
-                                        status="secondary"
-                                        placeholder="to"
-                                        value={schedule.deliverTo}
-                                        onChange={(e) =>
-                                            setSchedule({
-                                                ...schedule,
-                                                deliverTo: e.target.value,
-                                            })
-                                        }
-                                    />
-                                </div>
-                            </div>
-                        </div>
+                <div className="grid gap-6">
+                    <div className="flex justify-between">
+                        <div>Delivery charges</div>
+                        <div>{price} {appSettings?.currency} </div>
                     </div>
-                )}
 
-                <div className="grid gap-4 md:grid-cols-2">
-                    <div className="form-group">
-                        <div>Pickup Contact Number</div>
+                    <div className="flex justify-between">
+                        <div className="font-bold">Extra Charges </div>
+                        <div>{orderExtraCharges}  {appSettings?.currency} </div>
+                    </div>
 
-                        <PhoneInput
-                            value={pickNumber}
-                            inputProps={{
-                                required: true,
-                            }}
-                            country={"ca"}
-                            inputStyle={{}}
-                            onChange={(e) => setPickNumber(e)}
-                        />
+                    <div className="flex justify-between font-bold">
+                        <div>Total</div>
+                        <div>{price + orderExtraCharges}  {appSettings?.currency}</div>
                     </div>
-                    <div className="form-group">
-                        <div>Delivery Contact Number</div>
-                        <PhoneInput
-                            inputProps={{
-                                required: true,
-                            }}
-                            country={"ca"}
-                            value={deliveryNumber}
-                            onChange={(e) => setDeliveryNumber(e)}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <div>Pickup description</div>
-                        <textarea
-                            rows="2"
-                            className="form-control w-full resize-none"
-                            value={pickDescription}
-                            onChange={(e) => setPickDescription(e.target.value)}
-                        ></textarea>
-                    </div>
-                    <div className="form-group">
-                        <div>Delivery description</div>
-                        <textarea
-                            rows="2"
-                            className="form-control w-full resize-none"
-                            value={deliveryDescription}
-                            onChange={(e) =>
-                                setDeliveryDescription(e.target.value)
-                            }
-                        ></textarea>
-                    </div>
-                </div>
-                <div className="py-6">
-                    <div className="text-black text-xl font-bold">
-                        Collect payment from
-                    </div>
-                    <select
-                        className="form-control"
-                        value={receivePaymentFrom}
-                        onChange={(e) => setReceivePaymentFrom(e.target.value)}
-                    >
-                        <option value="on_pickup">On PickUp</option>
-                        <option value="on_delivery">On Delivery</option>
-                    </select>
-                </div>
-
-                <div className="flex gap-4 justify-end">
-                    <Button auto color={"success"} onPress={handleCreateOrder}>
-                        Save order
-                    </Button>
                 </div>
             </Modal.Body>
+            <Modal.Footer>
+                <div className="flex w-full gap-4 justify-end">
+                    <Button
+                        css={{ backgroundColor: "white" }}
+                        onPress={() => setOpen(false)}
+                        className="border border-gray-200"
+                    >
+                        <div className="font-bold text-gray-400">Cancel</div>
+                    </Button>
+
+                    <Button color={"success"} onPress={handleCreateOrder}>
+                        <div className="font-bold">Create</div>
+                    </Button>
+                </div>
+            </Modal.Footer>
         </Modal>
     );
 };
@@ -1053,7 +840,6 @@ const ParcelType = ({ value, setValue }) => {
                     ))}
                 </Select>
             </FormControl>
-           
         </div>
     );
 };
@@ -1085,6 +871,9 @@ const CountryAndCity = ({ country, setCountry, city, setCity }) => {
 
     useEffect(() => {
         getCities();
+        if (cities?.length > 0) {
+            setCity(cities[0]);
+        }
     }, [country]);
 
     return (
@@ -1127,11 +916,7 @@ const CountryAndCity = ({ country, setCountry, city, setCity }) => {
                             onChange={(e) => setCity(e.target.value)}
                         >
                             {cities?.map((city, index) => (
-                                <MenuItem
-                                    key={index}
-                                    defaultChecked={city.id == 1 ? true : false}
-                                    value={city.id}
-                                >
+                                <MenuItem key={index} value={city}>
                                     {" "}
                                     {city.name}{" "}
                                 </MenuItem>
@@ -1164,13 +949,18 @@ const PositionInformations = ({
                     setSelected={setSelected}
                 />
                 <div>
-                    <div>{title} Contact Number</div>
-                    <PhoneInput
+                    <div className="py-2">
+                        {title} Contact Number {phoneValue}{" "}
+                    </div>
+                    <MuiTelInput
                         value={phoneValue}
-                        inputProps={{
+                        /* inputProps={{
                             required: true,
-                        }}
-                        country={"ca"}
+                        }} */
+                        /*  country={"pk"} */
+                        className="!outline-none focus:!outline-none w-full"
+                        forceCallingCode
+                        defaultCountry="IN"
                         onChange={(e) => setPhoneValue(e)}
                     />
                 </div>

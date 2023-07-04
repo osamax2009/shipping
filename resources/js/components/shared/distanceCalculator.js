@@ -1,5 +1,3 @@
-
-
 export function haversine_distance(pickLoc, deliverLoc) {
     var R = 6371; // Radius of the Earth in km
     var rlat1 = pickLoc?.geometry.location.lat * (Math.PI / 180); // Convert degrees to radians
@@ -27,47 +25,35 @@ export function haversine_distance(pickLoc, deliverLoc) {
     return res;
 }
 
-export function charges(distance, weight, service) {
-    if (
-        service == "court_document" ||
-        service == "envelopes" ||
-        service == "letters"
-    ) {
-        let dCharge = 0;
-        let dWeight = 0;
-        let fixCharge = 7
-        let th;
-        let gst;
-        let pst;
-        let ttc;
+export function charges(distance, weight, city) {
 
+    let dCharge = 0;
+    let dWeight = 0;
+    let fixCharge = city?.fixed_charges;
+    let th;
+    let gst;
+    let pst;
+    let ttc;
 
-        distance > 10 ? dCharge = (distance - 10) * 0.5 : null ;
-        weight > 5 ? dWeight= (weight- 5 ) * 0.5 : null; 
-        th = dCharge + dWeight + fixCharge;
-        gst = th * 0.06;
-        pst = th * 0.05;
+    distance > city?.min_distance
+        ? (dCharge =
+              (distance - city?.min_distance) * city?.per_distance_charges)
+        : 0;
+    weight > city?.min_weight
+        ? (dWeight = (weight - city?.min_weight) * city?.per_weight_charges)
+        : 0;
+    th = dCharge + dWeight + fixCharge;
 
-         ttc = th + gst + pst;
-        return ttc;
-    } else {
-        let dCharge = 0;
-        let dWeight = 0;
-        let fixCharge = 9
-        let th;
-        let gst;
-        let pst;
-        let ttc;
+    gst = th * 0.06;
+    pst = th * 0.05;
 
+    ttc = th /* + gst + pst */;
 
-        distance > 10 ? dCharge = (distance - 10) * 0.9 : null;
-        weight > 5 ? dWeight= (weight- 5 ) * 0.9 : null; 
-        th = dCharge + dWeight + fixCharge;
-        gst = th * 0.06;
-        pst = th * 0.05;
-
-        ttc = th + gst + pst;
+    if(ttc)
+    {
         return ttc
+    } else{
+      return  0
     }
 }
 

@@ -15,6 +15,7 @@ import UpdatePassword from "../../partials/changePassword";
 import { useState } from "react";
 import UpdateLocation from "../../partials/changeLocation";
 import DeleteAccount from "../../partials/deleteAccount";
+import ThemeSwitcher from "./themeSwitcher";
 
 const Topbar = () => {
     const { user, setUser } = useContext(UserContext);
@@ -35,7 +36,7 @@ const Topbar = () => {
     };
 
     return (
-        <nav className=" bg-white w-full">
+        <nav className="bg-white w-full dark:bg-slate-800">
             <div className="flex  w-full  pr-4 py-2 justify-between items-center">
                 {/* Sidebar Toggle (Topbar) */}
                 <ul className="">
@@ -68,44 +69,49 @@ const Topbar = () => {
                 </div>
             </form> */}
 
-                {/* Topbar Navbar */}
-                <ul className="flex items-center">
-                    <div className="topbar-divider d-none d-sm-block"></div>
+                {/* right side controls*/}
+                <div className="flex gap-8 items-center h-full">
+                    <div>
+                        <ThemeSwitcher />
+                    </div>
+                    <ul className="flex items-center">
+                        <div className="topbar-divider d-none d-sm-block"></div>
 
-                    {/* Nav Item - User Information */}
-                    <li className="flex items-center cursor-pointer">
-                        <a
-                            className="flex items-center "
-                            data-toggle="dropdown"
-                            aria-expanded="false"
-                        >
-                            <div className="flex items-center gap-2 ">
-                                <Avatar
-                                    icon={
-                                        <BsPersonFill className="text-appGreen " />
-                                    }
-                                />
-                                <span className="text-sm font-bold no-underline hover:no-underline">
-                                    {user?.name}{" "}
-                                </span>
-                                <BsCaretDownFill className="text-appGreen" />
-                            </div>
-                        </a>
-                        {/* Dropdown - User Information */}
+                        {/* Nav Item - User Information */}
+                        <li className="flex items-center cursor-pointer">
+                            <a
+                                className="flex items-center "
+                                data-toggle="dropdown"
+                                aria-expanded="false"
+                            >
+                                <div className="flex items-center gap-2 ">
+                                    <Avatar
+                                        icon={
+                                            <BsPersonFill className="text-appGreen " />
+                                        }
+                                    />
+                                    <span className="text-sm font-bold no-underline hover:no-underline">
+                                        {user?.name}{" "}
+                                    </span>
+                                    <BsCaretDownFill className="text-appGreen" />
+                                </div>
+                            </a>
+                            {/* Dropdown - User Information */}
 
-                        {user?.user_type == "client" && (
-                            <UserMenu handleLogout={handleLogout} />
-                        )}
+                            {user?.user_type == "client" && (
+                                <UserMenu handleLogout={handleLogout} />
+                            )}
 
-                        {user?.user_type == "admin" && (
-                            <AdminMenu handleLogout={handleLogout} />
-                        )}
+                            {user?.user_type == "admin" && (
+                                <AdminMenu handleLogout={handleLogout} />
+                            )}
 
-                        {user?.user_type == "delivery_man" && (
-                            <DeliveryMan handleLogout={handleLogout} />
-                        )}
-                    </li>
-                </ul>
+                            {user?.user_type == "delivery_man" && (
+                                <DeliveryMan handleLogout={handleLogout} />
+                            )}
+                        </li>
+                    </ul>
+                </div>
             </div>
         </nav>
     );
