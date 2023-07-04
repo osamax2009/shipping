@@ -3,38 +3,73 @@ import { useEffect } from "react";
 import { BsListCheck } from "react-icons/bs";
 import { getWithAxios } from "../api/axios";
 import { FaClipboardList } from "react-icons/fa";
+import { Loading } from "@nextui-org/react";
 
 const Dashboard = () => {
-    const [dashboard, setDashboard] = useState([]);
-   
+    const [dashboard, setDashboard] = useState();
 
-
-
-    const getDashboard = async () => {   
+    const getDashboard = async () => {
         const res = await getWithAxios("/api/dashboard-detail");
         setDashboard(res);
     };
 
-
     useEffect(() => {
-        getDashboard()
-    },[])
-
+        getDashboard();
+    }, []);
 
     return (
         <div>
-            <div className="flex flex-wrap gap-8">
-                <Minicard title={'Total Order'} value={dashboard?.total_order} />
-                <Minicard title={'Created Order'} value={dashboard?.total_create_order} />
-                <Minicard title={'Assigned Order'} value={dashboard?.total_courier_assigned_order} />
-                <Minicard title={'Accepted Order'} value={dashboard?.total_active_order} />
-                <Minicard title={'Arrived Order'} value={dashboard?.total_courier_arrived_order} />
-                <Minicard title={'Picked Order'} value={dashboard?.total_courier_picked_up_order} />
-                <Minicard title={'Departed Order'} value={dashboard?.total_courier_departed_order} />
-                <Minicard title={'Delivered Order'} value={dashboard?.total_completed_order} />
-                <Minicard title={'Cancelled Order'} value={dashboard?.total_cancelled_order} />
-                <Minicard title={'Total User'} value={dashboard?.total_order} />
-                <Minicard title={'Total Delivery Person'} value={dashboard?.total_order} />
+            <div>
+                {dashboard ? (
+                    <div className="flex flex-wrap gap-8">
+                        <Minicard
+                            title={"Total Order"}
+                            value={dashboard?.total_order}
+                        />
+                        <Minicard
+                            title={"Created Order"}
+                            value={dashboard?.total_create_order}
+                        />
+                        <Minicard
+                            title={"Assigned Order"}
+                            value={dashboard?.total_courier_assigned_order}
+                        />
+                        <Minicard
+                            title={"Accepted Order"}
+                            value={dashboard?.total_active_order}
+                        />
+                        <Minicard
+                            title={"Arrived Order"}
+                            value={dashboard?.total_courier_arrived_order}
+                        />
+                        <Minicard
+                            title={"Picked Order"}
+                            value={dashboard?.total_courier_picked_up_order}
+                        />
+                        <Minicard
+                            title={"Departed Order"}
+                            value={dashboard?.total_courier_departed_order}
+                        />
+                        <Minicard
+                            title={"Delivered Order"}
+                            value={dashboard?.total_completed_order}
+                        />
+                        <Minicard
+                            title={"Cancelled Order"}
+                            value={dashboard?.total_cancelled_order}
+                        />
+                        <Minicard
+                            title={"Total User"}
+                            value={dashboard?.total_order}
+                        />
+                        <Minicard
+                            title={"Total Delivery Person"}
+                            value={dashboard?.total_order}
+                        />
+                    </div>
+                ) : (
+                    <Loading type="points" />
+                )}
             </div>
         </div>
     );

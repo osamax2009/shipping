@@ -51,7 +51,7 @@ const AppSettings = () => {
 
     return (
         <div className="" ref={isFirst}>
-            <div className="font-bold py-4">App Settings {openCreate} </div>
+            <div className="font-bold py-4">App Settings </div>
             <div className="grid gap-8 md:grid-cols-2">
                 <div className="px-6 font-bold border">
                     <div className="py-4 ">Notification settings</div>
@@ -283,7 +283,28 @@ const NotificationLine = ({ label, title }) => {
     const [checkedF, setCheckedF] = useState(true);
 
     const handleFirebaseChange = () => {
-        setCheckedF(!checkedF);
+        if (checkedF) {
+            const notifications = appSettings?.notification_settings;
+            notifications[label].IS_FIREBASE_NOTIFICATION = 0;
+            // console.log(notifications)
+
+            setAppSettings({
+                ...appSettings,
+                notification_settings: notifications,
+            });
+            // console.log(appSettings)
+        } else {
+            const notifications = appSettings?.notification_settings;
+            notifications[label].IS_FIREBASE_NOTIFICATION = 1;
+            // console.log(notifications)
+            setAppSettings({
+                ...appSettings,
+                notification_settings: notifications,
+            });
+            //  console.log(appSettings)
+        }
+
+        setChecked(!checkedF);
     };
 
     const handleOnesignalChange = () => {
