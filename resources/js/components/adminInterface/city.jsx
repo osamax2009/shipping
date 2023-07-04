@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import dayjs, { Dayjs } from "dayjs";
 import { useContext } from "react";
 import { AppSettingsContext } from "../contexts/appSettings";
+import { CountryDropdown, RegionDropdown } from "react-country-region-selector";
 
 const City = () => {
     const [cities, setCities] = useState();
@@ -183,8 +184,23 @@ const CityLine = ({
 const CreateModal = ({ open, setOpen, countries }) => {
     const [cityInfos, setCityInfos] = useState();
     const { appSettings, setAppSettings } = useContext(AppSettingsContext);
+    const [country, setCountry] = useState();
+    const [countrycodes, setCountryCodes] = useState([]);
+
+    const getCityId = () => {
+        countries?.map((e) => {
+            if (e.name == country) {
+                 setCityInfos({
+                    ...cityInfos,
+                    country_id: e.id,
+                });
+                return;
+            }
+        });
+    };
 
     const createCity = async () => {
+
         const res = await postWithAxios("/api/city-save", cityInfos);
         if (res.message) {
             setOpen(false);
@@ -194,6 +210,22 @@ const CreateModal = ({ open, setOpen, countries }) => {
             });
         }
     };
+
+    useEffect(() => {
+        countries?.map((c) => {
+            return setCountryCodes([...countrycodes, c?.code]);
+        });
+    }, [countries]);
+
+    useEffect(() => {
+        getCityId();
+        
+    }, [country]);
+
+    useEffect(() => {
+        console.log(cityInfos)
+    },[cityInfos])
+
     return (
         <Modal
             open={open}
@@ -209,16 +241,16 @@ const CreateModal = ({ open, setOpen, countries }) => {
             <Modal.Body>
                 <div className="grid gap-8 md:grid-cols-2">
                     <div className="form-group ">
-                        <label htmlFor="city name">city Name</label>
+                        <label htmlFor="city name">city Name </label>
 
-                        <input
-                            type="text"
-                            className="form-control"
+                        <RegionDropdown
+                            country={country}
+                            classes="form-control"
                             value={cityInfos?.name}
                             onChange={(e) =>
                                 setCityInfos({
                                     ...cityInfos,
-                                    name: e.target.value,
+                                    name: e,
                                 })
                             }
                         />
@@ -226,7 +258,14 @@ const CreateModal = ({ open, setOpen, countries }) => {
                     <div className="form-group ">
                         <label htmlFor="city name">Select Country Name</label>
 
-                        <select
+                        <CountryDropdown
+                            value={country}
+                            onChange={(val) => setCountry(val)}
+                            whitelist={countrycodes}
+                            classes="form-control"
+                        />
+
+                        {/*   <select
                             type="text"
                             className="form-control"
                             value={cityInfos?.country_id}
@@ -242,7 +281,7 @@ const CreateModal = ({ open, setOpen, countries }) => {
                                     {country?.name}
                                 </option>
                             ))}
-                        </select>
+                        </select> */}
                     </div>
 
                     <div className="form-group">
