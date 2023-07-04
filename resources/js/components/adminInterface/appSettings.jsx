@@ -1,4 +1,4 @@
-import { Image, table } from "@nextui-org/react";
+import { Button, Image, Radio, table } from "@nextui-org/react";
 import { useRef, useState } from "react";
 import { getWithAxios, postWithAxios } from "../api/axios";
 import { useEffect } from "react";
@@ -12,36 +12,22 @@ const AppSettings = () => {
 
     const [openCreate, setOpenCreate] = useState("false");
 
-    const isFirst = useRef(null);
-
     const UpdateSettings = async () => {
-        if (openCreate == "true") {
-            const res = await postWithAxios(
-                "/api/update-appsetting",
-                appSettings
-            );
+        const res = await postWithAxios("/api/update-appsetting", appSettings);
 
-            if (res.message) {
-                toast(res.message, {
-                    type: "success",
-                    hideProgressBar: true,
-                });
-            }
+        if (res.message) {
+            toast(res.message, {
+                type: "success",
+                hideProgressBar: true,
+            });
         }
-
-        if (openCreate == "false") {
-            const res = await getWithAxios("/api/get-appsetting");
-            setAppSettings(res);
-            setOpenCreate("charged");
-        }
-        // console.log(res);
     };
 
-    useEffect(() => {
+    /*  useEffect(() => {
         if (isFirst.current) {
             UpdateSettings();
         }
-    }, [appSettings]);
+    }, [appSettings]); */
 
     useEffect(() => {
         if (openCreate == "charged" && appSettings) {
@@ -50,8 +36,13 @@ const AppSettings = () => {
     }, [appSettings]);
 
     return (
-        <div className="" ref={isFirst}>
+        <div className="">
             <div className="font-bold py-4">App Settings </div>
+            <div className="flex w-full px-4 py-2 justify-end">
+                <Button auto onPress={UpdateSettings}>
+                    <div className="font-bold text-lg">Save</div>
+                </Button>
+            </div>
             <div className="grid gap-8 md:grid-cols-2">
                 <div className="px-6 font-bold border">
                     <div className="py-4 ">Notification settings</div>
@@ -154,6 +145,44 @@ const AppSettings = () => {
                                 />
                             </div>
 
+                            <div className="grid gap-6 p-4 ">
+                                <div className="form-group">
+                                    <label htmlFor=""> Distance</label>
+                                    <input
+                                        className="form-control"
+                                        // value={appSettings?.distance}
+                                        defaultValue={appSettings?.distance}
+                                        onBlur={(e) =>
+                                            setAppSettings({
+                                                ...appSettings,
+                                                distance: e.target.value,
+                                            })
+                                        }
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor=""> Distance Unit </label>
+                                    <div className="flex">
+                                        <Radio.Group
+                                            orientation="horizontal"
+                                            value={appSettings?.distance_unit}
+                                            onChange={(e) =>
+                                                setAppSettings({
+                                                    ...appSettings,
+                                                    distance_unit: e,
+                                                })
+                                            }
+                                        >
+                                            <Radio value="km">
+                                                <div className="pl-6">km</div>
+                                            </Radio>
+                                            <Radio value="mile">
+                                                <div className="pl-6">Mile</div>
+                                            </Radio>
+                                        </Radio.Group>
+                                    </div>
+                                </div>
+                            </div>
                             <div className="flex w-full justify-between">
                                 <div>
                                     Otp verification on Pickup and Delivery
@@ -205,42 +234,7 @@ const AppSettings = () => {
                             </div>
                         </div>
                     </div>
-                    <div>
-                        <div className="grid gap-6 p-4 border ">
-                            <div className="py-2 font-bold">Distance Setting</div>
-                            <div className="form-group">
-                                <label htmlFor=""> Distance</label>
-                                <input
-                                    className="form-control"
-                                   // value={appSettings?.distance}
-                                    defaultValue={appSettings?.distance}
-                                    onBlur={(e) =>
-                                        setAppSettings({
-                                            ...appSettings,
-                                            distance : e.target.value,
-                                        })
-                                    }
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor=""> Distance Unit </label>
-                                <select
-                                    className="form-control"
-                                    value={appSettings?.distance_unit}
-                                    defaultValue={appSettings?.distance_unit}
-                                    onChange={(e) =>
-                                        setAppSettings({
-                                            ...appSettings,
-                                            distance_unit: e.target.value,
-                                        })
-                                    }
-                                >
-                                    <option value="km">Km</option>
-                                    <option value="mile">Mile</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
+
                     <div>
                         <div className="grid gap-6 p-4 border ">
                             <div className="py-4 font-bold">
@@ -275,6 +269,20 @@ const AppSettings = () => {
                                         setAppSettings({
                                             ...appSettings,
                                             currency: e.target.value,
+                                        })
+                                    }
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor=""> Currency Code</label>
+                                <input
+                                    className="form-control"
+                                    value={appSettings?.currency_code}
+                                    onChange={(e) =>
+                                        setAppSettings({
+                                            ...appSettings,
+                                            currency_code: e.target.value,
                                         })
                                     }
                                 />
