@@ -71,11 +71,11 @@ const Vehicle = () => {
                                     <div className="flex justify-start w-full">
                                         <Image
                                             src={
-                                                "/storage/17/Logistics-rafiki.png"
+                                                vehicle.vehicle_image
                                             }
                                             width={80}
                                             height={60}
-                                            alt={vehicle.image}
+                                            alt={"vehicle image"}
                                         />
                                     </div>
                                 </Table.Cell>

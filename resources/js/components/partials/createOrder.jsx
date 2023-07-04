@@ -974,7 +974,7 @@ const PositionInformations = ({
                     <div className="py-2">{title} Contact Number </div>
                     <PhoneInput
                         value={phoneValue}
-                        countryCode={"in"}
+                        countryCode={"ca"}
                         
                         onChange={(e) => setPhoneValue(e)}
                     />
