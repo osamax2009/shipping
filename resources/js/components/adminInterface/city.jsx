@@ -222,9 +222,7 @@ const CreateModal = ({ open, setOpen, countries }) => {
         
     }, [country]);
 
-    useEffect(() => {
-        console.log(cityInfos)
-    },[cityInfos])
+
 
     return (
         <Modal
@@ -442,6 +440,8 @@ const CreateModal = ({ open, setOpen, countries }) => {
 
 const UpdateModal = ({ city, open, setOpen, countries }) => {
     const [cityInfos, setCityInfos] = useState(city);
+    const [country, setCountry] = useState();
+    const [countrycodes, setCountryCodes] = useState([]);
 
     const updateCity = async () => {
         const res = await postWithAxios("/api/city-save", cityInfos);
@@ -455,8 +455,18 @@ const UpdateModal = ({ city, open, setOpen, countries }) => {
     };
 
     useEffect(() => {
+        countries?.map((c) => {
+            return setCountryCodes([...countrycodes, c?.code]);
+        });
+    }, [countries]);
+
+    useEffect(() => {
         setCityInfos(city);
     }, [city]);
+
+    useEffect(() => {
+        setCountry(city?.country_name)
+    },[city])
     return (
         <Modal
             open={open}
@@ -474,14 +484,14 @@ const UpdateModal = ({ city, open, setOpen, countries }) => {
                     <div className="form-group ">
                         <label htmlFor="city name">city Name</label>
 
-                        <input
-                            type="text"
-                            className="form-control"
+                        <RegionDropdown
+                            country={country}
+                            classes="form-control"
                             value={cityInfos?.name}
                             onChange={(e) =>
                                 setCityInfos({
                                     ...cityInfos,
-                                    name: e.target.value,
+                                    name: e,
                                 })
                             }
                         />
@@ -489,23 +499,14 @@ const UpdateModal = ({ city, open, setOpen, countries }) => {
                     <div className="form-group ">
                         <label htmlFor="city name">Select Country Name</label>
 
-                        <select
-                            type="text"
-                            className="form-control"
-                            value={cityInfos?.country_id}
-                            onChange={(e) =>
-                                setCityInfos({
-                                    ...cityInfos,
-                                    country_id: e.target.value,
-                                })
-                            }
-                        >
-                            {countries?.map((country, index) => (
-                                <option key={index} value={country?.id}>
-                                    {country?.name}
-                                </option>
-                            ))}
-                        </select>
+                        <CountryDropdown
+                            value={country}
+                            
+                            onChange={(val) => setCountry(val)}
+                            whitelist={countrycodes}
+                            classes="form-control"
+                        />
+
                     </div>
 
                     <div className="form-group">
