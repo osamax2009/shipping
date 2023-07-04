@@ -1,10 +1,12 @@
 <?php
 
+use App\Models\Order;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Storage;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -44,6 +46,17 @@ Route::get("/storage/{folder}/{name}", function(Request $request)
 {
     $path = "public/" . $request -> folder . "/" . $request->name;
     return Storage::get($path);
+});
+
+Route::get("/get-invoice-from-backend", function(Request $request)
+{
+    $order = Order::whereId($request->id)->first();
+
+    $pdf =  PDF::loadView('invoice', [
+        'order' => $order
+    ])->setPaper("a4", "lanscape");
+
+    return $pdf->stream("invoice.pdf");
 });
 
 Route::fallback(function()
