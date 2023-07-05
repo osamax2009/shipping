@@ -26,10 +26,9 @@ const DashboardLayout = ({ children }) => {
         <div className="wrapper">
            
             <Sidebar />
-            <div className="content-wrapper">
+            <div className="content-wrapper dark:bg-slate-800 dark:text-white">
             <Topbar />
-                <div className="content">
-               
+                <div className="content">       
                     <div className="container-fluid">
                         <div className="col-12 py-12 mt-[10px]">
                         <div className="min-h-screen">

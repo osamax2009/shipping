@@ -4,6 +4,7 @@ import { getWithAxios, postWithAxios } from "../api/axios";
 import { useEffect } from "react";
 import { BsPencilFill, BsTrash } from "react-icons/bs";
 import { toast } from "react-toastify";
+import dayjs from "dayjs";
 
 const Users = () => {
     const [users, setUsers] = useState();
@@ -57,13 +58,22 @@ const Users = () => {
                                     <Table.Cell>
                                         {user.contact_number}
                                     </Table.Cell>
-                                    <Table.Cell> {user.email} </Table.Cell>
+                                    <Table.Cell>
+                                        <div className="truncate w-[190px]">
+                                            {user.email}
+                                        </div>{" "}
+                                    </Table.Cell>
                                     <Table.Cell> {user.city_name} </Table.Cell>
                                     <Table.Cell>
                                         {" "}
                                         {user.country_name}{" "}
                                     </Table.Cell>
-                                    <Table.Cell> {user.created_at} </Table.Cell>
+                                    <Table.Cell>
+                                        {" "}
+                                        {dayjs(user.created_at).format(
+                                            "DD-MM-YYYY; HH:mm:ss"
+                                        )}{" "}
+                                    </Table.Cell>
 
                                     <Table.Cell>
                                         {user.status == 1 ? (
