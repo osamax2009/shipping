@@ -3,6 +3,7 @@ import { useState } from "react";
 import { getWithAxios } from "../api/axios";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
 
 const DeliveryPerson = () => {
     const [users, setUsers] = useState();
@@ -50,7 +51,7 @@ const DeliveryPerson = () => {
                                         {" "}
                                         {user.country_name}{" "}
                                     </Table.Cell>
-                                    <Table.Cell> {user.created_at} </Table.Cell>
+                                    <Table.Cell> daysjs(user.created_at).format("DD-MM-YYYY; HH:mm:ss") </Table.Cell>
 
                                     <Table.Cell>
                                         {user.status == 1 ? (

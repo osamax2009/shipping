@@ -761,11 +761,12 @@ const SeeModal = ({ city, open, setOpen }) => {
                     <hr />
                     <div className="grid grid-cols-2 gap-4 text-start">
                         <div className="font-bold">Created Date</div>
-                        <div>{city?.created_at}</div>
+                        <div>{dayjs(city?.created_at).format("DD-MM-YYYY; HH:mm:ss")}</div>
                     </div>
                     <div className="grid grid-cols-2 gap-4 text-start">
                         <div className="font-bold">Updated Date</div>
-                        <div>{city?.updated_at}</div>
+                        <div>{dayjs(city?.updated_at).format("DD-MM-YYYY; HH:mm:ss")}</div>
+
                     </div>
                 </div>
             </Modal.Body>
