@@ -16,6 +16,7 @@ import { FormControl, MenuItem, Select } from "@mui/material";
 import { MuiTelInput } from "mui-tel-input";
 import { AppSettingsContext } from "../contexts/appSettings";
 import { PhoneInput } from "react-contact-number-input";
+import { useLayoutEffect } from "react";
 
 const AdminCreateOrder = () => {
     const [from, setFrom] = useState();
@@ -66,7 +67,6 @@ const AdminCreateOrder = () => {
     };
 
     const handleOpen = () => {
-       
         if (!from || !to || !service || !weight) {
             toast("Empty field submitted", {
                 type: "error",
@@ -405,7 +405,7 @@ const AdminCreateOrder = () => {
                 )}
             </div>
 
-            <div className="grid lg:grid-cols-3 gap-4">
+            <div className="grid pr-8 lg:grid-cols-2 gap-4">
                 <NumberInput
                     title={"Weight"}
                     value={weight}
@@ -779,6 +779,9 @@ const QuoteModal = ({
 };
 
 const NumberInput = ({ title, value, setValue }) => {
+    const [inputWidth, setInputWidth] = useState();
+    const inputDivRef = useRef(null);
+    const inputRef = useRef(null);
     const minus = () => {
         if (value > 1) {
             setValue((v) => v - 1);
@@ -788,6 +791,14 @@ const NumberInput = ({ title, value, setValue }) => {
     const add = () => {
         setValue((v) => v + 1);
     };
+
+    useEffect(() => {
+        setInputWidth(inputDivRef.current.clientWidth);
+        inputRef.current.className =
+            inputDivRef.current.clientWidth +
+            " absolute left-0 right-0 bg-transparent text-center h-full border-0 border-transparent  outline-none focus:outline-none";
+    }, [document.body.clientWidth]);
+
     return (
         <div className="grid grid-cols-7 divide-x-2 w-full divide-gray-400 rounded-xl  text-gray-500 font-bold border-2 border-gray-400">
             <div className="col-span-3 text-md py-3 pl-4">{title}</div>
@@ -799,10 +810,15 @@ const NumberInput = ({ title, value, setValue }) => {
                     <FaMinus className="text-center" />
                 </button>
             </div>
-            <div className="relative col-span-2 h-full flex justify-stretch">
+            <div
+                ref={inputDivRef}
+                className="relative col-span-2 h-full flex justify-center"
+            >
                 <input
+                    ref={inputRef}
+                    style={{ width: inputWidth }}
                     type="number"
-                    className="absolute right-0 left-0 bottom-0 top-0 bg-transparent text-center border-0 border-transparent  outline-none focus:outline-none"
+                    className="  text-center border-0 border-transparent  outline-none focus:outline-none"
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
                 />

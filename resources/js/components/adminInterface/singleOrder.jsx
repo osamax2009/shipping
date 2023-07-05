@@ -10,7 +10,7 @@ import {
     BsTelephoneFill,
 } from "react-icons/bs";
 import { AiOutlineFileSearch } from "react-icons/ai";
-import { Button } from "@nextui-org/react";
+import { Button, Image } from "@nextui-org/react";
 import { UserContext } from "../contexts/userContext";
 import { toast } from "react-toastify";
 import ReactPDF, { Document, Page, Text, View } from "@react-pdf/renderer";
@@ -64,7 +64,7 @@ const SingleOrder = () => {
 
             if (res.data.id) {
                 setOrder(res.data);
-               // console.log(res.order_history);
+                // console.log(res.order_history);
                 setHistory(res.order_history);
                 const id = {
                     id: res.data.client_id,
@@ -77,12 +77,12 @@ const SingleOrder = () => {
 
     const downloadInvoice = async () => {
         const res = await postWithAxios("/get-invoice-from-backend", {
-            id : params.order_id,
-            order : order
-        })
+            id: params.order_id,
+            order: order,
+        });
 
-        console.log(res)
-    }
+        // console.log(res)
+    };
 
     const handleTab = () => {
         !active ? setActive(true) : setActive(false);
@@ -240,6 +240,23 @@ const SingleOrder = () => {
                                 </div>
                             </div>
 
+                            <div className="pt-8">
+                                <div>
+                                    <div className="pb-2">Vehicle</div>
+                                    <div className="border rounded-lg py-3 px-4">
+                                        <div className="flex justify-between">
+                                            <div>Vehicle name</div>
+                                            <div>{order?.vehicle_data.title}</div>
+                                        </div>
+
+                                        <div className="flex justify-between">
+                                            <div >Vehicle Image</div>
+                                            <div className="flex justify-center">{order?.vehicle_image ? <Image src={order?.vehicle_image} /> : null }</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div className="pt-12">
                                 <div>
                                     <div className="border rounded-lg py-3 px-4">
@@ -299,7 +316,6 @@ const SingleOrder = () => {
                     </div>
                 </div>
             </div>
-            
         </div>
     );
 };
@@ -324,30 +340,22 @@ const Content = ({ history }) => {
 };
 
 const Invoicepdf = () => {
-    return(
+    return (
         <Document>
-            <Page size={'A4'} >
+            <Page size={"A4"}>
                 <View>
                     <Text>
                         <div className="flex justify-between text-black px-4 font-bold ">
-                            <div className="text-blue-600 text-xl">
-                                Invoice
-                            </div>
+                            <div className="text-blue-600 text-xl">Invoice</div>
                             <div>
-                                <div>
-                                Roberts Private Limited
-                                </div>
-                                <div>
-                                Sarah Street 9, Beijing, Ahmedabad
-                                </div>
-                                <div>
-                                +91 9845345665
-                                </div>
+                                <div>Roberts Private Limited</div>
+                                <div>Sarah Street 9, Beijing, Ahmedabad</div>
+                                <div>+91 9845345665</div>
                             </div>
                         </div>
                     </Text>
                 </View>
             </Page>
         </Document>
-    )
-}
+    );
+};
