@@ -11,6 +11,7 @@ const DeliveryManDocument = () => {
     const [deliveryManDocuments, setDeliveryManDocuments] = useState();
     const [openCreate, setOpenCreate] = useState(false);
     const [openVerify, setOpenVerify] = useState(false);
+    const [selectedDocument, setSelectedDocument] = useState()
 
     const getDeliveryManDocuments = async () => {
         const res = await getWithAxios("/api/delivery-man-document-list");
@@ -75,6 +76,7 @@ const DeliveryManDocument = () => {
                                                 document={deliveryManDocument}
                                                 setOpenVerify={setOpenVerify}
                                                 openVerify={openVerify}
+                                                setSelectedDocument={setSelectedDocument}
                                             />
                                         </Table.Cell>
                                     </Table.Row>
@@ -93,13 +95,19 @@ const DeliveryManDocument = () => {
                     <Loading type="points" />
                 )}
             </div>
+            <VerifyModal
+                document={selectedDocument}
+                open={openVerify}
+                setOpen={setOpenVerify}
+            />
         </div>
     );
 };
 
 export default DeliveryManDocument;
 
-const DeliveryManDocumentLine = ({ document, setOpenVerify, openVerify }) => {
+const DeliveryManDocumentLine = ({ document, setOpenVerify, openVerify, setSelectedDocument }) => {
+
     const [doc, setDoc] = useState();
     const { user, setUser } = useContext(UserContext);
     const [status, setStatus] = useState();
@@ -109,9 +117,9 @@ const DeliveryManDocumentLine = ({ document, setOpenVerify, openVerify }) => {
 
         const data = {
             id: doc?.id,
-            status: status,
+            status: e.target.value,
             is_verified: 1,
-            delivery_man_id: user?.id,
+           // delivery_man_id: user?.id,
         };
 
         const res = await postWithAxios(
@@ -126,14 +134,16 @@ const DeliveryManDocumentLine = ({ document, setOpenVerify, openVerify }) => {
     };
 
     const openVerifyModal = () => {
+        setSelectedDocument(document)
         setOpenVerify(true);
+        
     };
 
     useEffect(() => {
         setDoc(document);
         setStatus(document?.status);
         //  console.log(document);
-    }, [document]);
+    }, [document, openVerify]);
 
     return (
         <div className="flex gap-4">
@@ -152,24 +162,39 @@ const DeliveryManDocumentLine = ({ document, setOpenVerify, openVerify }) => {
             <Button auto color={"secondary"} onPress={openVerifyModal}>
                 <div className="font-bold">verify</div>
             </Button>
-            <VerifyModal
-                document={document}
-                open={openVerify}
-                setOpen={setOpenVerify}
-            />
+           
         </div>
     );
 };
 
 const VerifyModal = ({ document, open, setOpen }) => {
+
+    const {user, setUser} = useContext(UserContext)
+
+    const value = "approved"
+
     const verifyDocument = async () => {
-        const url = "/api/extracharge-delete/" + extraCharge?.id;
-        const res = await postWithAxios(url);
-        setOpen(false);
+
+        const data = {
+            id: document?.id,
+            status : value,
+            is_verified: 1,
+          //  delivery_man_id: user?.id,
+        };
+
+       
+
+        const res = await postWithAxios("/api/delivery-man-document-save", data);
+
+
         toast(res.message, {
-            type: "success",
+            type: "info",
             hideProgressBar: true,
         });
+
+        setOpen(false);
+
+
     };
 
     return (
