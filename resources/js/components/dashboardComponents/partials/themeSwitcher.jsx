@@ -1,11 +1,16 @@
 
 import { Switch } from '@nextui-org/react'
 import { useTheme } from 'next-themes'
+import { useEffect } from 'react'
 import { BsSun, BsMoon } from 'react-icons/bs'
 
 const ThemeSwitcher = () => {
   
   const { theme, setTheme } = useTheme()
+
+  useEffect(() => {
+    document.body.className = theme;
+  }, [theme]);
 
   return (
     <div>

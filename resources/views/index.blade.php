@@ -16,7 +16,7 @@
     <link rel="shortcut icon" href="{{ asset('images/favicon.png') }}">
     <!-- Styles -->
     <link rel="stylesheet" href="{{ asset(mix('css/app.css')) }}">
-    
+
 
 
     <!-- Theme style -->
@@ -42,10 +42,12 @@
 
     <script src="{{ asset('js/app.js') }}"></script>
 </head>
-<body class="hold-transition font-sans font-nunito overflow-x-hidden bg-[#f4f6f9]">
-    <div  id="page-top" class="bg-[#f4f6f9]">
-
+<body class="">
+    <div class="hold-transition w-full h-full font-sans font-nunito overflow-x-hidden bg-[#f4f6f9]">
+        <div id="page-top" class="bg-[#f4f6f9]"></div>
     </div>
+
+
 
     {{-- @env ('local')
             <script src="http://localhost:3000/browser-sync/browser-sync-client.js"></script>

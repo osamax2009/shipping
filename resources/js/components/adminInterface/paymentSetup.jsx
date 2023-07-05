@@ -180,7 +180,7 @@ const PaymentSetup = ({children}) => {
 
     return (
         <div className="relative">
-            <div className="absolute top-5 right-3">
+            <div className="flex justify-end py-4">
                 <Button
                     auto
                     color={"secondary"}
@@ -190,7 +190,7 @@ const PaymentSetup = ({children}) => {
                     <div className="font-bold text-lg">back</div>
                 </Button>
             </div>
-            <div className="flex flex-wrap w-3/4 gap-6 font-bold text-lg">
+            <div className="flex flex-wrap justify-center gap-6 font-bold">
                 {gateways.map((gateway, index) => (
                     <GatewayLink gateway={gateway} key={index} />
                 ))}

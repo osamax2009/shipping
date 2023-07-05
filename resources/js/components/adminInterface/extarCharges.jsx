@@ -60,7 +60,7 @@ const ExtraCharges = () => {
                                     {extraCharge?.city_name}{" "}
                                 </Table.Cell>
 
-                                <Table.Cell>{extraCharge?.charges}</Table.Cell>
+                                <Table.Cell>{extraCharge?.charges} {extraCharge?.charges_type == 'fixed' ? null : "%"}</Table.Cell>
                                 <Table.Cell>
                                     {dayjs(extraCharge?.created_at).format(
                                         "DD-MM-YYYY; HH:mm:ss"

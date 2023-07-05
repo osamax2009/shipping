@@ -17,7 +17,7 @@ const PaymentGateway = () => {
     };
 
     const goToSetup = () => {
-        navigate("/admin/paymentsetup");
+        navigate("/admin/paymentsetup/payment_type/stripe");
     };
 
     useEffect(() => {
