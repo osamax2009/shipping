@@ -65,9 +65,8 @@ const AdminCreateOrder = () => {
         setVehicles(res.data);
     };
 
-    const handleOpen = (e) => {
-        e.preventDefault()
-
+    const handleOpen = () => {
+       
         if (!from || !to || !service || !weight) {
             toast("Empty field submitted", {
                 type: "error",
@@ -165,7 +164,6 @@ const AdminCreateOrder = () => {
     let currentDate = new Date().toJSON().slice(0, 10);
 
     const handleOrder = async () => {
-        
         setOpen(false);
         setProcessing(true);
 
@@ -224,326 +222,311 @@ const AdminCreateOrder = () => {
         getExtraCharges();
     }, []);
 
-
     return (
         <div className="">
-            <form onSubmit={handleOpen}>
-                <div className="text-appGreen text-lg mt-4 font-bold">
-                    Create Order
+            <div className="text-appGreen text-lg mt-4 font-bold">
+                Create Order
+            </div>
+            <div>
+                <div className="flex flex-wrap items-center justify-end gap-12">
+                    <div className="flex items-center h-full">
+                        <Button
+                            auto
+                            color={"success"}
+                            type="submitb"
+                            onPress={handleOpen}
+                            className=""
+                        >
+                            save
+                        </Button>
+                    </div>
                 </div>
-                <div>
-                    <div className="flex flex-wrap items-center justify-end gap-12">
-                        <div className="flex items-center h-full">
-                            <Button
-                                auto
-                                color={"success"}
-                                type="submitb"
-                             //   onPress={handleOpen}
-                                className=""
-                            >
-                                save
-                            </Button>
+            </div>
+            <div>
+                <div className="flex py-4 mt-2 flex-wrap gap-4">
+                    <button
+                        onClick={handleDeliverNow}
+                        className={
+                            deliverNow
+                                ? "py-3 px-6 border-2 border-appGreen rounded-lg"
+                                : "py-3 px-6 border-2 border-gray-400 rounded-lg"
+                        }
+                    >
+                        <div className="flex items-center justify-between px-2 gap-4">
+                            <IoAlarmOutline
+                                className={
+                                    deliverNow
+                                        ? "text-lg text-appGreen"
+                                        : "text-lg text-gray-400"
+                                }
+                            />
+                            <div className="font-bold text-lg text-gray-400">
+                                {" "}
+                                Express
+                            </div>
+                        </div>
+                    </button>
+
+                    <button
+                        onClick={handleDeliverNow}
+                        className={
+                            !deliverNow
+                                ? "py-3 px-6 border-2 border-appGreen rounded-lg"
+                                : "py-3 px-6 border-2 border-gray-400 rounded-lg"
+                        }
+                    >
+                        <div className="flex items-center py-2 justify-between px-2  gap-4">
+                            <FaRegCalendarAlt
+                                className={
+                                    !deliverNow
+                                        ? "text-lg text-appGreen"
+                                        : "text-lg text-gray-400"
+                                }
+                            />
+                            <div className="font-bold text-lg text-gray-400">
+                                {" "}
+                                Schedule
+                            </div>
+                        </div>
+                    </button>
+                </div>
+                {!deliverNow && (
+                    <div className="grid gap-4 pt-2 md:grid-cols-2">
+                        <div className="p-2 bg-gray-100/25">
+                            <div className="font-bold mb-2 text-md">
+                                Pick Time
+                            </div>
+                            <div className="grid p-4 border-2 border-gray-300 rounded-xl ">
+                                <div className="grid gap-2 font-bold">
+                                    <div className="">Date</div>
+                                    <DatePicker
+                                        label="Date"
+                                        className="w-full"
+                                        value={schedule.pickDate}
+                                        onChange={(e) =>
+                                            setSchedule({
+                                                ...schedule,
+                                                pickDate: e,
+                                            })
+                                        }
+                                    />
+                                </div>
+
+                                <div className="grid gap-4  md:grid-cols-2 mt-3">
+                                    <div className="grid gap-2 font-bold">
+                                        <div>From</div>
+                                        <TimePicker
+                                            required
+                                            label="From"
+                                            className="w-full"
+                                            value={schedule.pickFrom}
+                                            onChange={(e) =>
+                                                setSchedule({
+                                                    ...schedule,
+                                                    pickFrom: e,
+                                                })
+                                            }
+                                        />
+                                    </div>
+                                    <div className="grid gap-2 font-bold">
+                                        <div>To</div>
+                                        <TimePicker
+                                            required
+                                            className="w-full"
+                                            label="To"
+                                            value={schedule.pickTo}
+                                            onChange={(e) =>
+                                                setSchedule({
+                                                    ...schedule,
+                                                    pickTo: e,
+                                                })
+                                            }
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="p-2 bg-gray-100/25">
+                            <div className="font-bold mb-2 text-md">
+                                Deliver Time
+                            </div>
+                            <div className="grid p-4 border-2 border-gray-300 rounded-xl ">
+                                <div className="grid gap-2 font-bold">
+                                    <div className="">Date</div>
+                                    <DatePicker
+                                        label="Date"
+                                        className="w-full"
+                                        value={schedule.deliverDate}
+                                        onChange={(e) =>
+                                            setSchedule({
+                                                ...schedule,
+                                                deliverDate: e,
+                                            })
+                                        }
+                                    />
+                                </div>
+
+                                <div className="grid gap-4  md:grid-cols-2 mt-3">
+                                    <div className="grid gap-2 font-bold">
+                                        <div>From</div>
+                                        <TimePicker
+                                            required
+                                            label="From"
+                                            className="w-full"
+                                            value={schedule.deliverFrom}
+                                            onChange={(e) =>
+                                                setSchedule({
+                                                    ...schedule,
+                                                    deliverFrom: e,
+                                                })
+                                            }
+                                        />
+                                    </div>
+                                    <div className="grid gap-2 font-bold">
+                                        <div>To</div>
+                                        <TimePicker
+                                            required
+                                            className="w-full"
+                                            label="To"
+                                            value={schedule.deliverTo}
+                                            onChange={(e) =>
+                                                setSchedule({
+                                                    ...schedule,
+                                                    deliverTo: e,
+                                                })
+                                            }
+                                        />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                )}
+            </div>
+
+            <div className="grid lg:grid-cols-3 gap-4">
+                <NumberInput
+                    title={"Weight"}
+                    value={weight}
+                    setValue={setWeight}
+                />
+                <NumberInput
+                    title={"Number of parcels"}
+                    value={numberOfParcel}
+                    setValue={setNumberOfParcel}
+                />
+            </div>
+
+            <ParcelType value={service} setValue={setServive} />
+
+            <CountryAndCity
+                country={country}
+                setCountry={setCountry}
+                city={city}
+                setCity={setCity}
+            />
+            <div className="grid mt-4 md:grid-cols-2 gap-4">
+                <PositionInformations
+                    title={"Pickup"}
+                    selected={from}
+                    setSelected={setFrom}
+                    phoneValue={pickNumber}
+                    setPhoneValue={setPickNumber}
+                    descriptionValue={pickDescription}
+                    setDescriptionValue={setPickDescription}
+                />
+                <PositionInformations
+                    title={"Delivery"}
+                    selected={to}
+                    setSelected={setTo}
+                    phoneValue={deliveryNumber}
+                    setPhoneValue={setDeliveryNumber}
+                    descriptionValue={deliveryDescription}
+                    setDescriptionValue={setDeliveryDescription}
+                />
+            </div>
+
+            <div className="grid gap-4 items-center md:grid-cols-3">
+                <div className="py-4 font-bold">
+                    <div>Payment collect from</div>
+                    <div>
+                        <FormControl sx={{ m: 1 }} className="w-full">
+                            <Select
+                                inputProps={{
+                                    "aria-label": "Without label",
+                                }}
+                                value={receivePaymentFrom}
+                                label="Age"
+                                onChange={(e) =>
+                                    setReceivePaymentFrom(e.target.value)
+                                }
+                            >
+                                <MenuItem defaultChecked value={"on_pickup"}>
+                                    On Pickup
+                                </MenuItem>
+                                <MenuItem defaultChecked value={"on_delivery"}>
+                                    On Delivery
+                                </MenuItem>
+                            </Select>
+                        </FormControl>
+                    </div>
                 </div>
                 <div>
-                    <div className="flex py-4 mt-2 flex-wrap gap-4">
-                        <button
-                            onClick={handleDeliverNow}
-                            className={
-                                deliverNow
-                                    ? "py-3 px-6 border-2 border-appGreen rounded-lg"
-                                    : "py-3 px-6 border-2 border-gray-400 rounded-lg"
-                            }
-                        >
-                            <div className="flex items-center justify-between px-2 gap-4">
-                                <IoAlarmOutline
-                                    className={
-                                        deliverNow
-                                            ? "text-lg text-appGreen"
-                                            : "text-lg text-gray-400"
-                                    }
-                                />
-                                <div className="font-bold text-lg text-gray-400">
-                                    {" "}
-                                    Express
-                                </div>
-                            </div>
-                        </button>
-
-                        <button
-                            onClick={handleDeliverNow}
-                            className={
-                                !deliverNow
-                                    ? "py-3 px-6 border-2 border-appGreen rounded-lg"
-                                    : "py-3 px-6 border-2 border-gray-400 rounded-lg"
-                            }
-                        >
-                            <div className="flex items-center py-2 justify-between px-2  gap-4">
-                                <FaRegCalendarAlt
-                                    className={
-                                        !deliverNow
-                                            ? "text-lg text-appGreen"
-                                            : "text-lg text-gray-400"
-                                    }
-                                />
-                                <div className="font-bold text-lg text-gray-400">
-                                    {" "}
-                                    Schedule
-                                </div>
-                            </div>
-                        </button>
-                    </div>
-                    {!deliverNow && (
-                        <div className="grid gap-4 pt-2 md:grid-cols-2">
-                            <div className="p-2 bg-gray-100/25">
-                                <div className="font-bold mb-2 text-md">
-                                    Pick Time
-                                </div>
-                                <div className="grid p-4 border-2 border-gray-300 rounded-xl ">
-                                    <div className="grid gap-2 font-bold">
-                                        <div className="">Date</div>
-                                        <DatePicker
-                                            label="Date"
-                                            className="w-full"
-                                            value={schedule.pickDate}
-                                            onChange={(e) =>
-                                                setSchedule({
-                                                    ...schedule,
-                                                    pickDate: e,
-                                                })
-                                            }
-                                        />
-                                    </div>
-
-                                    <div className="grid gap-4  md:grid-cols-2 mt-3">
-                                        <div className="grid gap-2 font-bold">
-                                            <div>From</div>
-                                            <TimePicker
-                                                required
-                                                label="From"
-                                                className="w-full"
-                                                value={schedule.pickFrom}
-                                                onChange={(e) =>
-                                                    setSchedule({
-                                                        ...schedule,
-                                                        pickFrom: e,
-                                                    })
-                                                }
-                                            />
-                                        </div>
-                                        <div className="grid gap-2 font-bold">
-                                            <div>To</div>
-                                            <TimePicker
-                                                required
-                                                className="w-full"
-                                                label="To"
-                                                value={schedule.pickTo}
-                                                onChange={(e) =>
-                                                    setSchedule({
-                                                        ...schedule,
-                                                        pickTo: e,
-                                                    })
-                                                }
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="p-2 bg-gray-100/25">
-                                <div className="font-bold mb-2 text-md">
-                                    Deliver Time
-                                </div>
-                                <div className="grid p-4 border-2 border-gray-300 rounded-xl ">
-                                    <div className="grid gap-2 font-bold">
-                                        <div className="">Date</div>
-                                        <DatePicker
-                                            label="Date"
-                                            className="w-full"
-                                            value={schedule.deliverDate}
-                                            onChange={(e) =>
-                                                setSchedule({
-                                                    ...schedule,
-                                                    deliverDate: e,
-                                                })
-                                            }
-                                        />
-                                    </div>
-
-                                    <div className="grid gap-4  md:grid-cols-2 mt-3">
-                                        <div className="grid gap-2 font-bold">
-                                            <div>From</div>
-                                            <TimePicker
-                                                required
-                                                label="From"
-                                                className="w-full"
-                                                value={schedule.deliverFrom}
-                                                onChange={(e) =>
-                                                    setSchedule({
-                                                        ...schedule,
-                                                        deliverFrom: e,
-                                                    })
-                                                }
-                                            />
-                                        </div>
-                                        <div className="grid gap-2 font-bold">
-                                            <div>To</div>
-                                            <TimePicker
-                                                required
-                                                className="w-full"
-                                                label="To"
-                                                value={schedule.deliverTo}
-                                                onChange={(e) =>
-                                                    setSchedule({
-                                                        ...schedule,
-                                                        deliverTo: e,
-                                                    })
-                                                }
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
+                    {appSettings?.is_vehicle_in_order == "1" && (
+                        <div className="py-4 font-bold">
+                            <div>Vehicle</div>
+                            <div>
+                                <FormControl sx={{ m: 1 }} className="w-full">
+                                    <Select
+                                        inputProps={{
+                                            "aria-label": "Without label",
+                                        }}
+                                        value={vehicleId}
+                                        label="Age"
+                                        onChange={(e) =>
+                                            setVehicleId(e.target.value)
+                                        }
+                                    >
+                                        {vehicles?.map((vehicle, index) => (
+                                            <MenuItem
+                                                key={index}
+                                                defaultChecked
+                                                value={vehicle.id}
+                                            >
+                                                {vehicle.title}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
                             </div>
                         </div>
                     )}
                 </div>
-
-                <div className="grid lg:grid-cols-3 gap-4">
-                    <NumberInput
-                        title={"Weight"}
-                        value={weight}
-                        setValue={setWeight}
-                    />
-                    <NumberInput
-                        title={"Number of parcels"}
-                        value={numberOfParcel}
-                        setValue={setNumberOfParcel}
-                    />
-                </div>
-
-                <ParcelType value={service} setValue={setServive} />
-
-                <CountryAndCity
-                    country={country}
-                    setCountry={setCountry}
-                    city={city}
-                    setCity={setCity}
-                />
-                <div className="grid mt-4 md:grid-cols-2 gap-4">
-                    <PositionInformations
-                        title={"Pickup"}
-                        selected={from}
-                        setSelected={setFrom}
-                        phoneValue={pickNumber}
-                        setPhoneValue={setPickNumber}
-                        descriptionValue={pickDescription}
-                        setDescriptionValue={setPickDescription}
-                    />
-                    <PositionInformations
-                        title={"Delivery"}
-                        selected={to}
-                        setSelected={setTo}
-                        phoneValue={deliveryNumber}
-                        setPhoneValue={setDeliveryNumber}
-                        descriptionValue={deliveryDescription}
-                        setDescriptionValue={setDeliveryDescription}
-                    />
-                </div>
-
-                <div className="grid gap-4 items-center md:grid-cols-3">
-                    <div className="py-4 font-bold">
-                        <div>Payment collect from</div>
-                        <div>
-                            <FormControl sx={{ m: 1 }} className="w-full">
-                                <Select
-                                    inputProps={{
-                                        "aria-label": "Without label",
-                                    }}
-                                    value={receivePaymentFrom}
-                                    label="Age"
-                                    onChange={(e) =>
-                                        setReceivePaymentFrom(e.target.value)
-                                    }
-                                >
-                                    <MenuItem
-                                        defaultChecked
-                                        value={"on_pickup"}
-                                    >
-                                        On Pickup
-                                    </MenuItem>
-                                    <MenuItem
-                                        defaultChecked
-                                        value={"on_delivery"}
-                                    >
-                                        On Delivery
-                                    </MenuItem>
-                                </Select>
-                            </FormControl>
-                        </div>
-                    </div>
-                    <div>
-                        {appSettings?.is_vehicle_in_order == "1" && (
-                            <div className="py-4 font-bold">
-                                <div>Vehicle</div>
-                                <div>
-                                    <FormControl
-                                        sx={{ m: 1 }}
-                                        className="w-full"
-                                    >
-                                        <Select
-                                            inputProps={{
-                                                "aria-label": "Without label",
-                                            }}
-                                            value={vehicleId}
-                                            label="Age"
-                                            onChange={(e) =>
-                                                setVehicleId(e.target.value)
-                                            }
-                                        >
-                                            {vehicles?.map((vehicle, index) => (
-                                                <MenuItem
-                                                    key={index}
-                                                    defaultChecked
-                                                    value={vehicle.id}
-                                                >
-                                                    {vehicle.title}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                    <div className="py-2 px-6">
-                        <div className="font-bold text-lg py-4">
-                            Extra Charges
-                        </div>
-                        <div className="flex flex-wrap gap-4 items-center">
-                            {extraCharges?.map((extraCharge, index) => {
-                                if (
-                                    extraCharge.title !== "GST" &&
-                                    extraCharge.title !== "PST"
-                                ) {
-                                    return (
-                                        <ExtraChargeCheckbox
-                                            key={index}
-                                            extraCharge={extraCharge}
-                                            orderExtraCharges={
-                                                orderExtraCharges
-                                            }
-                                            setOrderExtraCharges={
-                                                setOrderExtraCharges
-                                            }
-                                        />
-                                    );
-                                }
-                            })}
-                        </div>
+                <div className="py-2 px-6">
+                    <div className="font-bold text-lg py-4">Extra Charges</div>
+                    <div className="flex flex-wrap gap-4 items-center">
+                        {extraCharges?.map((extraCharge, index) => {
+                            if (
+                                extraCharge.title !== "GST" &&
+                                extraCharge.title !== "PST"
+                            ) {
+                                return (
+                                    <ExtraChargeCheckbox
+                                        key={index}
+                                        extraCharge={extraCharge}
+                                        orderExtraCharges={orderExtraCharges}
+                                        setOrderExtraCharges={
+                                            setOrderExtraCharges
+                                        }
+                                    />
+                                );
+                            }
+                        })}
                     </div>
                 </div>
-            </form>
+            </div>
+
             <QuoteModal
                 from={pickLocationDetails}
                 to={deliveryLocationDetails}
@@ -807,7 +790,7 @@ const NumberInput = ({ title, value, setValue }) => {
     };
     return (
         <div className="grid grid-cols-7 divide-x-2 w-full divide-gray-400 rounded-xl  text-gray-500 font-bold border-2 border-gray-400">
-            <div className="col-span-4 text-md py-3 pl-4">{title}</div>
+            <div className="col-span-3 text-md py-3 pl-4">{title}</div>
             <div>
                 <button
                     onClick={minus}
@@ -816,14 +799,12 @@ const NumberInput = ({ title, value, setValue }) => {
                     <FaMinus className="text-center" />
                 </button>
             </div>
-            <div className="relative h-full">
+            <div className="relative col-span-2 h-full flex justify-stretch">
                 <input
                     type="number"
-                    className=" absolute left-0 right-0 top-0 bottom-0 outline-none text-center border-0 bg-transparent focus:outline-none focus:border-b-2 focus:border-appGreen"
-                    color="success"
+                    className="absolute right-0 left-0 bottom-0 top-0 bg-transparent text-center border-0 border-transparent  outline-none focus:outline-none"
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
-                    underlined
                 />
             </div>
             <div>
@@ -974,8 +955,7 @@ const PositionInformations = ({
                     <div className="py-2">{title} Contact Number </div>
                     <PhoneInput
                         value={phoneValue}
-                        countryCode={"in"}
-                        
+                        countryCode={"ca"}
                         onChange={(e) => setPhoneValue(e)}
                     />
                 </div>

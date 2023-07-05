@@ -13,9 +13,13 @@ import './bootstrap';
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
+àà 
+
+
+
 
 import './components/app';
 import 'react-toastify/dist/ReactToastify.css';
 import 'bootstrap/dist/css/bootstrap.css';
-// import 'pure-react-carousel/dist/react-carousel.es.css';
+
 import "react-alice-carousel/lib/alice-carousel.css";

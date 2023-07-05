@@ -1,5 +1,5 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { getWithAxios } from "../api/axios";
+import { getWithAxios, postWithAxios } from "../api/axios";
 import { useContext, useState } from "react";
 import { useEffect } from "react";
 import {
@@ -76,8 +76,9 @@ const SingleOrder = () => {
     };
 
     const downloadInvoice = async () => {
-        const res = await getWithAxios("/get-invoice-from-backend", {
-            id : params.order_id
+        const res = await postWithAxios("/get-invoice-from-backend", {
+            id : params.order_id,
+            order : order
         })
 
         console.log(res)

@@ -48,9 +48,9 @@ Route::get("/storage/{folder}/{name}", function(Request $request)
     return Storage::get($path);
 });
 
-Route::get("/get-invoice-from-backend", function(Request $request)
+Route::post("/get-invoice-from-backend", function(Request $request)
 {
-    $order = Order::whereId($request->id)->first();
+    $order = $request->order;
 
     $pdf =  PDF::loadView('invoice', [
         'order' => $order

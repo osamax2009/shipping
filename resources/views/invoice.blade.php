@@ -35,15 +35,17 @@
             </h3>
             <h3>
                 @php
-                $date = new Date()
+                $invoice_date = new DateTime()
                 @endphp
 
-                Invoice Date: {{ Dat }}
+                Invoice Date: {{ $invoice_date->format('d/m/Y') }}
 
             </h3>
             <h3>
-
-                Ordered Date: 4/13/2023
+                @php
+                $order_date = new DateTime($order->date)
+                @endphp
+                Ordered Date: {{ $order_date->format('d/m/Y') }}
             </h3>
         </div>
     </div>
