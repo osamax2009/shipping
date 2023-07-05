@@ -1,8 +1,10 @@
 <?php
 
 use App\Models\Order;
+use App\Models\User;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Storage;
@@ -18,7 +20,7 @@ use Illuminate\Support\Facades\Storage;
 |
 */
 
-Route::post('login',[API\UserController::class,'login']);
+Route::post('login', [API\UserController::class,'login']);
 Route::get('logout', [ API\UserController::class, 'logout' ]);
 
 
@@ -42,25 +44,28 @@ Route::get('/storage-link-exist', function () {
 });
 
 
-Route::get("/storage/{folder}/{name}", function(Request $request)
-{
+Route::get("/storage/{folder}/{name}", function (Request $request) {
     $path = "public/" . $request -> folder . "/" . $request->name;
     return Storage::get($path);
 });
 
-Route::post("/get-invoice-from-backend", function(Request $request)
-{
-    $order = $request->order;
+Route::get("/get-invoice-from-backend", function (Request $request) {
 
-    $pdf =  PDF::loadView('invoice', [
-        'order' => $order
-    ])->setPaper("a4", "lanscape");
+    $order = Order::where("id", $request->id)->first();
+    $client = User::where("id", $order->client_id)->first();
+    
 
-    return $pdf->stream("invoice.pdf");
+     $pdf =  PDF::loadView('invoice', [
+         'order' => $order,
+         'client' => $client
+     ])->setPaper("a4", "lanscape");
+
+     return $pdf->download("invoice.pdf");
+
+
 });
 
-Route::fallback(function()
-{
+Route::fallback(function () {
     return view("index");
 
 })->name("home");

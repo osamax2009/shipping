@@ -1,6 +1,6 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { getWithAxios, postWithAxios } from "../api/axios";
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { useEffect } from "react";
 import {
     BsDownload,
@@ -20,6 +20,8 @@ const SingleOrder = () => {
     const [client, setClient] = useState();
     const [history, setHistory] = useState();
     const [active, setActive] = useState(true);
+
+    const linkRef = useRef(null)
 
     const { user, setUser } = useContext(UserContext);
     const navigate = useNavigate();
@@ -76,12 +78,13 @@ const SingleOrder = () => {
     };
 
     const downloadInvoice = async () => {
-        const res = await postWithAxios("/get-invoice-from-backend", {
+        /* const res = await getWithAxios("/get-invoice-from-backend", {
             id: params.order_id,
-            order: order,
-        });
+            //order : JSON.stringify(order)
+        }); */
 
-        // console.log(res)
+        linkRef.current.click()
+         console.log(res)
     };
 
     const handleTab = () => {
@@ -108,9 +111,14 @@ const SingleOrder = () => {
                 <Button auto onPress={downloadInvoice} color={"success"}>
                     <div className="flex items-center justify-center font-bold text-lg gap-2">
                         <BsDownload className="text-2xl" />
-                        invoice
+                        Invoice
                     </div>
                 </Button>
+                <div>
+                    <a ref={linkRef} className="hidden" href={"/get-invoice-from-backend?id=" + params.order_Id} target="blank">
+                        invoice
+                    </a>
+                </div>
             </div>
             <div className="grid w-full gap-6 px-4 md:grid-cols-3">
                 <div className="md:col-span-2">
@@ -246,12 +254,24 @@ const SingleOrder = () => {
                                     <div className="border rounded-lg py-3 px-4">
                                         <div className="flex justify-between">
                                             <div>Vehicle name</div>
-                                            <div>{order?.vehicle_data.title}</div>
+                                            <div>
+                                                {order?.vehicle_data.title}
+                                            </div>
                                         </div>
 
-                                        <div className="flex justify-between">
-                                            <div >Vehicle Image</div>
-                                            <div className="flex justify-center">{order?.vehicle_image ? <Image src={order?.vehicle_image} /> : null }</div>
+                                        <div className="flex py-4 items-center justify-between">
+                                            <div>Vehicle Image</div>
+                                            <div className="flex justify-center">
+                                                {order?.vehicle_image ? (
+                                                    <Image
+                                                        height={90}
+                                                        width={100}
+                                                        src={
+                                                            order?.vehicle_image
+                                                        }
+                                                    />
+                                                ) : null}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -287,30 +307,61 @@ const SingleOrder = () => {
                     )}
                 </div>
 
-                <div className="">
-                    <div className="flex justify-between font-bold bg-green-300 p-4 rounded-t-lg">
-                        {user?.user_type == "admin"
-                            ? " About user"
-                            : "Ordered by"}
-                    </div>
-                    <div className="grid gap-4 font-bold bg-white text-black py-4 px-6 rounded-b-lg">
-                        <div className="flex gap-4 items-center font-bold">
-                            <div>
-                                <BsPerson className="text-4xl" />
+                <div className="grid h-fit gap-6">
+                    <div className="">
+                        <div className="flex justify-between font-bold bg-green-300 p-4 rounded-t-lg">
+                            {user?.user_type == "admin"
+                                ? " About user"
+                                : "Ordered by"}
+                        </div>
+                        <div className="grid gap-4 font-bold bg-white text-black py-4 px-6 rounded-b-lg">
+                            <div className="flex gap-4 items-center font-bold">
+                                <div>
+                                    <BsPerson className="text-4xl" />
+                                </div>
+
+                                <div className="">
+                                    <div>{order?.client_name}</div>
+                                    <div>{client?.contact_number}</div>
+                                </div>
                             </div>
 
-                            <div className="">
-                                <div>{order?.client_name}</div>
-                                <div>{client?.contact_number}</div>
+                            <div className="pt-2">
+                                <div className="flex items-center gap-4">
+                                    <div className="text-green-500 text-xl">
+                                        <BsEnvelope />
+                                    </div>
+                                    <div>{client?.email}</div>
+                                </div>
                             </div>
                         </div>
+                    </div>
 
-                        <div className="pt-2">
-                            <div className="flex items-center gap-4">
-                                <div className="text-green-500 text-xl">
-                                    <BsEnvelope />
+                    <div className="">
+                        <div className="flex justify-between font-bold bg-green-300 p-4 rounded-t-lg">
+                            {user?.user_type == "admin"
+                                ? " About delivery person"
+                                : "delivered by"}
+                        </div>
+                        <div className="grid gap-4 font-bold bg-white text-black py-4 px-6 rounded-b-lg">
+                            <div className="flex gap-4 items-center font-bold">
+                                <div>
+                                    <BsPerson className="text-4xl" />
                                 </div>
-                                <div>{client?.email}</div>
+
+                                <div className="">
+                                    <div>{order?.delivery_man_name}</div>
+                                    <div>{client?.contact_number}</div>
+                                </div>
+                            </div>
+
+                            <div className="pt-2">
+                                <div className="flex items-center gap-4">
+                                    <div className="text-green-500 text-xl">
+                                        <BsEnvelope />
+                                    </div>
+                                    <div>{client?.email}</div>
+                                </div>
                             </div>
                         </div>
                     </div>

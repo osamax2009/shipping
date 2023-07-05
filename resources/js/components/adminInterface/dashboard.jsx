@@ -69,7 +69,7 @@ const Dashboard = () => {
     }, [data, labels]);
 
     return (
-        <div>
+        <div className="">
             <div>
                 {dashboard ? (
                     <div>
