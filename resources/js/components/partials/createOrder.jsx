@@ -4,7 +4,10 @@ import { parcelTypes } from "../shared/constancy";
 import { Button, Checkbox, Modal } from "@nextui-org/react";
 import { toast } from "react-toastify";
 import { IoAlarmOutline } from "react-icons/io5";
-import { charges, haversine_distance } from "../shared/distanceCalculator";
+import {
+    calculateCharges,
+    haversine_distance,
+} from "../shared/distanceCalculator";
 import { getWithAxios, postWithAxios } from "../api/axios";
 import { todaysDate, tomorrowsDate } from "../shared/date";
 import { UserContext } from "../contexts/userContext";
@@ -51,6 +54,7 @@ const AdminCreateOrder = () => {
     const [vehicleId, setVehicleId] = useState();
     const [extraCharges, setExtraCharges] = useState();
     const [orderExtraCharges, setOrderExtraCharges] = useState(0);
+    const [charges, setCharges] = useState();
 
     const { user, setUser } = useContext(UserContext);
     const { appSettings, setAppSettings } = useContext(AppSettingsContext);
@@ -67,7 +71,7 @@ const AdminCreateOrder = () => {
     };
 
     const handleOpen = () => {
-        if (!from || !to || !service || !weight) {
+        if (!from || !to || !service || !weight || !city) {
             toast("Empty field submitted", {
                 type: "error",
                 hideProgressBar: true,
@@ -175,15 +179,17 @@ const AdminCreateOrder = () => {
                 city_id: city?.id,
                 pickup_point: pickupDPoint(),
                 delivery_point: deliveryPoint(),
-                extra_charges: [],
+                extra_charges: { extracharges: orderExtraCharges },
                 parcel_type: service.value,
                 total_weight: weight,
                 total_distance: distance,
                 payment_collect_from: receivePaymentFrom,
                 status: "create",
-                payment_type: "",
-                payment_status: "",
+                payment_type: "cash",
+                payment_status: "pending",
                 fixed_charges: city?.fixed_charges,
+                weight_charge: charges?.weight_charges,
+                distance_charge: charges?.distance_charges,
                 parent_order_id: "",
                 total_amount: price + orderExtraCharges,
                 save_user_address: user?.id,
@@ -193,6 +199,7 @@ const AdminCreateOrder = () => {
 
         const dataToSend = stateDate.state;
         const res = await postWithAxios("/api/order-save", dataToSend);
+        
 
         if (res.order_id) {
             setProcessing(false);
@@ -556,6 +563,8 @@ const AdminCreateOrder = () => {
                 handleOrder={handleOrder}
                 city={city}
                 orderExtraCharges={orderExtraCharges}
+                charges={charges}
+                setCharges={setCharges}
             />
         </div>
     );
@@ -692,6 +701,8 @@ const QuoteModal = ({
     setReceivePaymentFrom,
     handleOrder,
     orderExtraCharges,
+    charges,
+    setCharges,
     city,
 }) => {
     //  const deliveryCharges = 3.8;
@@ -708,8 +719,24 @@ const QuoteModal = ({
     };
 
     const calculateTotalCharge = () => {
-        const brut = charges(distance, weight, city);
-        const result = Math.round(brut * 100) / 100;
+        const brut = calculateCharges(distance, weight, city);
+
+        const fixed_charges = Math.round(brut.fixed_charges * 100) / 100;
+        const distance_charges = Math.round(brut.distance_charges * 100) / 100;
+        const weight_charges = Math.round(brut.weight_charges * 100) / 100;
+
+        const c = {
+            fixed_charges: fixed_charges,
+            distance_charges: distance_charges,
+            weight_charges: weight_charges,
+        };
+
+        setCharges(c);
+
+        const unround =
+            brut.fixed_charges + brut.distance_charges + brut.weight_charges;
+
+        const result = Math.round(unround * 100) / 100;
         setPrice(result);
     };
 
@@ -740,7 +767,21 @@ const QuoteModal = ({
                     <div className="flex justify-between">
                         <div>Delivery charges</div>
                         <div>
-                            {price} {appSettings?.currency}{" "}
+                            {charges?.fixed_charges} {appSettings?.currency}{" "}
+                        </div>
+                    </div>
+
+                    <div className="flex justify-between">
+                        <div>Distance charges</div>
+                        <div>
+                            {charges?.distance_charges} {appSettings?.currency}{" "}
+                        </div>
+                    </div>
+
+                    <div className="flex justify-between">
+                        <div>Weight Charges </div>
+                        <div>
+                            {charges?.weight_charges} {appSettings?.currency}{" "}
                         </div>
                     </div>
 

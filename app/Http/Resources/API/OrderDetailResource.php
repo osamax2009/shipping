@@ -40,6 +40,8 @@ class OrderDetailResource extends JsonResource
             'payment_status'                => optional($this->payment)->payment_status,
             'payment_collect_from'          => $this->payment_collect_from,
             'delivery_man_id'               => $this->delivery_man_id,
+            'delivery_man_email'            => optional($this->delivery_man)->email,
+            'delivery_man_contact'            => optional($this->delivery_man)->contact_number,
             'delivery_man_name'             => optional($this->delivery_man)->name,
             'fixed_charges'                 => $this->fixed_charges,
             'extra_charges'                 => $this->extra_charges,

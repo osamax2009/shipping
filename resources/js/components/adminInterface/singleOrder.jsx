@@ -14,6 +14,7 @@ import { Button, Image } from "@nextui-org/react";
 import { UserContext } from "../contexts/userContext";
 import { toast } from "react-toastify";
 import ReactPDF, { Document, Page, Text, View } from "@react-pdf/renderer";
+import { AppSettingsContext } from "../contexts/appSettings";
 
 const SingleOrder = () => {
     const [order, setOrder] = useState();
@@ -21,9 +22,10 @@ const SingleOrder = () => {
     const [history, setHistory] = useState();
     const [active, setActive] = useState(true);
 
-    const linkRef = useRef(null)
+    const linkRef = useRef(null);
 
     const { user, setUser } = useContext(UserContext);
+    const { appSettings, setAppSettings } = useContext(AppSettingsContext);
     const navigate = useNavigate();
 
     const params = useParams();
@@ -83,8 +85,8 @@ const SingleOrder = () => {
             //order : JSON.stringify(order)
         }); */
 
-        linkRef.current.click()
-         console.log(res)
+        linkRef.current.click();
+        console.log(res);
     };
 
     const handleTab = () => {
@@ -115,7 +117,12 @@ const SingleOrder = () => {
                     </div>
                 </Button>
                 <div>
-                    <a ref={linkRef} className="hidden" href={"/get-invoice-from-backend?id=" + params.order_Id} target="blank">
+                    <a
+                        ref={linkRef}
+                        className="hidden"
+                        href={"/get-invoice-from-backend?id=" + params.order_Id}
+                        target="blank"
+                    >
                         invoice
                     </a>
                 </div>
@@ -180,24 +187,34 @@ const SingleOrder = () => {
                                     <div className="border rounded-lg py-3 px-4">
                                         <div className="flex justify-between">
                                             <div>Payment type</div>
-                                            <div>{order?.payment_type}</div>
+                                            <div>
+                                                {order?.payment_type
+                                                    ? order?.payment_type
+                                                    : "cash"}
+                                            </div>
                                         </div>
 
                                         <div className="flex justify-between">
                                             <div>Payment Status</div>
-                                            <div>{order?.total_weight}</div>
+                                            <div>
+                                                {order?.payment_status
+                                                    ? order?.payment_status
+                                                    : "pending"}
+                                            </div>
                                         </div>
 
                                         <div className="flex justify-between">
                                             <div>Payment collect from</div>
                                             <div>
-                                                {/* {order?.parcel_type} */} 1
+                                                {order?.payment_collect_from ==
+                                                "on_pickup"
+                                                    ? "On Pickup"
+                                                    : "On Delivery"}{" "}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
                             <div className="grid mt-3 gap-4 md:grid-cols-2">
                                 <div>
                                     <div className="pb-2">Pickup Address</div>
@@ -247,42 +264,192 @@ const SingleOrder = () => {
                                     </div>
                                 </div>
                             </div>
-
-                            <div className="pt-8">
-                                <div>
-                                    <div className="pb-2">Vehicle</div>
-                                    <div className="border rounded-lg py-3 px-4">
-                                        <div className="flex justify-between">
-                                            <div>Vehicle name</div>
-                                            <div>
-                                                {order?.vehicle_data.title}
+                            {order?.vehicle_data && (
+                                <div className="pt-8">
+                                    <div>
+                                        <div className="pb-2">Vehicle</div>
+                                        <div className="border rounded-lg py-3 px-4">
+                                            <div className="flex justify-between">
+                                                <div>Vehicle name</div>
+                                                <div>
+                                                    {order?.vehicle_data?.title}
+                                                </div>
                                             </div>
-                                        </div>
 
-                                        <div className="flex py-4 items-center justify-between">
-                                            <div>Vehicle Image</div>
-                                            <div className="flex justify-center">
-                                                {order?.vehicle_image ? (
-                                                    <Image
-                                                        height={90}
-                                                        width={100}
-                                                        src={
-                                                            order?.vehicle_image
-                                                        }
-                                                    />
-                                                ) : null}
+                                            <div className="flex py-4 items-center justify-between">
+                                                <div>Vehicle Image</div>
+                                                <div className="flex justify-center">
+                                                    {order?.vehicle_image ? (
+                                                        <Image
+                                                            height={90}
+                                                            width={100}
+                                                            src={
+                                                                order?.vehicle_image
+                                                            }
+                                                        />
+                                                    ) : null}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            )}
 
+                            <div className="pt-8">
+                                <div className="pb-2">Payment Details</div>
+                                <div className="border rounded-lg py-3 px-4">
+                                    <div className="flex justify-between">
+                                        <div>Payment type</div>
+                                        <div>
+                                            {order?.payment_type
+                                                ? order?.payment_type
+                                                : "cash"}
+                                        </div>
+                                    </div>
+
+                                    <div className="flex justify-between">
+                                        <div>Payment Status</div>
+                                        <div>
+                                            {order?.payment_status
+                                                ? order?.payment_status
+                                                : "pending"}
+                                        </div>
+                                    </div>
+
+                                    <div className="flex justify-between">
+                                        <div>Payment collect from</div>
+                                        <div>
+                                            {order?.payment_collect_from ==
+                                            "on_pickup"
+                                                ? "On Pickup"
+                                                : "On Delivery"}{" "}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div className="pt-12">
                                 <div>
-                                    <div className="border rounded-lg py-3 px-4">
+                                    <div className="grid gap-4 border rounded-lg py-3 px-4">
                                         <div className="flex justify-between">
+                                            <div>Delivery Charges</div>
+                                            {appSettings?.currency_position ==
+                                            "left" ? (
+                                                <div>
+                                                    {" "}
+                                                    {appSettings?.currency}{" "}
+                                                    {order?.fixed_charges}
+                                                </div>
+                                            ) : (
+                                                <div>
+                                                    {" "}
+                                                    {order?.fixed_charges}{" "}
+                                                    {appSettings?.currency}
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="flex justify-between">
+                                            <div>Distance Charge</div>
+                                            {appSettings?.currency_position ==
+                                            "left" ? (
+                                                <div>
+                                                    {" "}
+                                                    {appSettings?.currency}{" "}
+                                                    {order?.distance_charge}
+                                                </div>
+                                            ) : (
+                                                <div>
+                                                    {" "}
+                                                    {
+                                                        order?.distance_charge
+                                                    }{" "}
+                                                    {appSettings?.currency}
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="flex justify-between">
+                                            <div>Weight Charge</div>
+                                            {appSettings?.currency_position ==
+                                            "left" ? (
+                                                <div>
+                                                    {" "}
+                                                    {appSettings?.currency}{" "}
+                                                    {order?.weight_charge}
+                                                </div>
+                                            ) : (
+                                                <div>
+                                                    {" "}
+                                                    {order?.weight_charge}{" "}
+                                                    {appSettings?.currency}
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="flex justify-between">
+                                            <div> </div>
+                                            {appSettings?.currency_position ==
+                                            "left" ? (
+                                                <div>
+                                                    {" "}
+                                                    {appSettings?.currency}{" "}
+                                                    {order?.fixed_charges +
+                                                        order?.distance_charge +
+                                                        order?.weight_charge}
+                                                </div>
+                                            ) : (
+                                                <div>
+                                                    {" "}
+                                                    {order?.fixed_charges +
+                                                        order?.distance_charge +
+                                                        order?.weight_charge}{" "}
+                                                    {appSettings?.currency}
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="flex mt-6 justify-between">
+                                            <div>Extra Charges</div>
+
+                                            {appSettings?.currency_position ==
+                                            "left" ? (
+                                                <div>
+                                                    {" "}
+                                                    {appSettings?.currency}{" "}
+                                                    {
+                                                        order?.extra_charges
+                                                            ?.extracharges
+                                                    }
+                                                </div>
+                                            ) : (
+                                                <div>
+                                                    {" "}
+                                                    {
+                                                        order?.extra_charges
+                                                            ?.extracharges
+                                                    }{" "}
+                                                    {appSettings?.currency}
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="flex text-lg font-bold mt-6 justify-between">
                                             <div>Total price</div>
-                                            <div>$ {order?.total_amount}</div>
+
+                                            {appSettings?.currency_position ==
+                                            "left" ? (
+                                                <div>
+                                                    {" "}
+                                                    {appSettings?.currency}{" "}
+                                                    {order?.total_amount}
+                                                </div>
+                                            ) : (
+                                                <div>
+                                                    {" "}
+                                                    {order?.total_amount}{" "}
+                                                    {appSettings?.currency}
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -337,34 +504,36 @@ const SingleOrder = () => {
                         </div>
                     </div>
 
-                    <div className="">
-                        <div className="flex justify-between font-bold bg-green-300 p-4 rounded-t-lg">
-                            {user?.user_type == "admin"
-                                ? " About delivery person"
-                                : "delivered by"}
-                        </div>
-                        <div className="grid gap-4 font-bold bg-white text-black py-4 px-6 rounded-b-lg">
-                            <div className="flex gap-4 items-center font-bold">
-                                <div>
-                                    <BsPerson className="text-4xl" />
-                                </div>
-
-                                <div className="">
-                                    <div>{order?.delivery_man_name}</div>
-                                    <div>{client?.contact_number}</div>
-                                </div>
+                    {order?.delivery_man_id && (
+                        <div className="">
+                            <div className="flex justify-between font-bold bg-green-300 p-4 rounded-t-lg">
+                                {user?.user_type == "admin"
+                                    ? " About delivery person"
+                                    : "delivered by"}
                             </div>
-
-                            <div className="pt-2">
-                                <div className="flex items-center gap-4">
-                                    <div className="text-green-500 text-xl">
-                                        <BsEnvelope />
+                            <div className="grid gap-4 font-bold bg-white text-black py-4 px-6 rounded-b-lg">
+                                <div className="flex gap-4 items-center font-bold">
+                                    <div>
+                                        <BsPerson className="text-4xl" />
                                     </div>
-                                    <div>{client?.email}</div>
+
+                                    <div className="">
+                                        <div>{order?.delivery_man_name}</div>
+                                        <div>{order?.delivery_man_contact}</div>
+                                    </div>
+                                </div>
+
+                                <div className="pt-2">
+                                    <div className="flex items-center gap-4">
+                                        <div className="text-green-500 text-xl">
+                                            <BsEnvelope />
+                                        </div>
+                                        <div>{order?.delivery_man_email}</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             </div>
         </div>

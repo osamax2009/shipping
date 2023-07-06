@@ -13,7 +13,7 @@ import {
 } from "@nextui-org/react";
 import { toast } from "react-toastify";
 
-import { charges, haversine_distance } from "../../shared/distanceCalculator";
+import { calculateCharges, haversine_distance } from "../../shared/distanceCalculator";
 
 import {
     getCsrfToken,
@@ -552,7 +552,7 @@ const QuoteModal = ({
     };
 
     const calculateTotalCharge = () => {
-        const brut = charges(distance, weight, service) + deliveryCharges;
+        const brut = calculateCharges(distance, weight, service) + deliveryCharges;
         const result = Math.round(brut * 100) / 100;
         setPrice(result);
     };

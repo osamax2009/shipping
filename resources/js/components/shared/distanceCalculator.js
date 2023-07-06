@@ -25,8 +25,7 @@ export function haversine_distance(pickLoc, deliverLoc) {
     return res;
 }
 
-export function charges(distance, weight, city) {
-
+export function calculateCharges(distance, weight, city) {
     let dCharge = 0;
     let dWeight = 0;
     let fixCharge = city?.fixed_charges;
@@ -49,11 +48,18 @@ export function charges(distance, weight, city) {
 
     ttc = th /* + gst + pst */;
 
-    if(ttc)
-    {
-        return ttc
-    } else{
-      return  0
+    if (ttc) {
+        return {
+            fixed_charges: fixCharge,
+            distance_charges: dCharge,
+            weight_charges: dWeight,
+        };
+    } else {
+        return {
+            fixed_charges: fixCharge,
+            distance_charges: dCharge,
+            weight_charges: dWeight,
+        };
     }
 }
 
