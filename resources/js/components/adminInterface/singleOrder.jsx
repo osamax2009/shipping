@@ -393,44 +393,55 @@ const SingleOrder = () => {
                                                 <div>
                                                     {" "}
                                                     {appSettings?.currency}{" "}
-                                                    {order?.fixed_charges +
-                                                        order?.distance_charge +
-                                                        order?.weight_charge}
+                                                    {Math.round(
+                                                        (order?.fixed_charges +
+                                                            order?.distance_charge +
+                                                            order?.weight_charge) *
+                                                            100
+                                                    ) / 100}
                                                 </div>
                                             ) : (
                                                 <div>
                                                     {" "}
-                                                    {order?.fixed_charges +
-                                                        order?.distance_charge +
-                                                        order?.weight_charge}{" "}
+                                                    {Math.round(
+                                                        (order?.fixed_charges +
+                                                            order?.distance_charge +
+                                                            order?.weight_charge) *
+                                                            100
+                                                    ) / 100}{" "}
                                                     {appSettings?.currency}
                                                 </div>
                                             )}
                                         </div>
 
-                                        <div className="flex mt-6 justify-between">
-                                            <div>Extra Charges</div>
+                                        <div className=" mt-6">
+                                            <div className="py-2">Extra Charges</div>
 
-                                            {appSettings?.currency_position ==
-                                            "left" ? (
-                                                <div>
-                                                    {" "}
-                                                    {appSettings?.currency}{" "}
-                                                    {
-                                                        order?.extra_charges
-                                                            ?.extracharges
-                                                    }
-                                                </div>
-                                            ) : (
-                                                <div>
-                                                    {" "}
-                                                    {
-                                                        order?.extra_charges
-                                                            ?.extracharges
-                                                    }{" "}
-                                                    {appSettings?.currency}
-                                                </div>
-                                            )}
+                                            <div>
+                                                {order?.extra_charges?.extracharges?.map(
+                                                    (extra, index) => (
+                                                        <div
+                                                            key={index}
+                                                            className="flex justify-between text-sm"
+                                                        >
+                                                            <div>
+                                                                {extra.title}
+                                                            </div>
+                                                            <div>
+                                                                {appSettings?.currency_position ==
+                                                                "left"
+                                                                    ? appSettings?.currency
+                                                                    : null}{" "}
+                                                                {extra.charges}{" "}
+                                                                {appSettings?.currency_position ==
+                                                                "right"
+                                                                    ? appSettings?.currency
+                                                                    : null}
+                                                            </div>
+                                                        </div>
+                                                    )
+                                                )}
+                                            </div>
                                         </div>
 
                                         <div className="flex text-lg font-bold mt-6 justify-between">

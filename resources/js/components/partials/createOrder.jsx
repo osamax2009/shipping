@@ -54,6 +54,8 @@ const AdminCreateOrder = () => {
     const [vehicleId, setVehicleId] = useState();
     const [extraCharges, setExtraCharges] = useState();
     const [orderExtraCharges, setOrderExtraCharges] = useState(0);
+    const [listOfExtraCharges, setListOfExtraCharges] = useState([]);
+
     const [charges, setCharges] = useState();
 
     const { user, setUser } = useContext(UserContext);
@@ -71,7 +73,8 @@ const AdminCreateOrder = () => {
     };
 
     const handleOpen = () => {
-        if (!from || !to || !service || !weight || !city) {
+
+         if (!from || !to || !service || !weight || !city) {
             toast("Empty field submitted", {
                 type: "error",
                 hideProgressBar: true,
@@ -86,14 +89,17 @@ const AdminCreateOrder = () => {
         setExtraCharges(res.data);
 
         let value = 0;
+        let list = [];
 
         res.data.map((extraCharge) => {
             if (extraCharge.title !== "GST" && extraCharge.title !== "PST") {
                 value = value + extraCharge?.charges;
+                list.push(extraCharge?.title);
             }
         });
 
         setOrderExtraCharges(value);
+        setListOfExtraCharges(list);
     };
 
     const getPlaceDetails = async (placeId, placeDetailSetter) => {
@@ -167,6 +173,17 @@ const AdminCreateOrder = () => {
 
     let currentDate = new Date().toJSON().slice(0, 10);
 
+    const extraChargesData = () => {
+        const array = [];
+        extraCharges?.map((extra) => {
+            if (listOfExtraCharges.includes(extra.title)) {
+                array.push(extra);
+            }
+        });
+
+        return array;
+    };
+
     const handleOrder = async () => {
         setOpen(false);
         setProcessing(true);
@@ -179,7 +196,7 @@ const AdminCreateOrder = () => {
                 city_id: city?.id,
                 pickup_point: pickupDPoint(),
                 delivery_point: deliveryPoint(),
-                extra_charges: { extracharges: orderExtraCharges },
+                extra_charges: { extracharges: extraChargesData() },
                 parcel_type: service.value,
                 total_weight: weight,
                 total_distance: distance,
@@ -199,7 +216,6 @@ const AdminCreateOrder = () => {
 
         const dataToSend = stateDate.state;
         const res = await postWithAxios("/api/order-save", dataToSend);
-        
 
         if (res.order_id) {
             setProcessing(false);
@@ -526,6 +542,10 @@ const AdminCreateOrder = () => {
                                         setOrderExtraCharges={
                                             setOrderExtraCharges
                                         }
+                                        listOfExtraCharges={listOfExtraCharges}
+                                        setListOfExtraCharges={
+                                            setListOfExtraCharges
+                                        }
                                     />
                                 );
                             }
@@ -565,6 +585,8 @@ const AdminCreateOrder = () => {
                 orderExtraCharges={orderExtraCharges}
                 charges={charges}
                 setCharges={setCharges}
+                listOfExtraCharges={listOfExtraCharges}
+                extraCharges={extraCharges}
             />
         </div>
     );
@@ -576,6 +598,8 @@ const ExtraChargeCheckbox = ({
     extraCharge,
     setOrderExtraCharges,
     orderExtraCharges,
+    setListOfExtraCharges,
+    listOfExtraCharges,
 }) => {
     const [checked, setChecked] = useState(true);
     const { appSettings, setAppSettings } = useContext(AppSettingsContext);
@@ -583,8 +607,15 @@ const ExtraChargeCheckbox = ({
     const calculateExtraCharges = () => {
         if (!checked) {
             setOrderExtraCharges(orderExtraCharges + extraCharge?.charges);
+            const array = listOfExtraCharges;
+            array?.push(extraCharge?.title);
+            setListOfExtraCharges(array);
         } else {
             setOrderExtraCharges(orderExtraCharges - extraCharge?.charges);
+            const array = listOfExtraCharges;
+            const index = array.indexOf(extraCharge?.title);
+            array.splice(index, 1);
+            setListOfExtraCharges(array);
         }
 
         setChecked(!checked);
@@ -604,7 +635,14 @@ const ExtraChargeCheckbox = ({
             />
             <div>
                 {" "}
-                ( + {appSettings?.currency} {extraCharge.charges}){" "}
+                ( +{" "}
+                {appSettings?.currency_position == "left"
+                    ? appSettings?.currency
+                    : null}{" "}
+                {extraCharge.charges}){" "}
+                {appSettings?.currency_position == "right"
+                    ? appSettings?.currency
+                    : null}{" "}
             </div>
         </div>
     );
@@ -704,9 +742,13 @@ const QuoteModal = ({
     charges,
     setCharges,
     city,
+    extraCharges,
+    listOfExtraCharges,
 }) => {
     //  const deliveryCharges = 3.8;
     const [inProcess, setInProcess] = useState();
+    const [extraList, setExtraList] = useState(listOfExtraCharges);
+
     const { appSettings, setAppSettings } = useContext(AppSettingsContext);
 
     const handleDeliverNow = () => {
@@ -749,6 +791,10 @@ const QuoteModal = ({
         showPrice();
     }, [from, to, weight, service, city]);
 
+    useEffect(() => {
+        setExtraList(listOfExtraCharges);
+    }, [listOfExtraCharges]);
+
     return (
         <Modal
             open={open}
@@ -767,35 +813,97 @@ const QuoteModal = ({
                     <div className="flex justify-between">
                         <div>Delivery charges</div>
                         <div>
-                            {charges?.fixed_charges} {appSettings?.currency}{" "}
+                            {" "}
+                            {appSettings?.currency_position == "left"
+                                ? appSettings?.currency
+                                : null}{" "}
+                            {charges?.fixed_charges}{" "}
+                            {appSettings?.currency_position == "right"
+                                ? appSettings?.currency
+                                : null}{" "}
                         </div>
                     </div>
 
                     <div className="flex justify-between">
                         <div>Distance charges</div>
                         <div>
-                            {charges?.distance_charges} {appSettings?.currency}{" "}
+                            {" "}
+                            {appSettings?.currency_position == "left"
+                                ? appSettings?.currency
+                                : null}{" "}
+                            {charges?.distance_charges}{" "}
+                            {appSettings?.currency_position == "right"
+                                ? appSettings?.currency
+                                : null}{" "}
                         </div>
                     </div>
 
                     <div className="flex justify-between">
                         <div>Weight Charges </div>
                         <div>
-                            {charges?.weight_charges} {appSettings?.currency}{" "}
+                            {" "}
+                            {appSettings?.currency_position == "left"
+                                ? appSettings?.currency
+                                : null}{" "}
+                            {charges?.weight_charges}{" "}
+                            {appSettings?.currency_position == "right"
+                                ? appSettings?.currency
+                                : null}{" "}
                         </div>
                     </div>
 
-                    <div className="flex justify-between">
-                        <div className="font-bold">Extra Charges </div>
+                    <div>
+                        <div className="flex justify-between">
+                            <div className="">Extra Charges </div>
+                            <div>
+                                {" "}
+                                {appSettings?.currency_position == "left"
+                                    ? appSettings?.currency
+                                    : null}{" "}
+                                {orderExtraCharges}{" "}
+                                {appSettings?.currency_position == "right"
+                                    ? appSettings?.currency
+                                    : null}{" "}
+                            </div>
+                        </div>
                         <div>
-                            {orderExtraCharges} {appSettings?.currency}{" "}
+                            {extraCharges?.map((extra, index) => {
+                                if (extraList?.includes(extra.title)) {
+                                    return (
+                                        <div
+                                            key={index}
+                                            className="flex justify-between text-sm"
+                                        >
+                                            <div>{extra.title}</div>
+                                            <div>
+                                                {appSettings?.currency_position ==
+                                                "left"
+                                                    ? appSettings?.currency
+                                                    : null}{" "}
+                                                {extra.charges}{" "}
+                                                {appSettings?.currency_position ==
+                                                "right"
+                                                    ? appSettings?.currency
+                                                    : null}
+                                            </div>
+                                        </div>
+                                    );
+                                }
+                            })}
                         </div>
                     </div>
 
                     <div className="flex justify-between font-bold">
                         <div>Total</div>
                         <div>
-                            {price + orderExtraCharges} {appSettings?.currency}
+                            {" "}
+                            {appSettings?.currency_position == "left"
+                                ? appSettings?.currency
+                                : null}{" "}
+                            {price + orderExtraCharges}{" "}
+                            {appSettings?.currency_position == "right"
+                                ? appSettings?.currency
+                                : null}
                         </div>
                     </div>
                 </div>

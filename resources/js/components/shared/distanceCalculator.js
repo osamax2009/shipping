@@ -56,9 +56,9 @@ export function calculateCharges(distance, weight, city) {
         };
     } else {
         return {
-            fixed_charges: fixCharge,
-            distance_charges: dCharge,
-            weight_charges: dWeight,
+            fixed_charges: 0,
+            distance_charges: 0,
+            weight_charges: 0,
         };
     }
 }
