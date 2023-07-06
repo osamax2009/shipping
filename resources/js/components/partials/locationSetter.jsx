@@ -52,7 +52,7 @@ const LocationSetter = ({ cityName, setCityName}) => {
         <div ref={divRef} className="relative w-full cursor-pointer">
             <input
                 type="text"
-                className="outline-none w-full bg-white/50 text-black font-bold focus:outile-none border py-2 rounded-lg border-gray-400 focus:border-appGreen"
+                className="form-control w-max"
                 value={cityName}
                 onChange={(e) => setCityName(e.target.value)}
                 onFocus={() => setExpanded(true)}
