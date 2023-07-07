@@ -8,7 +8,10 @@ import dayjs from "dayjs";
 
 const ParcelTypes = () => {
     const [parcelTypes, setParcelTypes] = useState();
+    const [selectedParcel, setSelectedParcel] = useState();
     const [openCreate, setOpenCreate] = useState(false);
+    const [openUpdate, setOpenUpdate] = useState(false);
+    const [openDelete, setOpenDelete] = useState(false);
 
     const getParcelTypes = async () => {
         const res = await getWithAxios("/api/staticdata-list?type=parcel_type");
@@ -20,8 +23,10 @@ const ParcelTypes = () => {
     };
 
     useEffect(() => {
-        getParcelTypes();
-    }, []);
+        if (!openCreate && !openUpdate && !openDelete) {
+            getParcelTypes();
+        }
+    }, [openCreate, openUpdate, openDelete]);
 
     return (
         <div>
@@ -42,16 +47,21 @@ const ParcelTypes = () => {
                     <Table.Body>
                         {parcelTypes?.map((parcel, index) => (
                             <Table.Row key={index}>
-                                <Table.Cell> {parcel.id} </Table.Cell>
-                                <Table.Cell>{parcel.label}</Table.Cell>
-                                <Table.Cell> {parcel.value} </Table.Cell>
+                                <Table.Cell> {parcel?.id} </Table.Cell>
+                                <Table.Cell>{parcel?.label}</Table.Cell>
+                                <Table.Cell> {parcel?.value} </Table.Cell>
                                 <Table.Cell>
                                     {dayjs(parcel?.created_at).format(
                                         "DD-MM-YYYY; HH:mm:ss"
                                     )}
                                 </Table.Cell>
                                 <Table.Cell>
-                                    <ParcelLine parcel={parcel} />
+                                    <ParcelLine
+                                        parcel={parcel}
+                                        setSelectedParcel={setSelectedParcel}
+                                        setOpenUpdate={setOpenUpdate}
+                                        setOpenDelete={setOpenDelete}
+                                    />
                                 </Table.Cell>
                             </Table.Row>
                         ))}
@@ -69,20 +79,34 @@ const ParcelTypes = () => {
             )}
 
             <CreateModal open={openCreate} setOpen={setOpenCreate} />
+            <UpdateModal
+                parcel={selectedParcel}
+                open={openUpdate}
+                setOpen={setOpenUpdate}
+            />
+            <DeleteModal
+                parcel={selectedParcel}
+                open={openDelete}
+                setOpen={setOpenDelete}
+            />
         </div>
     );
 };
 export default ParcelTypes;
 
-const ParcelLine = ({ parcel }) => {
-    const [openUpdate, setOpenUpdate] = useState(false);
-    const [openDelete, setOpenDelete] = useState(false);
-
+const ParcelLine = ({
+    parcel,
+    setSelectedParcel,
+    setOpenUpdate,
+    setOpenDelete,
+}) => {
     const handleOpenUpdate = () => {
+        setSelectedParcel(parcel);
         setOpenUpdate(true);
     };
 
     const handleOpenDelete = () => {
+        setSelectedParcel(parcel);
         setOpenDelete(true);
     };
 
@@ -102,18 +126,7 @@ const ParcelLine = ({ parcel }) => {
                     icon={<BsTrash />}
                 ></Button>
             </div>
-            <div>
-                <UpdateModal
-                    parcel={parcel}
-                    open={openUpdate}
-                    setOpen={setOpenUpdate}
-                />
-                <DeleteModal
-                    parcel={parcel}
-                    open={openDelete}
-                    setOpen={setOpenDelete}
-                />
-            </div>
+            <div></div>
         </div>
     );
 };
@@ -207,35 +220,38 @@ const CreateModal = ({ open, setOpen }) => {
 };
 
 const UpdateModal = ({ parcel, open, setOpen }) => {
-    const [parcelValue, setParcelValue] = useState(parcel.value);
-    const [parcelLabel, setParcelLabel] = useState(parcel.label);
+    const [parcelLabel, setParcelLabel] = useState(parcel?.value);
 
     const handleCreate = async () => {
         const dataToSend = {
-            id: parcel.id,
+            id: parcel?.id,
             type: "parcel_type",
             label: parcelLabel,
-            value: parcelValue,
         };
 
         const res = await postWithAxios("/api/staticdata-save", dataToSend);
 
-        if (res.message == "Static Data has been save successfully.") {
-            setOpen(false);
-            window.location.reload();
+        if (res.message == "Static Data has been updated successfully.") {
             toast(res.message, {
                 type: "success",
                 hideProgressBar: true,
             });
         }
 
-        if (res.message !== "Static Data has been save successfully.") {
+        if (res.message !== "Static Data has been updated successfully.") {
             toast(res.message, {
                 type: "error",
                 hideProgressBar: true,
             });
         }
+
+        setOpen(false);
     };
+
+    useEffect(() => {
+        setParcelLabel(parcel?.label);
+    }, [parcel]);
+
     return (
         <Modal
             open={open}
@@ -249,7 +265,7 @@ const UpdateModal = ({ parcel, open, setOpen }) => {
                 </div>
             </Modal.Header>
             <Modal.Body>
-                <div className="grid w-full h-72">
+                <div className="grid w-full">
                     <div className="form-group w-full ">
                         <label htmlFor="parcel name">Parcel Label</label>
                         <input
@@ -259,54 +275,47 @@ const UpdateModal = ({ parcel, open, setOpen }) => {
                             onChange={(e) => setParcelLabel(e.target.value)}
                         />
                     </div>
-                    <div className="form-group w-full">
-                        <label htmlFor=""> Value</label>
-                        <input
-                            type="text"
-                            className="form-control w-full"
-                            value={parcelValue}
-                            onChange={(e) => setParcelValue(e.target.value)}
-                        />
-                    </div>
-
-                    <div className="flex flex-wrap w-full gap-6 justify-end">
-                        <Button
-                            auto
-                            css={{ backgroundColor: "Grey" }}
-                            className="text-black"
-                            onPress={() => setOpen(false)}
-                        >
-                            cancel
-                        </Button>
-
-                        <Button
-                            auto
-                            color={"success"}
-                            onPress={handleCreate}
-                            className="text-black"
-                        >
-                            Update
-                        </Button>
-                    </div>
                 </div>
             </Modal.Body>
+            <Modal.Footer>
+                <div className="flex flex-wrap w-full gap-6 justify-end">
+                    <Button
+                        auto
+                        css={{ backgroundColor: "Grey" }}
+                        className="text-black"
+                        onPress={() => setOpen(false)}
+                    >
+                        cancel
+                    </Button>
+
+                    <Button
+                        auto
+                        color={"success"}
+                        onPress={handleCreate}
+                        className="text-black"
+                    >
+                        Update
+                    </Button>
+                </div>
+            </Modal.Footer>
         </Modal>
     );
 };
 
 const DeleteModal = ({ parcel, open, setOpen }) => {
+    
     const deleteParcel = async () => {
         const url = "/api/staticdata-delete/" + parcel?.id;
 
-        const res = postWithAxios(url);
+        const res = await postWithAxios(url);
 
         if (res.message) {
             toast(res.message, {
-                type: "success",
+                type: "info",
                 hideProgressBar: true,
             });
 
-            window.location.reload();
+            setOpen(false);
         }
     };
 
@@ -322,7 +331,7 @@ const DeleteModal = ({ parcel, open, setOpen }) => {
                 <div className="font-bold text-black">
                     Confirm, you want to delete parcel{" "}
                     <span className="text-red-300">
-                        {parcel.name} from list of ParcelTypes .
+                        {parcel?.label} from list of ParcelTypes .
                     </span>
                     <div className="flex flex-wrap  w-full gap-6 justify-between sm:justify-end">
                         <Button
@@ -334,7 +343,12 @@ const DeleteModal = ({ parcel, open, setOpen }) => {
                             Cancel
                         </Button>
 
-                        <Button auto color={"warning"} className="text-black">
+                        <Button
+                            auto
+                            onPress={deleteParcel}
+                            color={"warning"}
+                            className="text-black"
+                        >
                             Delete
                         </Button>
                     </div>
