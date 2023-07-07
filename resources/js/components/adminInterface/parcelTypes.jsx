@@ -70,7 +70,7 @@ const ParcelTypes = () => {
                         shadow
                         noMargin
                         align="center"
-                        rowsPerPage={6}
+                        rowsPerPage={8}
                         onPageChange={(page) => console.log({ page })}
                     />
                 </Table>
@@ -132,7 +132,6 @@ const ParcelLine = ({
 };
 
 const CreateModal = ({ open, setOpen }) => {
-    const [parcelValue, setParcelValue] = useState("");
     const [parcelLabel, setParcelLabel] = useState("");
 
     const handleCreate = async () => {
@@ -140,14 +139,11 @@ const CreateModal = ({ open, setOpen }) => {
             id: "",
             type: "parcel_type",
             label: parcelLabel,
-            value: parcelValue,
         };
 
         const res = await postWithAxios("/api/staticdata-save", dataToSend);
 
         if (res.message == "Static Data has been save successfully.") {
-            setOpen(false);
-            window.location.reload();
             toast(res.message, {
                 type: "success",
                 hideProgressBar: true,
@@ -160,6 +156,8 @@ const CreateModal = ({ open, setOpen }) => {
                 hideProgressBar: true,
             });
         }
+
+        setOpen(false);
     };
     return (
         <Modal
@@ -174,7 +172,7 @@ const CreateModal = ({ open, setOpen }) => {
                 </div>
             </Modal.Header>
             <Modal.Body>
-                <div className="grid w-full h-72">
+                <div className="grid w-full">
                     <div className="form-group w-full ">
                         <label htmlFor="parcel name">Parcel Label</label>
                         <input
@@ -184,37 +182,29 @@ const CreateModal = ({ open, setOpen }) => {
                             onChange={(e) => setParcelLabel(e.target.value)}
                         />
                     </div>
-                    <div className="form-group w-full">
-                        <label htmlFor=""> Value</label>
-                        <input
-                            type="text"
-                            className="form-control w-full"
-                            value={parcelValue}
-                            onChange={(e) => setParcelValue(e.target.value)}
-                        />
-                    </div>
-
-                    <div className="flex flex-wrap  w-full gap-6 justify-between sm:justify-end">
-                        <Button
-                            auto
-                            css={{ backgroundColor: "Grey" }}
-                            className="text-black"
-                            onPress={() => setOpen(false)}
-                        >
-                            cancel
-                        </Button>
-
-                        <Button
-                            auto
-                            color={"success"}
-                            onPress={handleCreate}
-                            className="text-black"
-                        >
-                            Create
-                        </Button>
-                    </div>
                 </div>
             </Modal.Body>
+            <Modal.Footer>
+                <div className="flex flex-wrap  w-full gap-6 justify-between sm:justify-end">
+                    <Button
+                        auto
+                        css={{ backgroundColor: "Grey" }}
+                        className="text-black"
+                        onPress={() => setOpen(false)}
+                    >
+                        cancel
+                    </Button>
+
+                    <Button
+                        auto
+                        color={"success"}
+                        onPress={handleCreate}
+                        className="text-black"
+                    >
+                        Create
+                    </Button>
+                </div>
+            </Modal.Footer>
         </Modal>
     );
 };
@@ -303,7 +293,6 @@ const UpdateModal = ({ parcel, open, setOpen }) => {
 };
 
 const DeleteModal = ({ parcel, open, setOpen }) => {
-    
     const deleteParcel = async () => {
         const url = "/api/staticdata-delete/" + parcel?.id;
 
