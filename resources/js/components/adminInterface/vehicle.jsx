@@ -432,6 +432,7 @@ const UpdateModal = ({ oldVehicle, open, setOpen }) => {
         setOpen(false);
         
         if (res.message == "Vehicle has been save successfully.") {
+            setImages([])
             toast(res.message, {
                 type: "success",
                 hideProgressBar: true,
