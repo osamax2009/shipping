@@ -418,7 +418,7 @@ const SingleOrder = () => {
                                             <div className="py-2">Extra Charges</div>
 
                                             <div>
-                                                {order?.extra_charges?.extracharges?.map(
+                                                {order?.extra_charges.map(
                                                     (extra, index) => (
                                                         <div
                                                             key={index}
@@ -432,7 +432,7 @@ const SingleOrder = () => {
                                                                 "left"
                                                                     ? appSettings?.currency
                                                                     : null}{" "}
-                                                                {extra.charges}{" "}
+                                                                {extra.value}{" "}
                                                                 {appSettings?.currency_position ==
                                                                 "right"
                                                                     ? appSettings?.currency
