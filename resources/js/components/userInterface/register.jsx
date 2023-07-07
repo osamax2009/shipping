@@ -7,11 +7,11 @@ import {
 } from "../api/axios";
 import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../contexts/userContext";
-import PhoneInput from "react-phone-input-2";
 import { appName } from "../shared/constancy";
 import { forEach } from "lodash";
 import { ToastContainer, toast } from "react-toastify";
 import LocationSetter from "../partials/locationSetter";
+import { PhoneInput, isPossiblePhoneNumber } from "react-contact-number-input";
 
 const Register = () => {
     const [countries, setCountries] = useState(null);
@@ -71,7 +71,7 @@ const Register = () => {
             country_id: country,
             city: city,
             address: address,
-            status : 1
+            status: 1,
         };
 
         const data = await postWithAxios("/api/register", dataToSend);
@@ -116,7 +116,7 @@ const Register = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-tl from-green-400 to-indigo-900 w-full py-16 px-4">
-            <div className="grid h-full lg:grid-cols-2">
+            <div className="grid h-full lg:grid-cols-4">
                 <div className="py-6">
                     <div className="flex  items-center gap-3 h-8">
                         <img
@@ -127,14 +127,14 @@ const Register = () => {
                         <div className="text-white text-2xl ">{appName}</div>
                     </div>
                 </div>
-                <div className=" bg-white p-5 h-full">
+                <div className=" col-span-3 bg-white p-5 h-full">
                     <div className="text-center">
                         <h1 className="h4 text-gray-900 mb-4">
                             Create an Account!
                         </h1>
                     </div>
-                    <form onSubmit={handleRegister} className="grid gap-4">
-                        <div className="grid gap-4 md:grid-cols-2">
+                    <form onSubmit={handleRegister} className="grid gap-8">
+                        <div className="grid gap-8 md:grid-cols-2">
                             <div className="form-group">
                                 <select
                                     name=""
@@ -193,37 +193,26 @@ const Register = () => {
                             </div>
                         </div>
 
-                        <div className="grid gap-4 md:grid-cols-2">
+                        <div className="grid gap-8 lg:gap-12  lg:grid-cols-2">
                             <div className=" form-group">
                                 <PhoneInput
                                     ref={contactInput}
-                                    country={"ca"}
-                                    inputProps={{
-                                        required: true,
-                                    }}
+                                    placeholder="Enter phone number"
+                                    countryCode={"ca"}
                                     value={contact}
                                     onChange={(e) => setContact(e)}
+
+                                    //  error={contact ? (isPossiblePhoneNumber(contact) ? undefined : 'Invalid phone number') : 'Phone number required'}
                                 />
                             </div>
-                            <div className="form-group">
-                                {/*  <input
-                                    required
-                                    type="text"
-                                    ref={addressInput}
-                                    value={address}
-                                    onChange={(e) => setAddress(e.target.value)}
-                                    className="form-control"
-                                    id="exampleRepeatPassword"
-                                    placeholder="address"
-                                /> */}
-                                <label htmlFor="">{" "}</label>
+                            <div className="w-full">
                                 <LocationSetter
                                     cityName={address}
                                     setCityName={setAddress}
                                 />
                             </div>
                         </div>
-                        <div className="grid gap-4 md:grid-cols-2">
+                        <div className="grid gap-8 md:grid-cols-2">
                             <div className=" form-group">
                                 <select
                                     required
@@ -231,11 +220,17 @@ const Register = () => {
                                     ref={countryInput}
                                     value={country}
                                     onChange={(e) => setCountry(e.target.value)}
-                                    className="form-control"
+                                    className="form-control w-fit"
                                     placeholder="country"
                                 >
                                     {countries?.map((country, index) => (
-                                        <option key={index} selected={country.id == 2 ? true : false} value={country.id}>
+                                        <option
+                                            key={index}
+                                            selected={
+                                                country.id == 2 ? true : false
+                                            }
+                                            value={country.id}
+                                        >
                                             {country.name}
                                         </option>
                                     ))}
@@ -282,7 +277,7 @@ const Register = () => {
                         {/* <Link className="small">Forgot Password?</Link> */}
                     </div>
                     <div className="text-center">
-                        <Link className="small" to={"/account/sign-in"}>
+                        <Link className="text-md" to={"/account/sign-in"}>
                             Already have an account? Login!
                         </Link>
                     </div>

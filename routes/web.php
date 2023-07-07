@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\AppSetting;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Foundation\Application;
@@ -53,14 +54,18 @@ Route::get("/get-invoice-from-backend", function (Request $request) {
 
     $order = Order::where("id", $request->id)->first();
     $client = User::where("id", $order->client_id)->first();
+    $appSettings = AppSetting::where('id', 1)->first();
     
 
      $pdf =  PDF::loadView('invoice', [
          'order' => $order,
-         'client' => $client
+         'client' => $client,
+         'appSettings' => $appSettings
      ])->setPaper("a4", "lanscape");
 
-     return $pdf->download("invoice.pdf");
+     $name = "invoice_" . $order->id . ".pdf";
+
+     return $pdf->download($name);
 
 
 });

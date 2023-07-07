@@ -61,18 +61,14 @@ const Users = () => {
                                     <Table.Cell>
                                         <div className="truncate w-[190px]">
                                             {user.email}
-                                        </div>{" "}
+                                        </div>
                                     </Table.Cell>
                                     <Table.Cell> {user.city_name} </Table.Cell>
+                                    <Table.Cell>{user.country_name}</Table.Cell>
                                     <Table.Cell>
-                                        {" "}
-                                        {user.country_name}{" "}
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                        {" "}
                                         {dayjs(user.created_at).format(
                                             "DD-MM-YYYY; HH:mm:ss"
-                                        )}{" "}
+                                        )}
                                     </Table.Cell>
 
                                     <Table.Cell>
@@ -441,14 +437,13 @@ const DeleteModal = ({ user, open, setOpen }) => {
     return (
         <Modal open={open} closeButton onClose={() => setOpen(false)}>
             <Modal.Header>
-                {" "}
                 <div className="text-lg font-bold text-appGreen">
                     Delete User
                 </div>
             </Modal.Header>
             <Modal.Body>
                 <div className="font-bold text-black">
-                    Confirm, you want to delete user{" "}
+                    Confirm, you want to delete user
                     <span className="text-red-300">
                         #{user?.id} from list of Users .
                     </span>

@@ -70,9 +70,7 @@ const Vehicle = () => {
                                 <Table.Cell>
                                     <div className="flex justify-start w-full">
                                         <Image
-                                            src={
-                                                vehicle.vehicle_image
-                                            }
+                                            src={vehicle.vehicle_image}
                                             width={80}
                                             height={60}
                                             alt={"vehicle image"}
@@ -426,14 +424,15 @@ const UpdateModal = ({ oldVehicle, open, setOpen }) => {
         data.append("capacity", vehicle?.capacity);
         data.append("status", vehicle?.status);
 
-        if (images?.length > 0) {
+        if (images[0]) {
             data.append("vehicle_image", images[0]);
         }
 
         const res = await postWithAxios("/api/vehicle-save", data);
-
+        setOpen(false);
+        
         if (res.message == "Vehicle has been save successfully.") {
-            setOpen(false);
+            setImages([])
             toast(res.message, {
                 type: "success",
                 hideProgressBar: true,
@@ -441,7 +440,6 @@ const UpdateModal = ({ oldVehicle, open, setOpen }) => {
         }
 
         if (res.message != "Vehicle has been save successfully.") {
-            setOpen(false);
             toast(res.message, {
                 type: "info",
                 hideProgressBar: true,

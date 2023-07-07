@@ -14,7 +14,7 @@ import {
 import { toast } from "react-toastify";
 
 import {
-    charges,
+    calculateCharges,
     haversine_distance,
 } from "../../../shared/distanceCalculator";
 import {
@@ -566,7 +566,7 @@ const QuoteModal = ({
     };
 
     const calculateTotalCharge = () => {
-        const brut = charges(distance, weight, service) + deliveryCharges;
+        const brut = calculateCharges(distance, weight, service) + deliveryCharges;
         const result = Math.round(brut * 100) / 100;
         setPrice(result);
     };

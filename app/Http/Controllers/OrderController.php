@@ -52,6 +52,10 @@ class OrderController extends Controller
         }
         $result = Order::updateOrCreate(['id' => $request->id], $data);
 
+        /* $payment = Payment::create([
+            
+        ]); */
+
         $message = __('message.update_form',[ 'form' => __('message.order') ] );
 		if($result->wasRecentlyCreated){
 			$message = __('message.save_form',[ 'form' => __('message.order') ] );
