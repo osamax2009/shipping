@@ -4,6 +4,7 @@ import { getWithAxios, postWithAxios } from "../api/axios";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { BsPencilFill, BsTrash } from "react-icons/bs";
+import dayjs from "dayjs";
 
 const Document = () => {
     const [documents, setDocuments] = useState();
@@ -59,7 +60,7 @@ const Document = () => {
                                     </Table.Cell>
                                     <Table.Cell>
                                         {" "}
-                                        {document.created_at}{" "}
+                                        {dayjs(document.created_at).format("DD-MM-YYYY; HH:mm:ss")}{" "}
                                     </Table.Cell>
 
                                     <Table.Cell>

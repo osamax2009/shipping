@@ -11,7 +11,7 @@ const DeliveryManDocument = () => {
     const [deliveryManDocuments, setDeliveryManDocuments] = useState();
     const [openCreate, setOpenCreate] = useState(false);
     const [openVerify, setOpenVerify] = useState(false);
-    const [selectedDocument, setSelectedDocument] = useState()
+    const [selectedDocument, setSelectedDocument] = useState();
 
     const getDeliveryManDocuments = async () => {
         const res = await getWithAxios("/api/delivery-man-document-list");
@@ -76,7 +76,9 @@ const DeliveryManDocument = () => {
                                                 document={deliveryManDocument}
                                                 setOpenVerify={setOpenVerify}
                                                 openVerify={openVerify}
-                                                setSelectedDocument={setSelectedDocument}
+                                                setSelectedDocument={
+                                                    setSelectedDocument
+                                                }
                                             />
                                         </Table.Cell>
                                     </Table.Row>
@@ -95,31 +97,31 @@ const DeliveryManDocument = () => {
                     <Loading type="points" />
                 )}
             </div>
-            <VerifyModal
-                document={selectedDocument}
-                open={openVerify}
-                setOpen={setOpenVerify}
-            />
         </div>
     );
 };
 
 export default DeliveryManDocument;
 
-const DeliveryManDocumentLine = ({ document, setOpenVerify, openVerify, setSelectedDocument }) => {
-
+const DeliveryManDocumentLine = ({
+    document,
+    setOpenVerify,
+    openVerify,
+    setSelectedDocument,
+}) => {
     const [doc, setDoc] = useState();
     const { user, setUser } = useContext(UserContext);
     const [status, setStatus] = useState();
 
     const handleStatus = async (e) => {
+        setOpenVerify("processing");
         setStatus(e.target.value);
 
         const data = {
             id: doc?.id,
             status: e.target.value,
             is_verified: 1,
-           // delivery_man_id: user?.id,
+            // delivery_man_id: user?.id,
         };
 
         const res = await postWithAxios(
@@ -131,12 +133,31 @@ const DeliveryManDocumentLine = ({ document, setOpenVerify, openVerify, setSelec
             type: "info",
             hideProgressBar: true,
         });
+
+        setOpenVerify(false);
     };
 
-    const openVerifyModal = () => {
-        setSelectedDocument(document)
-        setOpenVerify(true);
-        
+    const verifyDocument = async () => {
+        setOpenVerify("processing");
+        const value = "approved";
+        const data = {
+            id: document?.id,
+            status: value,
+            is_verified: 1,
+            //  delivery_man_id: user?.id,
+        };
+
+        const res = await postWithAxios(
+            "/api/delivery-man-document-save",
+            data
+        );
+
+        toast(res.message, {
+            type: "info",
+            hideProgressBar: true,
+        });
+
+        setOpenVerify(false);
     };
 
     useEffect(() => {
@@ -159,33 +180,39 @@ const DeliveryManDocumentLine = ({ document, setOpenVerify, openVerify, setSelec
                 <option value="rejected">rejected</option>
             </select>
 
-            <Button auto color={"secondary"} onPress={openVerifyModal}>
-                <div className="font-bold">verify</div>
-            </Button>
-           
+            {document?.status == "approved" ? (
+                <Button auto color={"success"}>
+                    <div className="font-bold">verified</div>
+                </Button>
+            ) : document?.status == "rejected" ? (
+                <Button auto color={"error"}>
+                    <div className="font-bold">rejected</div>
+                </Button>
+            ) : (
+                <Button auto color={"secondary"} onPress={verifyDocument}>
+                    <div className="font-bold">verify</div>
+                </Button>
+            )}
         </div>
     );
 };
 
 const VerifyModal = ({ document, open, setOpen }) => {
-
-    const {user, setUser} = useContext(UserContext)
-
-    const value = "approved"
+    const { user, setUser } = useContext(UserContext);
 
     const verifyDocument = async () => {
-
+        const value = "approved";
         const data = {
             id: document?.id,
-            status : value,
+            status: value,
             is_verified: 1,
-          //  delivery_man_id: user?.id,
+            //  delivery_man_id: user?.id,
         };
 
-       
-
-        const res = await postWithAxios("/api/delivery-man-document-save", data);
-
+        const res = await postWithAxios(
+            "/api/delivery-man-document-save",
+            data
+        );
 
         toast(res.message, {
             type: "info",
@@ -193,12 +220,10 @@ const VerifyModal = ({ document, open, setOpen }) => {
         });
 
         setOpen(false);
-
-
     };
 
     return (
-        <Modal open={open} closeButton onClose={() => setOpen(false)}>
+        <Modal>
             <Modal.Header>
                 {" "}
                 <div className="text-lg font-bold text-appGreen">

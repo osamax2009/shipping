@@ -79,6 +79,15 @@ const SingleOrder = () => {
         }
     };
 
+    const parcelTitle = (s) => {
+        if (s) {
+            s = s.toString();
+            return s
+                .replace(/^[-_]*(.)/, (_, c) => c.toUpperCase())
+                .replace(/[-_]+(.)/g, (_, c) => " " + c.toUpperCase());
+        }
+    };
+
     const downloadInvoice = async () => {
         /* const res = await getWithAxios("/get-invoice-from-backend", {
             id: params.order_id,
@@ -165,12 +174,19 @@ const SingleOrder = () => {
                                     <div className="border rounded-lg py-3 px-4">
                                         <div className="flex justify-between">
                                             <div>Parcel Type</div>
-                                            <div>{order?.parcel_type}</div>
+                                            <div>
+                                                {parcelTitle(
+                                                    order?.parcel_type
+                                                )}
+                                            </div>
                                         </div>
 
                                         <div className="flex justify-between">
                                             <div>Weight</div>
-                                            <div>{order?.total_weight}</div>
+                                            <div>
+                                                {order?.total_weight} (
+                                                {appSettings?.weight}){" "}
+                                            </div>
                                         </div>
 
                                         <div className="flex justify-between">
@@ -415,7 +431,9 @@ const SingleOrder = () => {
                                         </div>
 
                                         <div className=" mt-6">
-                                            <div className="py-2">Extra Charges</div>
+                                            <div className="py-2">
+                                                Extra Charges
+                                            </div>
 
                                             <div>
                                                 {order?.extra_charges.map(
