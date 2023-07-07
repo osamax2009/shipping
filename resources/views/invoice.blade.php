@@ -5,8 +5,8 @@
     @include('adminLTEcss')
 </head>
 <body>
-    <footer class="fixed-bottom pb-3">
-        <div class="align-self-end" style="margin-top:20vh">
+    <footer class="fixed-bottom" style="bottom:-55px">
+        <div class="align-self-end">
             <div class="container">
                 <div class="border-top">
                     <p class="text-center">
@@ -23,7 +23,7 @@
     </footer>
     <main>
         <div class="d-flex flex-column  ">
-            <div class="align-self-start " style="height:90vh">
+            <div class="align-self-start ">
                 <div class="container-fluid font-mono ">
                     <div class=" row">
                         <table class="table table-borderless">
@@ -72,7 +72,7 @@
                     </div>
 
 
-                    <div class="row mt-5">
+                    <div class="row mt-3">
                         <table class="table table-borderless">
                             <thead>
                                 <tr>
@@ -141,7 +141,7 @@
 
 
 
-                    <div class="row mt-5">
+                    <div class="row mt-4">
                         <table class="table table-borderless">
                             <thead class="thead-light">
                                 <tr>
@@ -234,11 +234,58 @@
 
                                     <td>
                                         <span class="font-weight-bold">
-                                            Total
+                                            Sub total
                                         </span>
                                     </td>
 
                                     <td>
+                                        <span>
+                                            {{ $order->fixed_charges + $order->distance_charge + $order->weight_charge }} {{ $appSettings->currency }}
+                                        </span>
+                                    </td>
+                                </tr>
+
+                                @foreach ($order->extra_charges as $extra )
+                                <tr class="">
+                                    <td>
+                                        <span>
+
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <span class="">
+                                           {{ $extra["title"] }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <span>
+                                            {{ $extra["value"] }} {{ $appSettings->currency }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                @endforeach
+                                <tr>
+                                    <td></td>
+                                    <td class="border-top"></td>
+                                    <td class="border-top"></td>
+                                </tr>
+
+                                <tr >
+                                    <td>
+                                        <span>
+
+                                        </span>
+                                    </td>
+
+                                    <td class="border-top">
+                                        <span class="font-weight-bold">
+                                            Total
+                                        </span>
+                                    </td>
+
+                                    <td class="border-top">
                                         <span>
                                             {{ $order->total_amount }} {{ $appSettings->currency }}
                                         </span>

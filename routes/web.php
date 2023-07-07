@@ -63,7 +63,9 @@ Route::get("/get-invoice-from-backend", function (Request $request) {
          'appSettings' => $appSettings
      ])->setPaper("a4", "lanscape");
 
-     return $pdf->download("invoice.pdf");
+     $name = "invoice_" . $order->id . ".pdf";
+
+     return $pdf->download($name);
 
 
 });
