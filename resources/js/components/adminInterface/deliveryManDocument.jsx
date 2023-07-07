@@ -171,7 +171,7 @@ const DeliveryManDocumentLine = ({
             <select
                 name=""
                 id=""
-                className="form-control w-fit"
+                className="form-control w-full"
                 value={status}
                 onChange={handleStatus}
             >

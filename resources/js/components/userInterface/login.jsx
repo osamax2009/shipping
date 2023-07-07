@@ -252,7 +252,7 @@ const Login = () => {
                             <label className="text-sm font-medium leading-none text-gray-800">
                                 Password
                             </label>
-                            <div className="relative flex items-center justify-center">
+                            <div className=" flex items-center justify-center">
                                 <input
                                     value={password}
                                     ref={passInput}
