@@ -29,6 +29,7 @@ class UserDetailResource extends JsonResource
             'user_type'         => $this->user_type,
             'country_id'        => $this->country_id,
             'country_name'      => optional($this->country)->name,
+            'country_code'      => optional($this->country)->code,
             'city_id'           => $this->city_id,
             'city_name'         => optional($this->city)->name,
             'address'           => $this->address,

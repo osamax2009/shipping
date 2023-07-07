@@ -2,9 +2,10 @@ import { Button, Image, Loading, Modal, Table } from "@nextui-org/react";
 import { useState } from "react";
 import { getWithAxios, postWithAxios } from "../api/axios";
 import { useEffect } from "react";
-import { BsPencilFill, BsTrash } from "react-icons/bs";
+import { BsEye, BsEyeSlash, BsPencilFill, BsTrash } from "react-icons/bs";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
+import { PhoneInput } from "react-contact-number-input";
 
 const Users = () => {
     const [users, setUsers] = useState();
@@ -59,7 +60,7 @@ const Users = () => {
                                         {user.contact_number}
                                     </Table.Cell>
                                     <Table.Cell>
-                                        <div className="truncate w-[190px]">
+                                        <div className="truncate w-[170px]">
                                             {user.email}
                                         </div>
                                     </Table.Cell>
@@ -138,7 +139,7 @@ const UserLine = ({ user, setSelected, setOpenDelete, setOpenUpdate }) => {
 
     return (
         <div>
-            <div className="flex flex-wrap gap-4 px-4">
+            <div className="flex gap-4 px-4">
                 <Button
                     auto
                     onPress={handleOpenUpdate}
@@ -158,21 +159,38 @@ const UserLine = ({ user, setSelected, setOpenDelete, setOpenUpdate }) => {
 };
 
 const CreateModal = ({ open, setOpen }) => {
+    const [passType, setPassType] = useState("password");
+
     const [user, setUser] = useState({});
 
-    const handleCreate = async () => {
-        const res = await postWithAxios("/api/update-profile", document);
+    const handlePassHidden = () => {
+        passType == "password" ? setPassType("text") : setPassType("password");
+    };
 
-        if (res.message == "Client has been save successfully.") {
+    const handleCreate = async () => {
+        const dataToSend = {
+            name: user?.name,
+            username: user?.username,
+            email: user?.email,
+            password: user?.password,
+            user_type: "user",
+            contact_number: user?.contact_number?.phoneNumber,
+            country_id: "",
+            city: "",
+            address: "",
+        };
+
+        const res = await postWithAxios("/api/register", dataToSend);
+
+        if (res.message == "message.user has been save successfully.") {
             setOpen(false);
-            toast(res.message, {
+            toast("User has been save successfully", {
                 type: "success",
                 hideProgressBar: true,
             });
         }
 
-        if (res.message != "Client has been save successfully.") {
-            setOpen(false);
+        if (res.message != "message.user has been save successfully.") {
             toast(res.message, {
                 type: "error",
                 hideProgressBar: true,
@@ -192,7 +210,7 @@ const CreateModal = ({ open, setOpen }) => {
             </Modal.Header>
             <Modal.Body>
                 <div className="grid w-full">
-                    <div className="grid">
+                    <div className="grid gap-4 md:grid-cols-2">
                         <div className="form-group">
                             <label htmlFor=""> Email</label>
                             <input
@@ -222,29 +240,58 @@ const CreateModal = ({ open, setOpen }) => {
                             />
                         </div>
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="">Name</label>
-                        <input
-                            type="text"
-                            value={user?.name}
-                            onChange={(e) =>
-                                setUser({
-                                    ...user,
-                                    name: e.target.value,
-                                })
-                            }
-                            className="form-control"
-                        />
+                    <div className="grid  gap-4 md:grid-cols-2">
+                        <div className="form-group">
+                            <label htmlFor="">Name</label>
+                            <input
+                                type="text"
+                                value={user?.name}
+                                onChange={(e) =>
+                                    setUser({
+                                        ...user,
+                                        name: e.target.value,
+                                    })
+                                }
+                                className="form-control"
+                            />
+                        </div>
+                        <div className="form-group relative">
+                            <label htmlFor="">Password</label>
+                            <div className="relative flex items-center">
+                                <input
+                                    type={passType}
+                                    value={user?.password}
+                                    onChange={(e) =>
+                                        setUser({
+                                            ...user,
+                                            password: e.target.value,
+                                        })
+                                    }
+                                    className="form-control"
+                                />
+                                <div
+                                    onMouseDown={handlePassHidden}
+                                    className="absolute right-0 top-0 mt-3 mr-3 cursor-pointer"
+                                >
+                                    {passType == "password" ? (
+                                        <BsEyeSlash />
+                                    ) : (
+                                        <BsEye />
+                                    )}
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div className="grid gap-4 md:grid-cols-2">
                         <div className="form-group">
                             <label className="px-2" htmlFor="">
-                                Contact Number
+                                Contact Number{" "}
+                                {user?.contact_number?.phoneNumber}
                             </label>
 
-                            <input
-                                type="text"
+                            <PhoneInput
+                                countryCode={"ca"}
                                 value={user?.contact_number}
                                 onChange={(e) =>
                                     setUser({
@@ -256,34 +303,40 @@ const CreateModal = ({ open, setOpen }) => {
                             />
                         </div>
                     </div>
-
-                    <div className="flex flex-wrap  w-full gap-6 justify-between sm:justify-end">
-                        <Button
-                            auto
-                            css={{ backgroundColor: "Grey" }}
-                            className="text-black"
-                            onPress={() => setOpen(false)}
-                        >
-                            cancel
-                        </Button>
-
-                        <Button
-                            auto
-                            color={"success"}
-                            onPress={handleCreate}
-                            className="text-black"
-                        >
-                            Create
-                        </Button>
-                    </div>
                 </div>
             </Modal.Body>
+            <Modal.Footer>
+                <div className="flex flex-wrap  w-full gap-6 justify-between sm:justify-end">
+                    <Button
+                        auto
+                        css={{ backgroundColor: "Grey" }}
+                        className="text-black"
+                        onPress={() => setOpen(false)}
+                    >
+                        cancel
+                    </Button>
+
+                    <Button
+                        auto
+                        color={"success"}
+                        onPress={handleCreate}
+                        className="text-black"
+                    >
+                        Create
+                    </Button>
+                </div>
+            </Modal.Footer>
         </Modal>
     );
 };
 
 const UpdateModal = ({ open, setOpen, oldUser }) => {
     const [user, setUser] = useState(oldUser);
+    const [passType, setPassType] = useState("password");
+
+    const handlePassHidden = () => {
+        passType == "password" ? setPassType("text") : setPassType("password");
+    };
 
     const handleCreate = async () => {
         const dataToSend = {
@@ -291,7 +344,9 @@ const UpdateModal = ({ open, setOpen, oldUser }) => {
             email: user?.email,
             name: user?.name,
             username: user?.username,
-            contact_number: user?.contact_number,
+            contact_number: user?.contact_number.phoneNumber
+                ? user?.contact_number.phoneNumber
+                : user?.contact_number,
         };
         const res = await postWithAxios("/api/update-profile", dataToSend);
 
@@ -313,7 +368,17 @@ const UpdateModal = ({ open, setOpen, oldUser }) => {
     };
 
     useEffect(() => {
-        setUser(oldUser);
+        setUser({
+            id: oldUser?.id,
+            email: oldUser?.email,
+            name: oldUser?.name,
+            username: oldUser?.username,
+            contact_number: { phoneNumber : oldUser?.contact_number,
+            countryCode : oldUser?.country_code ? oldUser?.country_code : "ca",
+            countryData : oldUser?.country_name ? oldUser?.country_name : "Canada"
+        }
+                
+        });
     }, [oldUser]);
     return (
         <Modal
@@ -323,11 +388,13 @@ const UpdateModal = ({ open, setOpen, oldUser }) => {
             onClose={() => setOpen(false)}
         >
             <Modal.Header>
-                <div className="text-lg font-bold text-appGreen">Add User</div>
+                <div className="text-lg font-bold text-appGreen">
+                    Update User
+                </div>
             </Modal.Header>
             <Modal.Body>
                 <div className="grid w-full">
-                    <div className="grid">
+                    <div className="grid gap-4 md:grid-cols-2">
                         <div className="form-group">
                             <label htmlFor=""> Email</label>
                             <input
@@ -357,29 +424,59 @@ const UpdateModal = ({ open, setOpen, oldUser }) => {
                             />
                         </div>
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="">Name</label>
-                        <input
-                            type="text"
-                            value={user?.name}
-                            onChange={(e) =>
-                                setUser({
-                                    ...user,
-                                    name: e.target.value,
-                                })
-                            }
-                            className="form-control"
-                        />
+                    <div className="grid  gap-4 md:grid-cols-2">
+                        <div className="form-group">
+                            <label htmlFor="">Name</label>
+                            <input
+                                type="text"
+                                value={user?.name}
+                                onChange={(e) =>
+                                    setUser({
+                                        ...user,
+                                        name: e.target.value,
+                                    })
+                                }
+                                className="form-control"
+                            />
+                        </div>
+                        <div className="form-group relative">
+                            <label htmlFor="">Password</label>
+                            <div className="relative flex items-center">
+                                <input
+                                    type={passType}
+                                    value={user?.password}
+                                    onChange={(e) =>
+                                        setUser({
+                                            ...user,
+                                            password: e.target.value,
+                                        })
+                                    }
+                                    className="form-control"
+                                />
+                                <div
+                                    onMouseDown={handlePassHidden}
+                                    className="absolute right-0 top-0 mt-3 mr-3 cursor-pointer"
+                                >
+                                    {passType == "password" ? (
+                                        <BsEyeSlash />
+                                    ) : (
+                                        <BsEye />
+                                    )}
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div className="grid gap-4 md:grid-cols-2">
                         <div className="form-group">
                             <label className="px-2" htmlFor="">
-                                Contact Number
+                                Contact Number{" "}
+                                {user?.contact_number?.phoneNumber}
                             </label>
 
-                            <input
-                                type="text"
+                            <PhoneInput
+                                countryCode={"ca"}
+                                placeholder={user?.contact_number}
                                 value={user?.contact_number}
                                 onChange={(e) =>
                                     setUser({
@@ -391,28 +488,29 @@ const UpdateModal = ({ open, setOpen, oldUser }) => {
                             />
                         </div>
                     </div>
-
-                    <div className="flex flex-wrap  w-full gap-6 justify-between sm:justify-end">
-                        <Button
-                            auto
-                            css={{ backgroundColor: "Grey" }}
-                            className="text-black"
-                            onPress={() => setOpen(false)}
-                        >
-                            cancel
-                        </Button>
-
-                        <Button
-                            auto
-                            color={"success"}
-                            onPress={handleCreate}
-                            className="text-black"
-                        >
-                            Update
-                        </Button>
-                    </div>
                 </div>
             </Modal.Body>
+            <Modal.Footer>
+                <div className="flex flex-wrap  w-full gap-6 justify-between sm:justify-end">
+                    <Button
+                        auto
+                        css={{ backgroundColor: "Grey" }}
+                        className="text-black"
+                        onPress={() => setOpen(false)}
+                    >
+                        cancel
+                    </Button>
+
+                    <Button
+                        auto
+                        color={"success"}
+                        onPress={handleCreate}
+                        className="text-black"
+                    >
+                        Update
+                    </Button>
+                </div>
+            </Modal.Footer>
         </Modal>
     );
 };
