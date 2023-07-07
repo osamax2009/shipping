@@ -60,7 +60,12 @@ const ExtraCharges = () => {
                                     {extraCharge?.city_name}{" "}
                                 </Table.Cell>
 
-                                <Table.Cell>{extraCharge?.charges} {extraCharge?.charges_type == 'fixed' ? null : "%"}</Table.Cell>
+                                <Table.Cell>
+                                    {extraCharge?.charges}{" "}
+                                    {extraCharge?.charges_type == "fixed"
+                                        ? null
+                                        : "%"}
+                                </Table.Cell>
                                 <Table.Cell>
                                     {dayjs(extraCharge?.created_at).format(
                                         "DD-MM-YYYY; HH:mm:ss"
@@ -162,7 +167,6 @@ const CountryAndCity = ({ country, setCountry, city, setCity }) => {
 
         if (!country) {
             setCountry(res.data[0].id);
-            l;
         }
     };
 
@@ -172,9 +176,22 @@ const CountryAndCity = ({ country, setCountry, city, setCity }) => {
                 country_id: country,
             });
             setCities(res.data);
+            if (!city) {
+                setCity(res.data[0].id);
+            } else {
+                res.data.match((e) => {
+                    if (e.id == city) {
+                        setCity(e.id);
+                    } else {
+                        setCity(res.data[0].id);
+                    }
+                });
+            }
         } else {
             const res = await getWithAxios("/api/city-list");
             setCities(res.data);
+            setCity(res.data[0].id)
+
         }
     };
 
@@ -231,7 +248,7 @@ const CountryAndCity = ({ country, setCountry, city, setCity }) => {
             </div>
 
             <div className="grid">
-                <div>City</div>
+                <div>City </div>
                 <div>
                     <div className="w-full">
                         <select
