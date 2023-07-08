@@ -1,13 +1,16 @@
-import { Button, Image, Loading, Table } from "@nextui-org/react";
+import { Button, Image, Loading, Modal, Table } from "@nextui-org/react";
 import { useState } from "react";
-import { getWithAxios } from "../api/axios";
+import { getWithAxios, postWithAxios } from "../api/axios";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
+import { toast } from "react-toastify";
 
 const DeliveryPerson = () => {
     const [users, setUsers] = useState();
     const [openCreate, setOpenCreate] = useState();
+    const [openStatus, setOpenStatus] = useState(false);
+    const [selectedUser, setSelectedUser] = useState();
 
     const getUsers = async () => {
         const res = await getWithAxios("/api/user-list?user_type=delivery_man");
@@ -15,10 +18,10 @@ const DeliveryPerson = () => {
     };
 
     useEffect(() => {
-        if (!openCreate) {
+        if (!openCreate && !openStatus) {
             getUsers();
         }
-    }, [openCreate]);
+    }, [openCreate, openStatus]);
 
     return (
         <div className="">
@@ -45,26 +48,30 @@ const DeliveryPerson = () => {
                                     <Table.Cell>
                                         {user.contact_number}
                                     </Table.Cell>
-                                    <Table.Cell>  <div className="truncate w-[190px]">
+                                    <Table.Cell>
+                                        {" "}
+                                        <div className="truncate w-[190px]">
                                             {user.email}
-                                        </div>{" "} </Table.Cell>
+                                        </div>{" "}
+                                    </Table.Cell>
                                     <Table.Cell> {user.city_name} </Table.Cell>
                                     <Table.Cell>
                                         {" "}
                                         {user.country_name}{" "}
                                     </Table.Cell>
-                                    <Table.Cell> {dayjs(user.created_at).format("DD-MM-YYYY; HH:mm:ss")} </Table.Cell>
+                                    <Table.Cell>
+                                        {" "}
+                                        {dayjs(user.created_at).format(
+                                            "DD-MM-YYYY; HH:mm:ss"
+                                        )}{" "}
+                                    </Table.Cell>
 
                                     <Table.Cell>
-                                        {user.status == 1 ? (
-                                            <span className="text-green-700">
-                                                Enabled
-                                            </span>
-                                        ) : (
-                                            <span className="text-red-700">
-                                                Disabled
-                                            </span>
-                                        )}
+                                        <Status
+                                            user={user}
+                                            setOpen={setOpenStatus}
+                                            setSelectedUser={setSelectedUser}
+                                        />
                                     </Table.Cell>
 
                                     <Table.Cell>
@@ -85,6 +92,11 @@ const DeliveryPerson = () => {
                     <Loading type="points" />
                 )}
             </div>
+            <StatusModal
+                open={openStatus}
+                setOpen={setOpenStatus}
+                user={selectedUser}
+            />
         </div>
     );
 };
@@ -109,5 +121,84 @@ const UserLine = ({ user }) => {
                 </Button>
             )}
         </div>
+    );
+};
+
+const Status = ({ setSelectedUser, setOpen, user }) => {
+    
+    const handleModal = () => {
+        setSelectedUser(user);
+        setOpen(true);
+    };
+    return (
+        <div>
+            {user?.status == 1 ? (
+                <button onClick={handleModal}>
+                    <div className="text-blue-500">Enable</div>
+                </button>
+            ) : (
+                <button onClick={handleModal}>
+                    <div className="text-red-500">Disable</div>
+                </button>
+            )}
+        </div>
+    );
+};
+
+const StatusModal = ({ open, setOpen, user }) => {
+    const handleStatus = async () => {
+        const dataToSend = {
+            id: user?.id,
+            status: user?.status == 1 ? 0 : 1,
+        };
+
+        const res = await postWithAxios("/api/update-user-status", dataToSend);
+        if (res) {
+            toast(res.message, {
+                type: "info",
+                hideProgressBar: true,
+            });
+        }
+
+        setOpen(false);
+    };
+
+    return (
+        <Modal open={open} closeButton onClose={() => setOpen(false)}>
+            <Modal.Header>
+                <div className="text-lg">
+                    {user?.status == 1
+                        ? "Disable Delivery Person ?"
+                        : "Enable  Delivery Person ?"}
+                </div>
+            </Modal.Header>
+            <Modal.Body>
+                <div className="text-center">
+                    Do you want to {user?.status == 1 ? "disable" : "enable"}{" "}
+                    this Delivery Person ?
+                </div>
+            </Modal.Body>
+            <Modal.Footer>
+                <div className="flex flex-wrap w-full gap-6 justify-between sm:justify-end">
+                    <Button
+                        auto
+                        css={{ backgroundColor: "Grey" }}
+                        className="text-black"
+                        onPress={() => setOpen(false)}
+                    >
+                        No
+                    </Button>
+
+                    <Button
+                        auto
+                        color={"error"}
+                        onPress={handleStatus}
+                        className="text-black"
+                    >
+                        Yes
+                    </Button>
+                </div>
+            </Modal.Footer>
+        </Modal>
     );
 };

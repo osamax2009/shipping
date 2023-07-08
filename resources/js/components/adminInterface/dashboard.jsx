@@ -45,7 +45,8 @@ const Dashboard = () => {
     }, [dashboard]);
 
     useEffect(() => {
-        if (labels.length > 6 && data.length > 6) {
+        if (labels.length == 7 && data.length == 7) {
+
             setChartData({
                 labels: labels,
                 datasets: [
@@ -120,7 +121,7 @@ const Dashboard = () => {
                             />
                         </div>
                         <div className="grid mt-4 gap-6 lg:grid-cols-2">
-                            {/* <CustomPieChart chartData={chartData} /> */}
+                            <CustomPieChart chartData={chartData} />
                         </div>
                         <div className="grid mt-4 gap-6 lg:grid-cols-2">
                             <div className={"border-2 rounded-xl p-4"} >

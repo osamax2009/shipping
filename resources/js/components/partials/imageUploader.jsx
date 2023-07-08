@@ -11,7 +11,7 @@ const ImageUploader = ({ images, setImages, oldImagePath}) => {
 
     const uploadImageToClient = (event) => {
         if (event.target.files && event.target.files[0]) {
-            setImages((imageList) => [...imageList, event.target.files[0]]);
+            setImages([event.target.files[0]]);
             setImageURLS((urlList) => [
                 ...urlList,
                 URL.createObjectURL(event.target.files[0]),
