@@ -116,7 +116,8 @@ const Login = () => {
                             type: "success",
                             hideProgressBar: true,
                         });
-                        navigate("/admin/orders");
+                        localStorage.setItem("currentRoute", "/admin/dashboard")
+                        navigate("/admin/dashboard");
                     }
                 }
 
@@ -149,6 +150,7 @@ const Login = () => {
                             type: "success",
                             hideProgressBar: true,
                         });
+                        localStorage.setItem("currentRoute", "/delivery_man/order-list")
                         navigate("/delivery_man/order-list");
                     }
                 }

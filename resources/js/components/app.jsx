@@ -291,7 +291,7 @@ const router = createBrowserRouter([
 
             {
                 path: "deliverypersondocuments/delivery_man_id/:delivery_man_id",
-                element: <VerifyDocuments />,
+                element: <DeliveryManDocument />,
             },
 
             {

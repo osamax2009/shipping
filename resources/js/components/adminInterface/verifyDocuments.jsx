@@ -1,8 +1,9 @@
 import { useParams } from "react-router-dom";
 import { getWithAxios } from "../api/axios";
-import { Loading, Table } from "@nextui-org/react";
+import { Image, Loading, Table } from "@nextui-org/react";
 import { useState } from "react";
 import { useEffect } from "react";
+import dayjs from "dayjs";
 
 const VerifyDocuments = () => {
     const [documents, setDocuments] = useState();
@@ -10,13 +11,12 @@ const VerifyDocuments = () => {
     const delivery_man_id = params.delivery_man_id;
 
     const getDeliveryPerson = async () => {
-        
         const res = await getWithAxios("/api/delivery-man-document-list", {
             delivery_man_id: delivery_man_id,
         });
 
         setDocuments(res.data);
-        console.log(res)
+        console.log(res);
     };
 
     useEffect(() => {
@@ -24,7 +24,7 @@ const VerifyDocuments = () => {
     }, []);
 
     return (
-        <div className="h-full w-full flex items-center justify-center">
+        <div className="h-full w-full ">
             {documents ? (
                 <div>
                     <Table>
@@ -40,10 +40,17 @@ const VerifyDocuments = () => {
                             {documents?.map((document, index) => (
                                 <Table.Row key={index}>
                                     <Table.Cell> {document?.id} </Table.Cell>
-                                    <Table.Cell> {document?.id} </Table.Cell>
-                                    <Table.Cell> {document?.id} </Table.Cell>
-                                    <Table.Cell> {document?.id} </Table.Cell>
-                                    <Table.Cell> {document?.id} </Table.Cell>
+                                    <Table.Cell> {document?.delivery_man_name} </Table.Cell>
+                                    <Table.Cell> {document?.document_name} </Table.Cell>
+                                    <Table.Cell> <div className="flex justify-start w-full">
+                                        <Image
+                                            src={document.delivery_man_document}
+                                            width={80}
+                                            height={60}
+                                            alt={"vehicle image"}
+                                        />
+                                    </div></Table.Cell>
+                                    <Table.Cell> {dayjs(document?.created_at).format("DD-MM-YYYY; HH:mm:ss") } </Table.Cell>
                                     <Table.Cell> {document?.id} </Table.Cell>
                                 </Table.Row>
                             ))}
@@ -58,7 +65,9 @@ const VerifyDocuments = () => {
                     </Table>
                 </div>
             ) : (
-                <Loading type="points" />
+                <div className="h-full w-full flex items-center justify-center ">
+                    <Loading type="points" />
+                </div>
             )}
         </div>
     );

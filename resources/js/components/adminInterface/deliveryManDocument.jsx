@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 import { toast } from "react-toastify";
 import { useContext } from "react";
 import { UserContext } from "../contexts/userContext";
+import { useParams } from "react-router-dom";
 
 const DeliveryManDocument = () => {
     const [deliveryManDocuments, setDeliveryManDocuments] = useState();
@@ -13,8 +14,15 @@ const DeliveryManDocument = () => {
     const [openVerify, setOpenVerify] = useState(false);
     const [selectedDocument, setSelectedDocument] = useState();
 
+    const params = useParams()
+    const deliveryManId = params.delivery_man_id
+
     const getDeliveryManDocuments = async () => {
-        const res = await getWithAxios("/api/delivery-man-document-list");
+
+        const res = await getWithAxios("/api/delivery-man-document-list", {
+            delivery_man_id: deliveryManId,
+        });
+
         setDeliveryManDocuments(res.data);
     };
 
@@ -22,7 +30,7 @@ const DeliveryManDocument = () => {
         if (!openCreate && !openVerify) {
             getDeliveryManDocuments();
         }
-    }, [openCreate, openVerify]);
+    }, [openCreate, openVerify, deliveryManId]);
 
     return (
         <div className=" ">

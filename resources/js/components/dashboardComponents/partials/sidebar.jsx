@@ -23,15 +23,21 @@ import {
     BsPinMapFill,
     BsWalletFill,
 } from "react-icons/bs";
-import { FaListAlt, FaMapMarkedAlt, FaMoneyCheckAlt, FaUsers } from "react-icons/fa";
+import {
+    FaListAlt,
+    FaMapMarkedAlt,
+    FaMoneyCheckAlt,
+    FaUsers,
+} from "react-icons/fa";
 import { RiDashboardFill, RiEBikeFill } from "react-icons/ri";
 import { BiListCheck } from "react-icons/bi";
 import { margin } from "@mui/system";
 import { Image } from "@nextui-org/react";
 import { HiWallet } from "react-icons/hi2";
+import { useEffect } from "react";
+import { useState } from "react";
 const Sidebar = () => {
     const { user, setUser } = useContext(UserContext);
-    const location = useLocation();
 
     const userRoutes = [
         {
@@ -126,7 +132,6 @@ const Sidebar = () => {
             icon: <BsPersonCheckFill />,
         },
 
-
         {
             title: "Withdraw Request",
             path: "/admin/withdraw",
@@ -141,7 +146,6 @@ const Sidebar = () => {
     ];
 
     const deliveryManRoutes = [
-
         {
             title: "My orders",
             path: "/delivery_man/order-list",
@@ -177,9 +181,7 @@ const Sidebar = () => {
             icon: <BsFiles />,
         },
 
-       
-
-       /*  {
+        /*  {
             title: "My orders",
             path: "/delivery_man/order-list",
             icon: <BsCardChecklist />,
@@ -218,23 +220,7 @@ const Sidebar = () => {
                         </div>
 
                         {userRoutes.map((route, index) => (
-                            <div key={index}>
-                                <div className="text-sm w-full h-full  py-2 mt-2 px-4 hover:no-underline hover:bg-gray-200/25">
-                                    <Link
-                                        to={route.path}
-                                        className={
-                                            location.pathname == route.path
-                                                ? "flex gap-2 font-bold text-white"
-                                                : "flex gap-2 font-light"
-                                        }
-                                    >
-                                        <span className="text-md">
-                                            {route.icon}
-                                        </span>
-                                        {route.title}
-                                    </Link>
-                                </div>
-                            </div>
+                            <NavigateButton key={index} route={route} />
                         ))}
                     </>
                 ) : null}
@@ -247,23 +233,7 @@ const Sidebar = () => {
                         </div>
 
                         {adminRoutes.map((route, index) => (
-                            <div key={index}>
-                                <div className="text-sm w-full h-full  py-2 mt-2 px-4 hover:no-underline hover:bg-gray-200/25">
-                                    <Link
-                                        to={route.path}
-                                        className={
-                                            location.pathname == route.path
-                                                ? "flex gap-2 font-bold text-white"
-                                                : "flex gap-2 font-light"
-                                        }
-                                    >
-                                        <span className="text-md">
-                                            {route.icon}
-                                        </span>
-                                        {route.title}
-                                    </Link>
-                                </div>
-                            </div>
+                            <NavigateButton key={index} route={route} />
                         ))}
                     </>
                 ) : null}
@@ -276,23 +246,7 @@ const Sidebar = () => {
                         </div>
 
                         {deliveryManRoutes.map((route, index) => (
-                            <div key={index}>
-                                <div className="text-sm w-full h-full  py-2 mt-2 px-4 hover:no-underline hover:bg-gray-200/25">
-                                    <Link
-                                        to={route.path}
-                                        className={
-                                            location.pathname == route.path
-                                                ? "flex gap-2 font-bold text-white"
-                                                : "flex gap-2 font-light"
-                                        }
-                                    >
-                                        <span className="text-md">
-                                            {route.icon}
-                                        </span>
-                                        {route.title}
-                                    </Link>
-                                </div>
-                            </div>
+                            <NavigateButton key={index} route={route} />
                         ))}
                     </>
                 ) : null}
@@ -306,3 +260,33 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+
+const NavigateButton = ({ route }) => {
+
+    const [isCurrent, setIsCurrent] = useState(false)
+    const location = useLocation();
+
+    const setLocationToLocalStorage = () => {
+        localStorage.setItem("currentRoute", route.path)
+    }
+
+    useEffect(() => {      
+        route.path == localStorage.getItem("currentRoute") ? setIsCurrent(true) : setIsCurrent(false)
+    },[location])
+
+    return ( <div >
+        <div onMouseDown={setLocationToLocalStorage} className="text-sm w-full h-full  py-2 mt-2 px-4 hover:no-underline hover:bg-gray-200/25">
+            <Link
+                to={route.path}
+                className={
+                   isCurrent
+                        ? "flex gap-2 font-bold text-white"
+                        : "flex gap-2 font-light"
+                }
+            >
+                <span className="text-md">{route.icon}</span>
+                {route.title}
+            </Link>
+        </div>
+    </div>)
+};
