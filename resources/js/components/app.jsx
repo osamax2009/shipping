@@ -52,6 +52,7 @@ import Mercadopago from "./adminInterface/paymentGateway/mercadopago";
 import Paytm from "./adminInterface/paymentGateway/paytm";
 import Myfatoorah from "./adminInterface/paymentGateway/myfatoorah";
 import { ThemeProvider } from "next-themes";
+import ViewUser from "./adminInterface/viewUser";
 
 const router = createBrowserRouter([
     /*   Common routes */
@@ -296,6 +297,11 @@ const router = createBrowserRouter([
             {
                 path: "users",
                 element: <Users />,
+            },
+
+            {
+                path : "users/user_Id/:user_Id",
+                element : <ViewUser />
             },
 
             {

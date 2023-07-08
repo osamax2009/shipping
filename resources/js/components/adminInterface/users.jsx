@@ -6,6 +6,7 @@ import { BsEye, BsEyeSlash, BsPencilFill, BsTrash } from "react-icons/bs";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
 import { PhoneInput } from "react-contact-number-input";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Users = () => {
     const [users, setUsers] = useState();
@@ -127,6 +128,8 @@ const Users = () => {
 export default Users;
 
 const UserLine = ({ user, setSelected, setOpenDelete, setOpenUpdate }) => {
+    const navigate = useNavigate();
+
     const handleOpenUpdate = () => {
         setOpenUpdate(true);
         setSelected(user);
@@ -135,6 +138,11 @@ const UserLine = ({ user, setSelected, setOpenDelete, setOpenUpdate }) => {
     const handleOpenDelete = () => {
         setOpenDelete(true);
         setSelected(user);
+    };
+
+    const handleOpenDetails = () => {
+        const url = "/admin/users/user_Id/" + user?.id;
+        navigate(url);
     };
 
     return (
@@ -151,6 +159,13 @@ const UserLine = ({ user, setSelected, setOpenDelete, setOpenUpdate }) => {
                     onPress={handleOpenDelete}
                     color={"error"}
                     icon={<BsTrash />}
+                ></Button>
+
+                <Button
+                    auto
+                    onPress={handleOpenDetails}
+                    color={"primary"}
+                    icon={<BsEye />}
                 ></Button>
             </div>
             <div></div>
@@ -174,7 +189,7 @@ const CreateModal = ({ open, setOpen }) => {
             email: user?.email,
             password: user?.password,
             user_type: "user",
-            contact_number: user?.contact_number?.phoneNumber,
+            contact_number: user?.contact_number?.validData.phoneNumber,
             country_id: "",
             city: "",
             address: "",
@@ -287,7 +302,6 @@ const CreateModal = ({ open, setOpen }) => {
                         <div className="form-group">
                             <label className="px-2" htmlFor="">
                                 Contact Number{" "}
-                                {user?.contact_number?.phoneNumber}
                             </label>
 
                             <PhoneInput
@@ -345,8 +359,8 @@ const UpdateModal = ({ open, setOpen, oldUser }) => {
             name: user?.name,
             username: user?.username,
             contact_number: user?.contact_number.phoneNumber
-                ? user?.contact_number.phoneNumber
-                : user?.contact_number,
+                ? user?.contact_number.validData.phoneNumber
+                : oldUser?.contact_number,
         };
         const res = await postWithAxios("/api/update-profile", dataToSend);
 
@@ -368,18 +382,13 @@ const UpdateModal = ({ open, setOpen, oldUser }) => {
     };
 
     useEffect(() => {
-        setUser({
-            id: oldUser?.id,
-            email: oldUser?.email,
-            name: oldUser?.name,
-            username: oldUser?.username,
-            contact_number: { phoneNumber : oldUser?.contact_number,
-            countryCode : oldUser?.country_code ? oldUser?.country_code : "ca",
-            countryData : oldUser?.country_name ? oldUser?.country_name : "Canada"
-        }
-                
-        });
+        setUser(oldUser);
     }, [oldUser]);
+
+    useEffect(() => {
+        console.log(user?.contact_number);
+    }, [user?.contact_number]);
+
     return (
         <Modal
             open={open}
@@ -424,7 +433,7 @@ const UpdateModal = ({ open, setOpen, oldUser }) => {
                             />
                         </div>
                     </div>
-                    <div className="grid  gap-4 md:grid-cols-2">
+                    <div className="grid  gap-4 md:grid-cols-1">
                         <div className="form-group">
                             <label htmlFor="">Name</label>
                             <input
@@ -439,44 +448,22 @@ const UpdateModal = ({ open, setOpen, oldUser }) => {
                                 className="form-control"
                             />
                         </div>
-                        <div className="form-group relative">
-                            <label htmlFor="">Password</label>
-                            <div className="relative flex items-center">
-                                <input
-                                    type={passType}
-                                    value={user?.password}
-                                    onChange={(e) =>
-                                        setUser({
-                                            ...user,
-                                            password: e.target.value,
-                                        })
-                                    }
-                                    className="form-control"
-                                />
-                                <div
-                                    onMouseDown={handlePassHidden}
-                                    className="absolute right-0 top-0 mt-3 mr-3 cursor-pointer"
-                                >
-                                    {passType == "password" ? (
-                                        <BsEyeSlash />
-                                    ) : (
-                                        <BsEye />
-                                    )}
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
                     <div className="grid gap-4 md:grid-cols-2">
                         <div className="form-group">
                             <label className="px-2" htmlFor="">
-                                Contact Number{" "}
-                                {user?.contact_number?.phoneNumber}
+                                Contact Number : {oldUser?.contact_number}
                             </label>
-
+                            <label className="px-2" htmlFor="">
+                                Update Contact Number{" "}
+                            </label>
                             <PhoneInput
-                                countryCode={"ca"}
-                                placeholder={user?.contact_number}
+                                countryCode={
+                                    user?.country_code
+                                        ? user?.country_code
+                                        : "ca"
+                                }
                                 value={user?.contact_number}
                                 onChange={(e) =>
                                     setUser({
@@ -525,8 +512,6 @@ const DeleteModal = ({ user, open, setOpen }) => {
 
         setOpen(false);
 
-        console.log(res);
-
         toast(res.message, {
             type: "success",
             hideProgressBar: true,
@@ -545,27 +530,29 @@ const DeleteModal = ({ user, open, setOpen }) => {
                     <span className="text-red-300">
                         #{user?.id} from list of Users .
                     </span>
-                    <div className="flex flex-wrap  w-full gap-6 justify-between sm:justify-end">
-                        <Button
-                            auto
-                            css={{ backgroundColor: "Grey" }}
-                            className="text-black"
-                            onPress={() => setOpen(false)}
-                        >
-                            Cancel
-                        </Button>
-
-                        <Button
-                            auto
-                            color={"warning"}
-                            onPress={handleDelete}
-                            className="text-black"
-                        >
-                            Delete
-                        </Button>
-                    </div>
                 </div>
             </Modal.Body>
+            <Modal.Footer>
+                <div className="flex flex-wrap  w-full gap-6 justify-between sm:justify-end">
+                    <Button
+                        auto
+                        css={{ backgroundColor: "Grey" }}
+                        className="text-black"
+                        onPress={() => setOpen(false)}
+                    >
+                        Cancel
+                    </Button>
+
+                    <Button
+                        auto
+                        color={"warning"}
+                        onPress={handleDelete}
+                        className="text-black"
+                    >
+                        Delete
+                    </Button>
+                </div>
+            </Modal.Footer>
         </Modal>
     );
 };
