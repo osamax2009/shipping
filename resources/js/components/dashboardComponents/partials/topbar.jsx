@@ -175,7 +175,7 @@ const UserMenu = ({ handleLogout }) => {
                 Help & Support
             </Link>
 
-            <Link className="dropdown-item" to={"/privacypolicy"}>
+            <Link className="dropdown-item" to={"/term&condition"}>
                 <i className="fas fa-file-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                 Term & Condition
             </Link>
@@ -259,7 +259,7 @@ const AdminMenu = ({ handleLogout }) => {
                 Help & Support
             </Link>
 
-            <Link className="dropdown-item" to={"/privacypolicy"}>
+            <Link className="dropdown-item" to={"/term&condition"}>
                 <i className="fas fa-file-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                 Term & Condition
             </Link>
@@ -313,7 +313,7 @@ const DeliveryMan = ({ handleLogout }) => {
             className="dropdown-menu gap-4 dropdown-menu-right shadow animated--grow-in"
             aria-labelledby="userDropdown"
         >
-            <Link className="dropdown-item" to={"/admin/profile"}>
+            <Link className="dropdown-item" to={"/delivery_man/profile"}>
                 <i className="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                 Profile
             </Link>
@@ -343,7 +343,7 @@ const DeliveryMan = ({ handleLogout }) => {
                 Help & Support
             </Link>
 
-            <Link className="dropdown-item" to={"/privacypolicy"}>
+            <Link className="dropdown-item" to={"/term&condition"}>
                 <i className="fas fa-file-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                 Term & Condition
             </Link>

@@ -43,6 +43,7 @@ function saveOrderHistory($data)
     $sendTo = [];
     $order_id = $data['order']->id;
     $data['order'] = Order::find($order_id);
+
     switch ($data['history_type']) {
         case 'draft':
             $data['history_message'] = __('message.order_draft');
@@ -169,6 +170,8 @@ function saveOrderHistory($data)
             $history_data = [];
             break;
     }
+
+    
     $data['history_data'] = json_encode($history_data);
 
     OrderHistory::create($data);

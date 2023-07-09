@@ -44,71 +44,81 @@ const AppSettings = () => {
                 </Button>
             </div>
             <div className="grid gap-8 md:grid-cols-2">
-                <div className="px-6 font-bold border">
-                    <div className="py-4 ">Notification settings</div>
-                    <table className="table table-striped table-bordered text-black">
-                        <thead>
-                            <tr>
-                                <th>
-                                    {" "}
-                                    <span className="text-black font-bold">
+                <div className="grid gap-4">
+                    <div className="px-6 font-bold border">
+                        <div className="py-4 ">Notification settings</div>
+                        <table className="table table-striped table-bordered text-black">
+                            <thead>
+                                <tr>
+                                    <th>
                                         {" "}
-                                        Type
-                                    </span>{" "}
-                                </th>
-                                <th>
-                                    {" "}
-                                    <span className="text-black font-bold">
+                                        <span className="text-black font-bold">
+                                            {" "}
+                                            Type
+                                        </span>{" "}
+                                    </th>
+                                    <th>
                                         {" "}
-                                        ONE SIGNAL
-                                    </span>{" "}
-                                </th>
-                                <th>
-                                    {" "}
-                                    <span className="text-black font-bold">
+                                        <span className="text-black font-bold">
+                                            {" "}
+                                            ONE SIGNAL
+                                        </span>{" "}
+                                    </th>
+                                    <th>
                                         {" "}
-                                        FIREBASE (For admin)
-                                    </span>{" "}
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <NotificationLine title="Active" label={"active"} />
-                            <NotificationLine
-                                title="Cancelled"
-                                label={"cancelled"}
-                            />{" "}
-                            <NotificationLine
-                                title="Completed"
-                                label={"completed"}
-                            />
-                            <NotificationLine
-                                title="Courier Assigned"
-                                label={"courier_assigned"}
-                            />
-                            <NotificationLine
-                                title="Courier Departed"
-                                label={"courier_departed"}
-                            />
-                            <NotificationLine
-                                title="Courier Picked Up"
-                                label={"courier_picked_up"}
-                            />
-                            <NotificationLine
-                                title="Courier Transfer"
-                                label={"courier_transfer"}
-                            />
-                            <NotificationLine title="Create" label={"create"} />
-                            <NotificationLine
-                                title="Delayed"
-                                label={"delayed"}
-                            />
-                            <NotificationLine title="Failed" label={"failed"} />
-                            <NotificationLine
-                                title="Payment Status message"
-                                label={"payment_status_message"}
-                            />
-                            {/*  {appSettings
+                                        <span className="text-black font-bold">
+                                            {" "}
+                                            FIREBASE (For admin)
+                                        </span>{" "}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <NotificationLine
+                                    title="Active"
+                                    label={"active"}
+                                />
+                                <NotificationLine
+                                    title="Cancelled"
+                                    label={"cancelled"}
+                                />{" "}
+                                <NotificationLine
+                                    title="Completed"
+                                    label={"completed"}
+                                />
+                                <NotificationLine
+                                    title="Courier Assigned"
+                                    label={"courier_assigned"}
+                                />
+                                <NotificationLine
+                                    title="Courier Departed"
+                                    label={"courier_departed"}
+                                />
+                                <NotificationLine
+                                    title="Courier Picked Up"
+                                    label={"courier_picked_up"}
+                                />
+                                <NotificationLine
+                                    title="Courier Transfer"
+                                    label={"courier_transfer"}
+                                />
+                                <NotificationLine
+                                    title="Create"
+                                    label={"create"}
+                                />
+                                <NotificationLine
+                                    title="Delayed"
+                                    label={"delayed"}
+                                />
+                                <NotificationLine
+                                    title="Failed"
+                                    label={"failed"}
+                                />
+                                <NotificationLine
+                                    title="Payment Status message"
+                                    label={"payment_status_message"}
+                                />
+                                {/*  {appSettings
                                 ? Object.keys(
                                       appSettings?.notification_settings
                                   )?.map((key, index) => (
@@ -119,8 +129,57 @@ const AppSettings = () => {
                                       />
                                   ))
                                 : null} */}
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div className="px-6 font-bold border">
+                        <div className="py-4 ">Invoice settings</div>
+
+                        <div className="form-group">
+                            <label htmlFor=""> Company Name</label>
+                            <input
+                                type="text"
+                                value={appSettings?.site_name}
+                                onChange={(e) =>
+                                    setAppSettings({
+                                        ...appSettings,
+                                        site_name: e.target.value,
+                                    })
+                                }
+                                className="form-control"
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor=""> Company Contact Number</label>
+                            <input
+                                type="text"
+                                value={appSettings?.support_number}
+                                onChange={(e) =>
+                                    setAppSettings({
+                                        ...appSettings,
+                                        support_number: e.target.value,
+                                    })
+                                }
+                                className="form-control"
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor=""> Company Address </label>
+                            <input
+                                type="text"
+                                value={appSettings?.site_address}
+                                onChange={(e) =>
+                                    setAppSettings({
+                                        ...appSettings,
+                                        site_address: e.target.value,
+                                    })
+                                }
+                                className="form-control"
+                            />
+                        </div>
+                    </div>
                 </div>
                 <div className="grid gap-4">
                     <div>
@@ -312,6 +371,41 @@ const AppSettings = () => {
                             />
                         </div>
                     </div>
+                </div>
+            </div>
+            <div className="px-6 font-bold border mt-4">
+                <div className="py-4 "> </div>
+
+                <div className="form-group">
+                    <label htmlFor=""> Privacy Policy</label>
+                    <textarea
+                        rows={10}
+                        type="text"
+                        value={appSettings?.privacy_policy}
+                        onChange={(e) =>
+                            setAppSettings({
+                                ...appSettings,
+                                privacy_policy: e.target.value,
+                            })
+                        }
+                        className="form-control resize-none"
+                    ></textarea>
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="">Term & Condition</label>
+                    <textarea
+                        rows={10}
+                        type="text"
+                        value={appSettings?.term_and_condition}
+                        onChange={(e) =>
+                            setAppSettings({
+                                ...appSettings,
+                                term_and_condition: e.target.value,
+                            })
+                        }
+                        className="form-control resize-none"
+                    ></textarea>
                 </div>
             </div>
         </div>

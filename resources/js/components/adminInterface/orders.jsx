@@ -122,7 +122,7 @@ const Orders = () => {
                                         <Link
                                             className="underline"
                                             to={
-                                                "/admin/orderdetail/order_Id/" +
+                                                "/" +  user?.user_type + "/orderdetail/order_Id/" +
                                                 order?.id
                                             }
                                         >
@@ -130,10 +130,14 @@ const Orders = () => {
                                         </Link>
                                     </Table.Cell>
                                     <Table.Cell>
-                                        {order?.client_name}
+                                        <div className="truncate w-[80px]">
+                                            {order?.client_name}
+                                        </div>
                                     </Table.Cell>
                                     <Table.Cell>
-                                        {order?.delivery_man_name}
+                                        <div className="truncate w-[80px]">
+                                            {order?.delivery_man_name}
+                                        </div>
                                     </Table.Cell>
                                     <Table.Cell>
                                         {dayjs(order?.pickup_point.date).format(

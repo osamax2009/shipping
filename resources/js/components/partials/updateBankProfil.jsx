@@ -28,9 +28,9 @@ const BankProfil = () => {
 
     return (
         <div>
-            <div className="w-full ">
-                <div className="mt-6 w-full ">
-                    <div>
+            <div className="flex justify-center w-full ">
+                <div className="my-4 mx-2 md:w-1/2 lg:w-2/3">
+                    <div className="">
                         <div className="grid gap-3 w-full ">
                             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                 <div className="grid">

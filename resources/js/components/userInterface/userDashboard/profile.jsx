@@ -36,14 +36,14 @@ const Profile = () => {
 
     return (
         <div>
-            <div className="w-full px-12">
+            <div className=" flex flex-col items-center w-full px-12 ">
                 <div className="flex  items-center justify-center ">
                     <Text b className="text-gray-500 text-center">
                         User informations
                     </Text>
                 </div>
 
-                <div className=" rounded-[20px] px-4 py-10 bg-gray-100/25 ">
+                <div className=" grid justify-center w-full md:w-2/3 px-4 py-10  ">
                     <div>
                         <div className="grid gap-3 w-full ">
                             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 ">

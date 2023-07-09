@@ -276,7 +276,7 @@ const AdminCreateOrder = () => {
                 total_weight: weight,
                 total_distance: distance,
                 payment_collect_from: receivePaymentFrom,
-                status: "create",
+                status: "draft",
                 payment_type: "cash",
                 payment_status: "pending",
                 fixed_charges: city?.fixed_charges,
@@ -297,7 +297,6 @@ const AdminCreateOrder = () => {
         const res = await postWithAxios("/api/order-save", dataToSend);
 
         if (res.order_id) {
-
             setProcessing(false);
 
             const url =
@@ -1038,13 +1037,14 @@ const QuoteModal = ({
                 <div className="flex w-full gap-4 justify-end">
                     <Button
                         css={{ backgroundColor: "white" }}
+                        auto
                         onPress={() => setOpen(false)}
                         className="border border-gray-200"
                     >
                         <div className="font-bold text-gray-400">Cancel</div>
                     </Button>
 
-                    <Button color={"success"} onPress={handleCreateOrder}>
+                    <Button auto color={"success"} onPress={handleCreateOrder}>
                         <div className="font-bold">Create</div>
                     </Button>
                 </div>

@@ -60,7 +60,7 @@ class OrderController extends Controller
             }
         }
 
-        $order = $order->orderBy('date','desc')->paginate($per_page);
+        $order = $order->orderBy('id','desc')->paginate($per_page);
         $items = OrderResource::collection($order);
 
         $user = auth()->user();

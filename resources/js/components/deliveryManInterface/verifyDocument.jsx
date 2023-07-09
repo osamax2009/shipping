@@ -8,9 +8,9 @@ import { toast } from "react-toastify";
 import dayjs from "dayjs";
 
 const VerifyDocument = () => {
-    const [deliveryDocuments, setDeliveryDocuments] = useState();
-    const [userDocuments, setUserDocuments] = useState();
-    const [document, setDocument] = useState();
+    const [deliveryDocuments, setDeliveryDocuments] = useState([]);
+    const [userDocuments, setUserDocuments] = useState([]);
+    const [document, setDocument] = useState({});
     const [openModal, setOpenModal] = useState(false);
 
     const { user, setUser } = useContext(UserContext);
@@ -59,7 +59,7 @@ const VerifyDocument = () => {
                             <Table.Column>Document Name</Table.Column>
                             <Table.Column>Document</Table.Column>
                             <Table.Column>Created</Table.Column>
-                           {/*  <Table.Column>Actions</Table.Column> */}
+                            {/*  <Table.Column>Actions</Table.Column> */}
                         </Table.Header>
                         <Table.Body>
                             {userDocuments?.map((userDocument, index) => (
@@ -76,13 +76,13 @@ const VerifyDocument = () => {
                                     </Table.Cell>
                                     <Table.Cell>
                                         <div className="flex justify-start">
-                                        <Image
-                                            src={
-                                                userDocument.delivery_man_document
-                                            }
-                                            width={80}
-                                            height={60}
-                                        />
+                                            <Image
+                                                src={
+                                                    userDocument.delivery_man_document
+                                                }
+                                                width={80}
+                                                height={60}
+                                            />
                                         </div>
                                     </Table.Cell>
 
@@ -92,10 +92,9 @@ const VerifyDocument = () => {
                                         )}
                                     </Table.Cell>
 
-                                   {/*  <Table.Cell>
+                                    {/*  <Table.Cell>
                                           <userDocumentLine userDocument={userDocument} />
                                     </Table.Cell> */}
-                                    
                                 </Table.Row>
                             ))}
                         </Table.Body>
@@ -114,7 +113,6 @@ const VerifyDocument = () => {
                 setDocument={setDocument}
                 open={openModal}
                 setOpen={setOpenModal}
-                documents={userDocuments}
             />
         </div>
     );
@@ -124,22 +122,28 @@ export default VerifyDocument;
 
 const DocumentButton = ({ doc, setOpenModal, setDocument, documents }) => {
     const handleDocumentUpload = () => {
-        documents?.map((document) => {
-            if (document?.document_id == doc?.id) {
-                return setDocument({
-                    id: doc?.id == document.document_id ? document.id : null,
-                    document_id:
-                        doc?.id == document.document_id
-                            ? document.document_id
-                            : doc?.id,
-                    document_name: doc.name,
-                    delivery_man_document:
-                        doc?.id == document.document_id
-                            ? document?.delivery_man_document
-                            : "",
-                });
+        const arrayFiltered = documents?.filter((e) => {
+            if (e.document_id == doc.id) {
+                return e;
             }
         });
+
+        if (arrayFiltered.length > 0) {
+            setDocument({
+                ...document,
+                id: arrayFiltered[0].id,
+                delivery_man_document: arrayFiltered[0].delivery_man_document,
+                document_id: doc?.id,
+                document_name: doc.name,
+            });
+        } else {
+            setDocument({
+                ...document,
+                document_id: doc?.id,
+                document_name: doc.name,
+            });
+        }
+
         setOpenModal(true);
     };
 
@@ -149,7 +153,7 @@ const DocumentButton = ({ doc, setOpenModal, setDocument, documents }) => {
 
     return (
         <Button color={"primary"} onPress={handleDocumentUpload}>
-            Add {doc.name} 
+            Add {doc.name}
         </Button>
     );
 };
@@ -161,28 +165,37 @@ const DocumentModal = ({ document, setDocument, open, setOpen }) => {
     const uploadDocument = async () => {
         var data = new FormData();
 
-        data.append("id", document?.id);
+        if (document?.id) {
+            data.append("id", document?.id);
+        }
+
         data.append("delivery_man_id", user?.id);
         data.append("document_id", document.document_id);
         data.append("is_verified", 0);
+        data.append("status", "pending");
 
         if (files[0]) {
             data.append("delivery_man_document", files[0]);
         }
 
-        setOpen(false);
+        if (files[0]) {
+            const res = await postWithAxios(
+                "/api/delivery-man-document-save",
+                data
+            );
+            setOpen(false);
+            toast(res.message, {
+                type: "info",
+                hideProgressBar: true,
+            });
 
-        const res = await postWithAxios(
-            "/api/delivery-man-document-save",
-            data
-        );
-
-        toast(res.message, {
-            type: "info",
-            hideProgressBar: true,
-        });
-
-        setDocument({});
+            setDocument({});
+        } else {
+            toast("Any file selected", {
+                type: "error",
+                hideProgressBar: true,
+            });
+        }
     };
 
     const handleClose = () => {
@@ -194,7 +207,7 @@ const DocumentModal = ({ document, setDocument, open, setOpen }) => {
         <Modal open={open} onClose={handleClose} closeButton>
             <Modal.Header>
                 <div className="text-lg font-bold">
-                    Upload document{" "}
+                    Upload document {document?.id ? "id" : "no id"}{" "}
                 </div>
             </Modal.Header>
             <Modal.Body>

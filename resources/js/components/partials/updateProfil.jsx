@@ -3,10 +3,10 @@ import { useState, useContext, useEffect } from "react";
 import { BsPerson } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import { MuiTelInput } from "mui-tel-input";
 import { UserContext } from "../contexts/userContext";
 import { getWithAxios, postWithAxios } from "../api/axios";
 import LocationSetter from "./locationSetter";
+import PhoneInput from "react-phone-input-2";
 
 const UpdateProfil = ({ open, setOpen }) => {
     const { user, setUser } = useContext(UserContext);
@@ -84,7 +84,7 @@ const UpdateProfil = ({ open, setOpen }) => {
                 <div className="text-lg">Update profil</div>
             </Modal.Header>
             <Modal.Body>
-                <div className="w-full h-[65vh] ">
+                <div className="w-full h-[70vh] ">
                     <div className="mt-6 w-full ">
                         <div>
                             <div className="grid gap-3 w-full ">
@@ -171,10 +171,10 @@ const UpdateProfil = ({ open, setOpen }) => {
                                         >
                                             Contact
                                         </Text>
-                                        <MuiTelInput
+                                        <PhoneInput
                                             className="appearance-none"
                                             forceCallingCode
-                                            defaultCountry="IN"
+                                            defaultCountry="ca"
                                             placeholder={
                                                 userInformations?.contact_number
                                             }

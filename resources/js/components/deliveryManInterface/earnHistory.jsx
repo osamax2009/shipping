@@ -16,7 +16,7 @@ const EarnHistory = () => {
         };
         const res = await getWithAxios("/api/payment-list", dataToSend);
         console.log(res);
-        setOrders(res.data);
+       
     };
 
     useEffect(() => {
@@ -28,11 +28,15 @@ const EarnHistory = () => {
             <Table>
                 <Table.Header>
                     <Table.Column>Order id</Table.Column>
+                    <Table.Column>Name</Table.Column>
+                    <Table.Column> Amount </Table.Column>
                 </Table.Header>
                 <Table.Body>
                     {orders?.map((order, index) => (
                         <Table.Row key={index}>
                             <Table.Cell> {order.id} </Table.Cell>
+                            <Table.Cell> {order.user_name} </Table.Cell>
+                            <Table.Cell> {order.amount} </Table.Cell>
                         </Table.Row>
                     ))}
                 </Table.Body>

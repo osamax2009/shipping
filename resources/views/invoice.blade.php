@@ -14,7 +14,7 @@
                             Address
                         </span>
                         <span>
-                            14-2752 Montague street; S4S 0J9 Regina - Saskatchewan, Canada
+                            {{ $appSettings->site_address}}
                         </span>
                     </p>
                 </div>
@@ -53,16 +53,14 @@
                                     <td>
                                         <div class="text-right">
                                             <h5 class=" font-weight-bold pb-1  ">
-                                                2POINT DELIVERY
+                                                {{ $appSettings->site_name}}
                                             </h5>
                                             <h6>
-                                                14-2752 Montague street;
-                                                <br>
-                                                S4S 0J9 Regina - Saskatchewan, Canada
+                                                {{ $appSettings->site_address}}
 
                                             </h6>
                                             <h6>
-                                                +1 (639) 997-2710
+                                                {{ $appSettings->support_number}}
                                             </h6>
                                         </div>
                                     </td>

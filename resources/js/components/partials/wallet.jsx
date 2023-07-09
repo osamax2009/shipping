@@ -5,6 +5,7 @@ import { UserContext } from "../contexts/userContext";
 import { useNavigate } from "react-router-dom";
 
 const Wallet = () => {
+    
     const [wallet, setWallet] = useState(0.0);
     const [amount, setAmount] = useState();
     const [open, setOpen] = useState(0.0);
