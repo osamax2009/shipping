@@ -53,6 +53,7 @@ import Paytm from "./adminInterface/paymentGateway/paytm";
 import Myfatoorah from "./adminInterface/paymentGateway/myfatoorah";
 import { ThemeProvider } from "next-themes";
 import ViewUser from "./adminInterface/viewUser";
+import TermAndCondition from "./partials/termAndCondition";
 
 const router = createBrowserRouter([
     /*   Common routes */
@@ -74,6 +75,11 @@ const router = createBrowserRouter([
     {
         path: "/privacypolicy",
         element: <PrivacyAndPolicy />,
+    },
+
+    {
+        path : "/term&condition",
+        element : <TermAndCondition />
     },
 
     {
@@ -123,6 +129,11 @@ const router = createBrowserRouter([
                 path: "bank-informations",
                 element: <BankProfil />,
             },
+
+            {
+                path: "payment",
+                element: <Payment />,
+            },
         ],
     },
 
@@ -132,6 +143,12 @@ const router = createBrowserRouter([
         path: "/delivery_man",
         element: <DeliveryManDashboard />,
         children: [
+
+            {
+                path: "profile",
+                element: <Profile />,
+            },
+
             {
                 path: "order-list",
                 element: <Orders />,
@@ -173,6 +190,8 @@ const router = createBrowserRouter([
             },
         ],
     },
+
+
     /* Admin routes */
 
     {

@@ -15,6 +15,8 @@ import { UserContext } from "../contexts/userContext";
 import { toast } from "react-toastify";
 import ReactPDF, { Document, Page, Text, View } from "@react-pdf/renderer";
 import { AppSettingsContext } from "../contexts/appSettings";
+import { formatTitle } from "../shared/constancy";
+import { message } from "laravel-mix/src/Log";
 
 const SingleOrder = () => {
     const [order, setOrder] = useState();
@@ -79,14 +81,7 @@ const SingleOrder = () => {
         }
     };
 
-    const parcelTitle = (s) => {
-        if (s) {
-            s = s.toString();
-            return s
-                .replace(/^[-_]*(.)/, (_, c) => c.toUpperCase())
-                .replace(/[-_]+(.)/g, (_, c) => " " + c.toUpperCase());
-        }
-    };
+   
 
     const downloadInvoice = async () => {
         /* const res = await getWithAxios("/get-invoice-from-backend", {
@@ -175,7 +170,7 @@ const SingleOrder = () => {
                                         <div className="flex justify-between">
                                             <div>Parcel Type</div>
                                             <div>
-                                                {parcelTitle(
+                                                {formatTitle(
                                                     order?.parcel_type
                                                 )}
                                             </div>
@@ -576,12 +571,21 @@ const DataContent = ({ icon }) => {
 };
 
 const Content = ({ history }) => {
+
+    const reformatMessage = () => {
+        const message = history?.history_message
+        message.toString()
+        return message.replace("you", history?.history_data.delivery_man_name)    
+    }
+
+    console.log(reformatMessage())
+    
     return (
         <div className="grid text-start gap-2 font-bold text-black">
-            <div>{history?.history_type}</div>
+            <div>{formatTitle(history?.history_type)}</div>
 
             <div className="flex gap-2 font-light text-sm ">
-                {history?.history_message}
+                {reformatMessage()} {" "}
                 {history?.datetime}
             </div>
         </div>

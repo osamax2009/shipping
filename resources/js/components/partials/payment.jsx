@@ -53,7 +53,7 @@ const Payment = () => {
             {
                 selectedGateway && <div className=" grid md:grid-cols-2 gap-4 pt-6">
                     <div className="col-span-2">
-                        Add your informatio
+                        Add your informations
                     </div>
                     <div className="form-group">
                         <label htmlFor=""> Title</label>

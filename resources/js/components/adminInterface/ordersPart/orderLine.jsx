@@ -1,22 +1,25 @@
 import { Button } from "@nextui-org/react";
+import { useContext } from "react";
 import { BsEye, BsTrash } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
-
+import { UserContext } from "../../contexts/userContext";
 
 const OrderLine = ({ order, setOpenDelete, setSelectedOrder }) => {
     const navigate = useNavigate();
     const handleOpenDelete = () => {
         setSelectedOrder(order);
         setOpenDelete(true);
+        const { user, setUser } = useContext(UserContext);
     };
 
     const handleOpenDetails = () => {
-        const url = "/admin/orderdetail/order_Id/" + order?.id;
+        const url =
+            "/" + user?.user_type + "/orderdetail/order_Id/" + order?.id;
         navigate(url);
     };
 
     return (
-        <div className="flex flex-wrap gap-4">
+        <div className="flex gap-4">
             <Button
                 auto
                 onPress={handleOpenDetails}
@@ -24,14 +27,16 @@ const OrderLine = ({ order, setOpenDelete, setSelectedOrder }) => {
                 icon={<BsEye />}
             ></Button>
 
-            <Button
-                auto
-                onPress={handleOpenDelete}
-                color={"error"}
-                icon={<BsTrash />}
-            ></Button>
+            {user?.user_type == "admin" && (
+                <Button
+                    auto
+                    onPress={handleOpenDelete}
+                    color={"error"}
+                    icon={<BsTrash />}
+                ></Button>
+            )}
         </div>
     );
 };
 
-export default OrderLine
+export default OrderLine;

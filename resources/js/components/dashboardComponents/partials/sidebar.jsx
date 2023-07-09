@@ -51,6 +51,12 @@ const Sidebar = () => {
             path: "/client/order-list",
             icon: <BsCardChecklist />,
         },
+
+        {
+            title: "Wallet",
+            path: "/client/wallet",
+            icon: <BsWalletFill />,
+        },
     ];
 
     const adminRoutes = [
