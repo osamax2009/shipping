@@ -5,11 +5,13 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../contexts/userContext";
 
 const OrderLine = ({ order, setOpenDelete, setSelectedOrder }) => {
+    const { user, setUser } = useContext(UserContext);
+    
     const navigate = useNavigate();
     const handleOpenDelete = () => {
         setSelectedOrder(order);
         setOpenDelete(true);
-        const { user, setUser } = useContext(UserContext);
+       
     };
 
     const handleOpenDetails = () => {

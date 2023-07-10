@@ -16,6 +16,7 @@ import { useState } from "react";
 import UpdateLocation from "../../partials/changeLocation";
 import DeleteAccount from "../../partials/deleteAccount";
 import ThemeSwitcher from "./themeSwitcher";
+import Notifications from "./notifications";
 
 const Topbar = () => {
     const { user, setUser } = useContext(UserContext);
@@ -71,6 +72,9 @@ const Topbar = () => {
 
                 {/* right side controls*/}
                 <div className="flex gap-8 items-center h-full">
+                    <div>
+                        <Notifications />
+                    </div>
                     <div>
                         <ThemeSwitcher />
                     </div>
