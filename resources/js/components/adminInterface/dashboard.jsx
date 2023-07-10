@@ -4,18 +4,14 @@ import { BsListCheck } from "react-icons/bs";
 import { getWithAxios } from "../api/axios";
 import { FaClipboardList } from "react-icons/fa";
 import { Loading, Table } from "@nextui-org/react";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { Pie } from "react-chartjs-2";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
-
-ChartJS.register(ArcElement, Tooltip, Legend);
+import CustomPieChart from "./charts/weekOrderCount";
+import MonthOrderCount from "./charts/monthOrderCount";
+import MonthPaymentCount from "./charts/monthPaymentCount";
 
 const Dashboard = () => {
     const [dashboard, setDashboard] = useState();
-    const [labels, setLabels] = useState([]);
-    const [data, setData] = useState([]);
-    const [chartData, setChartData] = useState();
 
     const getDashboard = async () => {
         const res = await getWithAxios("/api/dashboard-detail");
@@ -25,46 +21,6 @@ const Dashboard = () => {
     useEffect(() => {
         getDashboard();
     }, []);
-
-    useEffect(() => {
-        let array = [];
-        dashboard?.weekly_order_count.map((d) => {
-            array.push(d.day);
-            return;
-        });
-        setLabels(array);
-    }, [dashboard]);
-
-    useEffect(() => {
-        let array = [];
-        dashboard?.weekly_order_count.map((d) => {
-            array.push(d.total);
-            return;
-        });
-        setData(array);
-    }, [dashboard]);
-
-    const pieLabels = dashboard?.weekly_order_count.map((e) => e.day);
-    const pievalues = dashboard?.weekly_order_count.map((e) => e.total);
-    const pieData = {
-        labels: pieLabels,
-        datasets: [
-            {
-                label: "Weekly Order Count",
-                data: pievalues,
-                backgroundColor: [
-                    "rgb(0,0,128)",
-                    "rgb(54, 162, 235)",
-                    "rgb(139,0,139)",
-                    "rgb(255, 99, 132)",
-                    "rgb(47,79,79)",
-                    "rgb(72,61,139)",
-                    "rgb(25, 205, 86)",
-                ],
-                //  hoverOffset: 4,
-            },
-        ],
-    };
 
     return (
         <div className="">
@@ -118,11 +74,17 @@ const Dashboard = () => {
                             />
                         </div>
                         <div className="grid mt-4 gap-6 lg:grid-cols-2">
-                            {pieLabels &&  pievalues &&(
-                                <div className="flex justify-start items-center">
-                                    <CustomPieChart chartData={pieData} />
-                                </div>
-                            )}
+                            <div className="flex justify-start items-center">
+                                <CustomPieChart />
+                            </div>
+
+                            <div className="flex justify-start items-center">
+                                <MonthOrderCount />
+                            </div>
+
+                        </div>
+                        <div className="grid mt-4">
+                            <MonthPaymentCount />
                         </div>
                         <div className="grid mt-4 gap-6 lg:grid-cols-2">
                             <div className={"border-2 rounded-xl p-4"}>
@@ -200,14 +162,6 @@ const Minicard = ({ value, title }) => {
             <div className="p-4 bg-appGreen rounded-xl text-white text-2xl">
                 <FaClipboardList />
             </div>
-        </div>
-    );
-};
-
-const CustomPieChart = ({ chartData }) => {
-    return (
-        <div className=" relative w-11/12 h-11/12 p-4 border-2 rounded-xl  ">
-            {chartData ? <Pie data={chartData} /> : null}
         </div>
     );
 };
