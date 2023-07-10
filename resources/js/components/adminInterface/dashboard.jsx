@@ -44,30 +44,27 @@ const Dashboard = () => {
         setData(array);
     }, [dashboard]);
 
-    useEffect(() => {
-        if (labels.length == 7 && data.length == 7) {
-
-            setChartData({
-                labels: labels,
-                datasets: [
-                    {
-                        label: "Weekly Order Count",
-                        data: data,
-                        backgroundColor: [
-                            "rgb(0,0,128)",
-                            "rgb(54, 162, 235)",
-                            "rgb(139,0,139)",
-                            "rgb(255, 99, 132)",
-                            "rgb(47,79,79)",
-                            "rgb(72,61,139)",
-                            "rgb(25, 205, 86)",
-                        ],
-                        hoverOffset: 4,
-                    },
+    const pieLabels = dashboard?.weekly_order_count.map((e) => e.day);
+    const pievalues = dashboard?.weekly_order_count.map((e) => e.total);
+    const pieData = {
+        labels: pieLabels,
+        datasets: [
+            {
+                label: "Weekly Order Count",
+                data: pievalues,
+                backgroundColor: [
+                    "rgb(0,0,128)",
+                    "rgb(54, 162, 235)",
+                    "rgb(139,0,139)",
+                    "rgb(255, 99, 132)",
+                    "rgb(47,79,79)",
+                    "rgb(72,61,139)",
+                    "rgb(25, 205, 86)",
                 ],
-            });
-        }
-    }, [data, labels]);
+                //  hoverOffset: 4,
+            },
+        ],
+    };
 
     return (
         <div className="">
@@ -121,10 +118,14 @@ const Dashboard = () => {
                             />
                         </div>
                         <div className="grid mt-4 gap-6 lg:grid-cols-2">
-                            <CustomPieChart chartData={chartData} />
+                            {pieLabels &&  pievalues &&(
+                                <div className="flex justify-start items-center">
+                                    <CustomPieChart chartData={pieData} />
+                                </div>
+                            )}
                         </div>
                         <div className="grid mt-4 gap-6 lg:grid-cols-2">
-                            <div className={"border-2 rounded-xl p-4"} >
+                            <div className={"border-2 rounded-xl p-4"}>
                                 <div className="flex justify-between px-4 py-4 ">
                                     <div className="font-bold text-lg">
                                         Recent Order
@@ -133,7 +134,7 @@ const Dashboard = () => {
                                 <RecentOrder dashboard={dashboard} />
                             </div>
 
-                            <div className={"border-2 rounded-xl p-4"} >
+                            <div className={"border-2 rounded-xl p-4"}>
                                 <div className="flex justify-between px-4 py-4 ">
                                     <div className="font-bold text-lg">
                                         Upcomming Order
@@ -144,7 +145,7 @@ const Dashboard = () => {
                         </div>
 
                         <div className="grid mt-4 gap-6 lg:grid-cols-2">
-                            <div className={"border-2 rounded-xl p-4"} >
+                            <div className={"border-2 rounded-xl p-4"}>
                                 <div className="flex justify-between px-4 py-4 ">
                                     <div className="font-bold text-lg">
                                         Recent User
@@ -161,7 +162,7 @@ const Dashboard = () => {
                                 <RecentUser dashboard={dashboard} />
                             </div>
 
-                            <div className={"border-2 rounded-xl p-4"} >
+                            <div className={"border-2 rounded-xl p-4"}>
                                 <div className="flex justify-between px-4 py-4 ">
                                     <div className="font-bold text-lg">
                                         Recent Delivery Person
@@ -204,14 +205,12 @@ const Minicard = ({ value, title }) => {
 };
 
 const CustomPieChart = ({ chartData }) => {
-    return   (
-        <div className=" p-4 border-2 rounded-xl  w-full">
+    return (
+        <div className=" relative w-11/12 h-11/12 p-4 border-2 rounded-xl  ">
             {chartData ? <Pie data={chartData} /> : null}
         </div>
     );
 };
-
-
 
 const RecentOrder = ({ dashboard }) => {
     return (
