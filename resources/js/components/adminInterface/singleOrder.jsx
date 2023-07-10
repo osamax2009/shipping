@@ -99,7 +99,7 @@ const SingleOrder = () => {
 
     useEffect(() => {
         getOrder();
-    }, []);
+    }, [orderId]);
 
     return (
         <div>
@@ -578,7 +578,7 @@ const Content = ({ history }) => {
         return message.replace("you", history?.history_data.delivery_man_name)    
     }
 
-    console.log(reformatMessage())
+
     
     return (
         <div className="grid text-start gap-2 font-bold text-black">
