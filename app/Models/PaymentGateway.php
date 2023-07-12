@@ -36,6 +36,7 @@ class PaymentGateway extends Model implements HasMedia
         return $val;
     }
 
+    
     public function setLiveValueAttribute($value)
     {
         $value = isset($value) ? json_decode($value,true) : null;

@@ -2,6 +2,7 @@ import { createContext, useEffect, useMemo, useState } from "react";
 import { getCsrfToken, getUserFromAPI, getWithAxios } from "../api/axios";
 import { ToastContainer } from "react-toastify";
 import Loader from "../partials/loader";
+import FirebaseNotification from "../partials/firebaseNotification";
 
 export const UserContext = createContext();
 
@@ -35,7 +36,7 @@ export const UserContextProvider = ({ children }) => {
     } else {
         return (
             <UserContext.Provider value={contextMemo}>
-                <ToastContainer />
+               <FirebaseNotification/>
                 <div>{children}</div>
             </UserContext.Provider>
         );

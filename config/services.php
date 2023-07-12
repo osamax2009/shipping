@@ -41,4 +41,12 @@ return [
     'fcm' => [
         'key' => env('FCM_SECRET_KEY')
     ],
+
+    /**
+     * Stripe API
+     */
+
+     'stripe' => [
+        'secret' => env('STRIPE_SECRET'),
+   ],
 ];

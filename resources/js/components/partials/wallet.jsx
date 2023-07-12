@@ -1,24 +1,32 @@
 import { Button, Modal } from "@nextui-org/react";
 import { useContext, useEffect, useState } from "react";
-import { getWithAxios } from "../api/axios";
+import { getWithAxios, postWithAxios } from "../api/axios";
 import { UserContext } from "../contexts/userContext";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Dropdown } from "@nextui-org/react";
+import { AppSettingsContext } from "../contexts/appSettings";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import StripePayment from "./stripePayment";
 
 const Wallet = () => {
-    
     const [wallet, setWallet] = useState(0.0);
     const [amount, setAmount] = useState();
     const [open, setOpen] = useState(0.0);
+    const [openStripe, setOpenStripe] = useState(false);
+    const [stripeIntent, setStripeIntent] = useState({});
+    const [stripeOptions, setStripeOptions] = useState({});
 
+    const { state } = useLocation();
     const { user, setUser } = useContext(UserContext);
 
     const getWallet = async () => {
-        const res = await getWithAxios("/api/wallet-list", {
+        const res = await getWithAxios("/api/wallet-detail", {
             user_id: user?.id,
         });
 
         if (res.wallet_data) {
-            setWallet(res.wallet_data);
+            setWallet(res);
         }
     };
 
@@ -35,42 +43,94 @@ const Wallet = () => {
                     <div>Available Balance</div>
                     <div className="flex">
                         <span>$</span>
-                        <span>{wallet}</span>
+                        <span>{wallet?.total_amount}</span>
                     </div>
                 </div>
                 <div>
-                    <Button auto css={{ backgroundColor: "white" }} onPress={() => setOpen(true)}>
+                    <Button
+                        auto
+                        css={{ backgroundColor: "white" }}
+                        onPress={() => setOpen(true)}
+                    >
                         <span className="text-appGreen font-bold">
                             Add Money
                         </span>
                     </Button>
                 </div>
             </div>
-            <AddMoneyModal amount={amount} setAmount={setAmount} open={open} setOpen={setOpen} />
+
+            <AddMoneyModal
+                amount={amount}
+                setAmount={setAmount}
+                open={open}
+                setOpen={setOpen}
+                setOpenStripe={setOpenStripe}
+            />
+            {state && (
+                <StripePayment open={openStripe} setOpen={setOpenStripe} getWallet={getWallet} />
+            )}
         </div>
     );
 };
 
 export default Wallet;
 
-const AddMoneyModal = ({ amount, setAmount, open, setOpen }) => {
-    const navigate = useNavigate()
-    const {user, setUser} = useContext(UserContext)
+const AddMoneyModal = ({ amount, setAmount, open, setOpen, setOpenStripe }) => {
+    const [paymentMethods, setPaymentMethods] = useState();
+    const [selectedGateway, setSelectedGateway] = useState("stripe");
 
-    const handlePayement = () => {
-        const url = "/" + user?.user_type + "/payment"
-        navigate(url, {state : {
-            paymentAmount : amount
-        }})
-    }
+    const navigate = useNavigate();
+    const { user, setUser } = useContext(UserContext);
+    const { appSettings, setAppSettings } = useContext(AppSettingsContext);
+
+    const getPaymentsMethods = async () => {
+        const res = await getWithAxios("/api/paymentgateway-list");
+        setPaymentMethods(res.data);
+    };
+
+    const handlePayement = async () => {
+        if (selectedGateway == "stripe") {
+            const dataToSend = {
+                amount: amount,
+                currency: appSettings?.currency_code.toLowerCase(),
+            };
+
+            const res = await postWithAxios("/api/stripe/intent", dataToSend);
+
+            if (res.intent) {
+                const intent = res.intent;
+                console.log(intent);
+                setOpenStripe(true);
+                const url = "/" + user?.user_type + "/wallet";
+                navigate(url, {
+                    state: {
+                        intent: intent,
+                    },
+                });
+            }
+
+            setOpen(false);
+
+            //  console.log(res)
+        }
+
+        /*    */
+    };
+
+    useEffect(() => {
+        getPaymentsMethods();
+    }, []);
+
     return (
         <Modal open={open} closeButton onClose={() => setOpen(false)}>
             <Modal.Header>
-                <div className="text-center font-bold">Add money</div>
+                <div className="text-center font-bold text-lg">Add money</div>
             </Modal.Header>
             <Modal.Body>
                 <div className="form-group">
-                    <label htmlFor="Amount"></label>
+                    <label htmlFor="Amount" className="font-bold">
+                        Amount
+                    </label>
                     <input
                         type="number"
                         className="form-control"
@@ -78,11 +138,42 @@ const AddMoneyModal = ({ amount, setAmount, open, setOpen }) => {
                         onChange={(e) => setAmount(e.target.value)}
                     />
                 </div>
+
+                <div className="grid items-center grid-cols-2">
+                    <div className="font-bold">Select gateway :</div>
+                    <Dropdown>
+                        <Dropdown.Button
+                            flat
+                            color="success"
+                            size={"lg"}
+                            css={{ tt: "capitalize" }}
+                        >
+                            {selectedGateway}
+                        </Dropdown.Button>
+
+                        <Dropdown.Menu
+                            aria-label="Multiple selection actions"
+                            color="sucess"
+                            disallowEmptySelection
+                            selectionMode="single"
+                            selectedKeys={selectedGateway}
+                            onSelectionChange={setSelectedGateway}
+                        >
+                            {paymentMethods?.map((method, index) => (
+                                <Dropdown.Item key={method?.type}>
+                                    <div className="flex">
+                                        <span> {method?.title} </span>
+                                    </div>
+                                </Dropdown.Item>
+                            ))}
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </div>
             </Modal.Body>
             <Modal.Footer>
                 <div className="flex">
-                    <Button onPress={handlePayement} color={"success"} >
-                        Add
+                    <Button auto onPress={handlePayement} color={"success"}>
+                        Submit
                     </Button>
                 </div>
             </Modal.Footer>

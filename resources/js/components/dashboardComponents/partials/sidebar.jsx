@@ -97,6 +97,12 @@ const Sidebar = () => {
         },
 
         {
+            title: "Wallet",
+            path: "/admin/wallet",
+            icon: <BsWalletFill />,
+        },
+
+        {
             title: "Payment gateway",
             path: "/admin/paymentgateway",
             icon: <BsFillCreditCardFill />,

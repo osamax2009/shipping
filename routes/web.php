@@ -70,6 +70,8 @@ Route::get("/get-invoice-from-backend", function (Request $request) {
 
 });
 
+
+
 Route::fallback(function () {
     return view("index");
 

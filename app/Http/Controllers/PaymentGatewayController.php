@@ -37,18 +37,29 @@ class PaymentGatewayController extends Controller
     {
         $data = $request->all();
 
-       // $data["test_value"] = json_decode($request->test_value,true);
+       /*  return response()->json([
+            't' => $request->test_value,
+            "data" => $data
+        ]); */
+
+        if(is_string(($data['test_value']))) {
+            $val = json_decode($request->test_value, true);
+            $data["test_value"] = json_encode($val);
+        }
+
+        // $data["test_value"] = json_decode($request->test_value,true);
 
         $result = PaymentGateway::updateOrCreate(['id' => $request->id], $data);
-        uploadMediaFile($result,$request->gateway_logo,'gateway_logo');
-        $message = __('message.update_form',[ 'form' => __('message.payment_gateway') ] );
-		if($result->wasRecentlyCreated) {
-			$message = __('message.save_form',[ 'form' => __('message.payment_gateway') ] );
-		}
+
+        uploadMediaFile($result, $request->gateway_logo, 'gateway_logo');
+        $message = __('message.update_form', [ 'form' => __('message.payment_gateway') ]);
+        if($result->wasRecentlyCreated) {
+            $message = __('message.save_form', [ 'form' => __('message.payment_gateway') ]);
+        }
 
         if($request->is('api/*')) {
             return json_message_response($message);
-		}
+        }
     }
 
     /**

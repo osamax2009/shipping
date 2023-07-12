@@ -42,7 +42,7 @@ class PaymentController extends Controller
                 $data['received_by'] = 'admin';
             }
             $result = Payment::updateOrCreate(['id' => $request->id],$data);
-            if( $result->payment_status == 'paid') {
+            if($result->payment_status == 'paid') {
                 if( $result->payment_type == 'wallet') {
                     $wallet->decrement('total_amount', $result->total_amount );
                     $order = $result->order;

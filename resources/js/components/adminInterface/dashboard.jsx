@@ -9,6 +9,8 @@ import { Link } from "react-router-dom";
 import CustomPieChart from "./charts/weekOrderCount";
 import MonthOrderCount from "./charts/monthOrderCount";
 import MonthPaymentCount from "./charts/monthPaymentCount";
+import { useContext } from "react";
+import { UserContext } from "../contexts/userContext";
 
 const Dashboard = () => {
     const [dashboard, setDashboard] = useState();
@@ -81,7 +83,6 @@ const Dashboard = () => {
                             <div className="flex justify-start items-center">
                                 <MonthOrderCount />
                             </div>
-
                         </div>
                         <div className="grid mt-4">
                             <MonthPaymentCount />
@@ -167,18 +168,44 @@ const Minicard = ({ value, title }) => {
 };
 
 const RecentOrder = ({ dashboard }) => {
+    const {user, setUser} = useContext(UserContext)
     return (
         <Table>
             <Table.Header>
-                <Table.Column> Order Id </Table.Column>
-                <Table.Column> Customer Name </Table.Column>
-                <Table.Column> Delivery Person </Table.Column>
-                <Table.Column> Pickup Date </Table.Column>
+                <Table.Column align="center" width={"auto"}>
+                    {" "}
+                    Order Id{" "}
+                </Table.Column>
+                <Table.Column align="center" width={"auto"}>
+                    {" "}
+                    Customer Name{" "}
+                </Table.Column>
+                <Table.Column align="center" width={"auto"}>
+                    {" "}
+                    Delivery Person{" "}
+                </Table.Column>
+                <Table.Column align="center" width={"auto"}>
+                    {" "}
+                    Pickup Date{" "}
+                </Table.Column>
             </Table.Header>
             <Table.Body>
                 {dashboard?.recent_order.map((order, index) => (
                     <Table.Row key={index}>
-                        <Table.Cell> {order.id} </Table.Cell>
+                        <Table.Cell>
+                            {" "}
+                            <Link
+                                className="underline"
+                                to={
+                                    "/" +
+                                    user?.user_type +
+                                    "/orderdetail/order_Id/" +
+                                    order?.id
+                                }
+                            >
+                                #{order?.id}
+                            </Link>
+                        </Table.Cell>
                         <Table.Cell> {order.client_name} </Table.Cell>
                         <Table.Cell> {order.delivery_man_name} </Table.Cell>
                         <Table.Cell>
@@ -195,18 +222,44 @@ const RecentOrder = ({ dashboard }) => {
 };
 
 const UpComingOrder = ({ dashboard }) => {
+    const {user, setUser} = useContext(UserContext)
     return (
         <Table>
             <Table.Header>
-                <Table.Column> Order Id </Table.Column>
-                <Table.Column> Customer Name </Table.Column>
-                <Table.Column> Delivery Person </Table.Column>
-                <Table.Column> Pickup Date </Table.Column>
+                <Table.Column align="center" width={"auto"}>
+                    {" "}
+                    Order Id{" "}
+                </Table.Column>
+                <Table.Column align="center" width={"auto"}>
+                    {" "}
+                    Customer Name{" "}
+                </Table.Column>
+                <Table.Column align="center" width={"auto"}>
+                    {" "}
+                    Delivery Person{" "}
+                </Table.Column>
+                <Table.Column align="center" width={"auto"}>
+                    {" "}
+                    Pickup Date{" "}
+                </Table.Column>
             </Table.Header>
             <Table.Body>
                 {dashboard?.upcoming_order.map((order, index) => (
                     <Table.Row key={index}>
-                        <Table.Cell> {order.id} </Table.Cell>
+                        <Table.Cell>
+                            {" "}
+                            <Link
+                                className="underline"
+                                to={
+                                    "/" +
+                                    user?.user_type +
+                                    "/orderdetail/order_Id/" +
+                                    order?.id
+                                }
+                            >
+                                #{order?.id}
+                            </Link>{" "}
+                        </Table.Cell>
                         <Table.Cell> {order.client_name} </Table.Cell>
                         <Table.Cell> {order.delivery_man_name} </Table.Cell>
                         <Table.Cell>
@@ -226,10 +279,22 @@ const RecentUser = ({ dashboard }) => {
     return (
         <Table>
             <Table.Header>
-                <Table.Column> Order Id </Table.Column>
-                <Table.Column> Name </Table.Column>
-                <Table.Column> Email Id </Table.Column>
-                <Table.Column> City </Table.Column>
+                <Table.Column align="center" width={"auto"}>
+                    {" "}
+                    Order Id{" "}
+                </Table.Column>
+                <Table.Column align="center" width={"auto"}>
+                    {" "}
+                    Name{" "}
+                </Table.Column>
+                <Table.Column align="center" width={"auto"}>
+                    {" "}
+                    Email Id{" "}
+                </Table.Column>
+                <Table.Column align="center" width={"auto"}>
+                    {" "}
+                    City{" "}
+                </Table.Column>
             </Table.Header>
             <Table.Body>
                 {dashboard?.recent_client.map((client, index) => (
@@ -249,10 +314,22 @@ const RecentDeliveryPerson = ({ dashboard }) => {
     return (
         <Table>
             <Table.Header>
-                <Table.Column> Order Id </Table.Column>
-                <Table.Column> Name </Table.Column>
-                <Table.Column> Email Id </Table.Column>
-                <Table.Column> City </Table.Column>
+                <Table.Column align="center" width={"auto"}>
+                    {" "}
+                    Order Id{" "}
+                </Table.Column>
+                <Table.Column align="center" width={"auto"}>
+                    {" "}
+                    Name{" "}
+                </Table.Column>
+                <Table.Column align="center" width={"auto"}>
+                    {" "}
+                    Email Id{" "}
+                </Table.Column>
+                <Table.Column align="center" width={"auto"}>
+                    {" "}
+                    City{" "}
+                </Table.Column>
             </Table.Header>
             <Table.Body>
                 {dashboard?.recent_delivery_man.map((client, index) => (

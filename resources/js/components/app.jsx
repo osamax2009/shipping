@@ -55,6 +55,8 @@ import { ThemeProvider } from "next-themes";
 import ViewUser from "./adminInterface/viewUser";
 import TermAndCondition from "./partials/termAndCondition";
 import AllNotifications from "./adminInterface/allNotifications";
+import StripePayment from "./partials/stripePayment";
+
 
 const router = createBrowserRouter([
     /*   Common routes */
@@ -110,6 +112,11 @@ const router = createBrowserRouter([
             {
                 path: "wallet",
                 element: <Wallet />,
+            },
+
+            {
+                path : "payment/stripe",
+                element : <StripePayment />
             },
 
             {
@@ -243,6 +250,11 @@ const router = createBrowserRouter([
             {
                 path: "vehicle",
                 element: <Vehicle />,
+            },
+
+            {
+                path: "wallet",
+                element: <Wallet />,
             },
 
             {

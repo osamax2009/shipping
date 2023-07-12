@@ -41,6 +41,7 @@
     <script src="{{ asset(mix('js/app.js')) }}" defer></script>
 
     <script src="{{ asset('js/app.js') }}"></script>
+    
 </head>
 <body class="hold-transition font-sans font-nunito overflow-x-hidden ">
     <div  id="page-top" class="">
@@ -64,5 +65,6 @@
     <script src="{{ asset('backoffice/js/adminlte.min.js') }}"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="{{ asset('backoffice/js/demo.js') }}"></script>
+    
 </body>
 </html>

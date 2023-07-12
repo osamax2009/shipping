@@ -167,6 +167,7 @@ return [
          */
 
          Barryvdh\DomPDF\ServiceProvider::class,
+         Barryvdh\Debugbar\ServiceProvider::class,
 
         /*
          * Application Service Providers...
