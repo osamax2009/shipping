@@ -109,64 +109,82 @@ const MyOrders = () => {
                     {orders.map((order, index) => (
                         <Table.Row key={index}>
                             <Table.Cell>
-                                {" "}
-                                <Link
-                                    className="underline"
-                                    to={
-                                        "/" +
-                                        user?.user_type +
-                                        "/orderdetail/order_Id/" +
-                                        order?.id
-                                    }
-                                >
-                                    #{order?.id}
-                                </Link>
+                                <div className="dark:text-white">
+                                    {" "}
+                                    <Link
+                                        className="underline"
+                                        to={
+                                            "/" +
+                                            user?.user_type +
+                                            "/orderdetail/order_Id/" +
+                                            order?.id
+                                        }
+                                    >
+                                        #{order?.id}
+                                    </Link>
+                                </div>
                             </Table.Cell>
                             <Table.Cell>
-                                {" "}
-                                {order.total_distance}
-                                {appSettings?.distance_unit}{" "}
+                                <div className="dark:text-white">
+                                    {" "}
+                                    {order.total_distance}
+                                    {appSettings?.distance_unit}{" "}
+                                </div>
                             </Table.Cell>
                             <Table.Cell>
-                                {" "}
-                                {order.total_weight}
-                                {appSettings?.weight}
+                                <div className="dark:text-white">
+                                    {" "}
+                                    {order.total_weight}
+                                    {appSettings?.weight}
+                                </div>
                             </Table.Cell>
                             <Table.Cell>
-                                {" "}
-                                {order.total_amount}
-                                {appSettings?.currency}{" "}
+                                <div className="dark:text-white">
+                                    {" "}
+                                    {order.total_amount}
+                                    {appSettings?.currency}{" "}
+                                </div>
                             </Table.Cell>
                             <Table.Cell>
-                                {" "}
-                                <div className="truncate w-[100px]">
-                                    {order?.pickup_point.address}
-                                </div>{" "}
+                                <div className="dark:text-white">
+                                    {" "}
+                                    <div className="truncate w-[100px]">
+                                        {order?.pickup_point.address}
+                                    </div>{" "}
+                                </div>
                             </Table.Cell>
                             <Table.Cell>
-                                {" "}
-                                <div className="truncate w-[100px]">
-                                    {order?.delivery_point.address}
-                                </div>{" "}
+                                <div className="dark:text-white">
+                                    {" "}
+                                    <div className="truncate w-[100px]">
+                                        {order?.delivery_point.address}
+                                    </div>{" "}
+                                </div>
                             </Table.Cell>
                             <Table.Cell>
-                                {" "}
-                                <OrderStatus order={order} />{" "}
+                                <div className="dark:text-white">
+                                    {" "}
+                                    <OrderStatus order={order} />{" "}
+                                </div>
                             </Table.Cell>
 
                             <Table.Cell>
-                                <OrderLine
-                                    order={order}
-                                    deleteModal={deleteModal}
-                                    setDeleteModal={setDeleteModal}
-                                />
+                                <div className="dark:text-white">
+                                    <OrderLine
+                                        order={order}
+                                        deleteModal={deleteModal}
+                                        setDeleteModal={setDeleteModal}
+                                    />
+                                </div>
                             </Table.Cell>
                             <Table.Cell>
-                                <PaymentLine
-                                    order={order}
-                                    gateways={gateways}
-                                    getOrders={getOrders}
-                                />
+                                <div className="dark:text-white">
+                                    <PaymentLine
+                                        order={order}
+                                        gateways={gateways}
+                                        getOrders={getOrders}
+                                    />
+                                </div>
                             </Table.Cell>
                         </Table.Row>
                     ))}

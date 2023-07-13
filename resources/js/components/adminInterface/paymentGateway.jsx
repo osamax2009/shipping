@@ -48,38 +48,55 @@ const PaymentGateway = () => {
                         <Table.Body>
                             {payments?.map((payment, index) => (
                                 <Table.Row key={index}>
-                                    <Table.Cell> {payment.id} </Table.Cell>
-                                    <Table.Cell>{payment.title}</Table.Cell>
                                     <Table.Cell>
-                                        <div className="flex justify-start">
-                                            <Image
-                                                src={payment.gateway_logo}
-                                                width={80}
-                                                height={60}
-                                            />
+                                        <div className="dark:text-white">
+                                            {" "}
+                                            {payment.id}{" "}
                                         </div>
                                     </Table.Cell>
                                     <Table.Cell>
-                                        {" "}
-                                        {payment.is_test == 1
-                                            ? "Test"
-                                            : "live"}{" "}
+                                        <div className="dark:text-white">
+                                            {payment.title}
+                                        </div>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <div className="dark:text-white">
+                                            <div className="flex justify-start">
+                                                <Image
+                                                    src={payment.gateway_logo}
+                                                    width={80}
+                                                    height={60}
+                                                />
+                                            </div>
+                                        </div>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <div className="dark:text-white">
+                                            {" "}
+                                            {payment.is_test == 1
+                                                ? "Test"
+                                                : "live"}{" "}
+                                        </div>
                                     </Table.Cell>
 
                                     <Table.Cell>
-                                        {payment.status == 1 ? (
-                                            <span className="text-green-700">
-                                                Enabled
-                                            </span>
-                                        ) : (
-                                            <span className="text-red-700">
-                                                Disabled
-                                            </span>
-                                        )}
+                                        <div className="dark:text-white">
+                                            {payment.status == 1 ? (
+                                                <span className="text-green-700">
+                                                    Enabled
+                                                </span>
+                                            ) : (
+                                                <span className="text-red-700">
+                                                    Disabled
+                                                </span>
+                                            )}
+                                        </div>
                                     </Table.Cell>
 
                                     <Table.Cell>
-                                        <PaymentLine payment={payment} />
+                                        <div className="dark:text-white">
+                                            <PaymentLine payment={payment} />
+                                        </div>
                                     </Table.Cell>
                                 </Table.Row>
                             ))}

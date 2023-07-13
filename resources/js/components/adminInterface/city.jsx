@@ -63,34 +63,60 @@ const City = () => {
                     <Table.Body>
                         {cities?.map((city, index) => (
                             <Table.Row key={index}>
-                                <Table.Cell> {city?.id} </Table.Cell>
-                                <Table.Cell>{city?.name}</Table.Cell>
-                                <Table.Cell> {city?.country_name} </Table.Cell>
                                 <Table.Cell>
-                                    {dayjs(city?.created_at).format(
-                                        "DD-MM-YYYY; HH:mm:ss"
-                                    )}
+                                    {" "}
+                                    <div className="dark:text-white">
+                                        {" "}
+                                        {city?.id}{" "}
+                                    </div>{" "}
                                 </Table.Cell>
                                 <Table.Cell>
-                                    {city?.status == 1 ? (
-                                        <span className="text-appGreen">
-                                            Enabled
-                                        </span>
-                                    ) : (
-                                        <span className="text-red-200">
-                                            Disabled
-                                        </span>
-                                    )}
+                                    {" "}
+                                    <div className="dark:text-white">
+                                        {city?.name}
+                                    </div>
+                                </Table.Cell>
+                                <Table.Cell>
+                                    {" "}
+                                    <div className="dark:text-white">
+                                        {" "}
+                                        {city?.country_name}
+                                    </div>{" "}
+                                </Table.Cell>
+                                <Table.Cell>
+                                    {" "}
+                                    <div className="dark:text-white">
+                                        {dayjs(city?.created_at).format(
+                                            "DD-MM-YYYY; HH:mm:ss"
+                                        )}
+                                    </div>
+                                </Table.Cell>
+                                <Table.Cell>
+                                    {" "}
+                                    <div className="dark:text-white">
+                                        {city?.status == 1 ? (
+                                            <span className="text-appGreen">
+                                                Enabled
+                                            </span>
+                                        ) : (
+                                            <span className="text-red-200">
+                                                Disabled
+                                            </span>
+                                        )}
+                                    </div>
                                 </Table.Cell>
 
                                 <Table.Cell>
-                                    <CityLine
-                                        city={city}
-                                        setSelectedCity={setSelectedCity}
-                                        setOpenDelete={setOpenDelete}
-                                        setOpenUpdate={setOpenUpdate}
-                                        setOpenSee={setOpenSee}
-                                    />
+                                    {" "}
+                                    <div className="dark:text-white">
+                                        <CityLine
+                                            city={city}
+                                            setSelectedCity={setSelectedCity}
+                                            setOpenDelete={setOpenDelete}
+                                            setOpenUpdate={setOpenUpdate}
+                                            setOpenSee={setOpenSee}
+                                        />{" "}
+                                    </div>
                                 </Table.Cell>
                             </Table.Row>
                         ))}
@@ -190,7 +216,7 @@ const CreateModal = ({ open, setOpen, countries }) => {
     const getCityId = () => {
         countries?.map((e) => {
             if (e.name == country) {
-                 setCityInfos({
+                setCityInfos({
                     ...cityInfos,
                     country_id: e.id,
                 });
@@ -200,7 +226,6 @@ const CreateModal = ({ open, setOpen, countries }) => {
     };
 
     const createCity = async () => {
-
         const res = await postWithAxios("/api/city-save", cityInfos);
         if (res.message) {
             setOpen(false);
@@ -219,10 +244,7 @@ const CreateModal = ({ open, setOpen, countries }) => {
 
     useEffect(() => {
         getCityId();
-        
     }, [country]);
-
-
 
     return (
         <Modal
@@ -465,8 +487,8 @@ const UpdateModal = ({ city, open, setOpen, countries }) => {
     }, [city]);
 
     useEffect(() => {
-        setCountry(city?.country_name)
-    },[city])
+        setCountry(city?.country_name);
+    }, [city]);
     return (
         <Modal
             open={open}
@@ -501,12 +523,10 @@ const UpdateModal = ({ city, open, setOpen, countries }) => {
 
                         <CountryDropdown
                             value={country}
-                            
                             onChange={(val) => setCountry(val)}
                             whitelist={countrycodes}
                             classes="form-control"
                         />
-
                     </div>
 
                     <div className="form-group">
@@ -761,12 +781,19 @@ const SeeModal = ({ city, open, setOpen }) => {
                     <hr />
                     <div className="grid grid-cols-2 gap-4 text-start">
                         <div className="font-bold">Created Date</div>
-                        <div>{dayjs(city?.created_at).format("DD-MM-YYYY; HH:mm:ss")}</div>
+                        <div>
+                            {dayjs(city?.created_at).format(
+                                "DD-MM-YYYY; HH:mm:ss"
+                            )}
+                        </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4 text-start">
                         <div className="font-bold">Updated Date</div>
-                        <div>{dayjs(city?.updated_at).format("DD-MM-YYYY; HH:mm:ss")}</div>
-
+                        <div>
+                            {dayjs(city?.updated_at).format(
+                                "DD-MM-YYYY; HH:mm:ss"
+                            )}
+                        </div>
                     </div>
                 </div>
             </Modal.Body>

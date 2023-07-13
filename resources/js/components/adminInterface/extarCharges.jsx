@@ -49,48 +49,69 @@ const ExtraCharges = () => {
                     <Table.Body>
                         {extraCharges?.map((extraCharge, index) => (
                             <Table.Row key={index}>
-                                <Table.Cell> {extraCharge?.id} </Table.Cell>
-                                <Table.Cell>{extraCharge?.title}</Table.Cell>
                                 <Table.Cell>
-                                    {" "}
-                                    {extraCharge?.country_name}{" "}
+                                    <div className="dark:text-white">
+                                        {" "}
+                                        {extraCharge?.id}{" "}
+                                    </div>
                                 </Table.Cell>
                                 <Table.Cell>
-                                    {" "}
-                                    {extraCharge?.city_name}{" "}
+                                    <div className="dark:text-white">
+                                        {extraCharge?.title}
+                                    </div>
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <div className="dark:text-white">
+                                        {" "}
+                                        {extraCharge?.country_name}{" "}
+                                    </div>
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <div className="dark:text-white">
+                                        {" "}
+                                        {extraCharge?.city_name}{" "}
+                                    </div>
                                 </Table.Cell>
 
                                 <Table.Cell>
-                                    {extraCharge?.charges}{" "}
-                                    {extraCharge?.charges_type == "fixed"
-                                        ? null
-                                        : "%"}
+                                    <div className="dark:text-white">
+                                        {extraCharge?.charges}{" "}
+                                        {extraCharge?.charges_type == "fixed"
+                                            ? null
+                                            : "%"}
+                                    </div>
                                 </Table.Cell>
                                 <Table.Cell>
-                                    {dayjs(extraCharge?.created_at).format(
-                                        "DD-MM-YYYY; HH:mm:ss"
-                                    )}
+                                    <div className="dark:text-white">
+                                        {dayjs(extraCharge?.created_at).format(
+                                            "DD-MM-YYYY; HH:mm:ss"
+                                        )}
+                                    </div>
                                 </Table.Cell>
                                 <Table.Cell>
-                                    {extraCharge?.status == 1 ? (
-                                        <span className="text-green-700">
-                                            Enabled
-                                        </span>
-                                    ) : (
-                                        <span className="text-red-700">
-                                            Disabled
-                                        </span>
-                                    )}
+                                    <div className="dark:text-white">
+                                        {extraCharge?.status == 1 ? (
+                                            <span className="text-green-700">
+                                                Enabled
+                                            </span>
+                                        ) : (
+                                            <span className="text-red-700">
+                                                Disabled
+                                            </span>
+                                        )}
+                                    </div>
                                 </Table.Cell>
                                 <Table.Cell>
-                                    <ExtraChargeLine
-                                        extraCharge={extraCharge}
-                                        setOpenDelete={setOpenDelete}
-                                        setOpenUpdate={setOpenUpdate}
-                                        setSelectedExtraCharges={
-                                            setSelectedExtraCharges
-                                        }
-                                    />
+                                    <div className="dark:text-white">
+                                        <ExtraChargeLine
+                                            extraCharge={extraCharge}
+                                            setOpenDelete={setOpenDelete}
+                                            setOpenUpdate={setOpenUpdate}
+                                            setSelectedExtraCharges={
+                                                setSelectedExtraCharges
+                                            }
+                                        />
+                                    </div>
                                 </Table.Cell>
                             </Table.Row>
                         ))}
@@ -190,8 +211,7 @@ const CountryAndCity = ({ country, setCountry, city, setCity }) => {
         } else {
             const res = await getWithAxios("/api/city-list");
             setCities(res.data);
-            setCity(res.data[0].id)
-
+            setCity(res.data[0].id);
         }
     };
 

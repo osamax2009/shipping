@@ -47,21 +47,42 @@ const ParcelTypes = () => {
                     <Table.Body>
                         {parcelTypes?.map((parcel, index) => (
                             <Table.Row key={index}>
-                                <Table.Cell> {parcel?.id} </Table.Cell>
-                                <Table.Cell>{parcel?.label}</Table.Cell>
-                                <Table.Cell> {parcel?.value} </Table.Cell>
                                 <Table.Cell>
-                                    {dayjs(parcel?.created_at).format(
-                                        "DD-MM-YYYY; HH:mm:ss"
-                                    )}
+                                    <div className="dark:text-white">
+                                        {" "}
+                                        {parcel?.id}{" "}
+                                    </div>
                                 </Table.Cell>
                                 <Table.Cell>
-                                    <ParcelLine
-                                        parcel={parcel}
-                                        setSelectedParcel={setSelectedParcel}
-                                        setOpenUpdate={setOpenUpdate}
-                                        setOpenDelete={setOpenDelete}
-                                    />
+                                    <div className="dark:text-white">
+                                        {" "}
+                                        {parcel?.label}
+                                    </div>
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <div className="dark:text-white">
+                                        {" "}
+                                        {parcel?.value}{" "}
+                                    </div>
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <div className="dark:text-white">
+                                        {dayjs(parcel?.created_at).format(
+                                            "DD-MM-YYYY; HH:mm:ss"
+                                        )}
+                                    </div>
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <div className="dark:text-white">
+                                        <ParcelLine
+                                            parcel={parcel}
+                                            setSelectedParcel={
+                                                setSelectedParcel
+                                            }
+                                            setOpenUpdate={setOpenUpdate}
+                                            setOpenDelete={setOpenDelete}
+                                        />
+                                    </div>
                                 </Table.Cell>
                             </Table.Row>
                         ))}

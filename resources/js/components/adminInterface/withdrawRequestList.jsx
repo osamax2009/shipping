@@ -10,7 +10,7 @@ const WithdrawRequest = () => {
 
     const getWithdrawRequests = async () => {
         const res = await getWithAxios("/api/withdrawrequest-list");
-       
+
         setWithdrawRequests(res.data);
     };
 
@@ -40,45 +40,65 @@ const WithdrawRequest = () => {
                             {withdrawRequests?.map((withdrawRequest, index) => (
                                 <Table.Row key={index}>
                                     <Table.Cell>
-                                        {" "}
-                                        {withdrawRequest.id}{" "}
+                                        <div className="dark:text-white">
+                                            {" "}
+                                            {withdrawRequest.id}{" "}
+                                        </div>{" "}
                                     </Table.Cell>
                                     <Table.Cell>
-                                        {withdrawRequest.user_name}
+                                        <div className="dark:text-white">
+                                            {withdrawRequest.user_name}
+                                        </div>{" "}
                                     </Table.Cell>
                                     <Table.Cell>
-                                        {withdrawRequest.amount}
+                                        <div className="dark:text-white">
+                                            {withdrawRequest.amount}
+                                        </div>{" "}
                                     </Table.Cell>
                                     <Table.Cell>
-                                        {withdrawRequest.wallet_balance}
-                                    </Table.Cell>
-
-                                    <Table.Cell>
-                                        {dayjs(withdrawRequest.created_at).format("DD-MM-YYYY; HH:mm:ss")}
-                                    </Table.Cell>
-                                    
-                                    <Table.Cell>
-                                        {withdrawRequest.status == "requested" ? (
-                                            <span className="text-purple-700">
-                                               {withdrawRequest.status}
-                                            </span>
-                                        ) : withdrawRequest.status == "approved" ? (
-                                            <span className="text-green-700">
-                                                {withdrawRequest.status}
-                                            </span>
-                                        ) : (
-                                            <span className="text-red-700">
-                                               {withdrawRequest.status}
-                                            </span>
-                                        )}
+                                        <div className="dark:text-white">
+                                            {withdrawRequest.wallet_balance}
+                                        </div>{" "}
                                     </Table.Cell>
 
                                     <Table.Cell>
-                                        {/*  <WithdrawRequestLine withdrawRequest={withdrawRequest} /> */}
+                                        <div className="dark:text-white">
+                                            {dayjs(
+                                                withdrawRequest.created_at
+                                            ).format("DD-MM-YYYY; HH:mm:ss")}
+                                        </div>{" "}
                                     </Table.Cell>
 
                                     <Table.Cell>
-                                        {/*  <WithdrawRequestLine withdrawRequest={withdrawRequest} /> */}
+                                        <div className="dark:text-white">
+                                            {withdrawRequest.status ==
+                                            "requested" ? (
+                                                <span className="text-purple-700">
+                                                    {withdrawRequest.status}
+                                                </span>
+                                            ) : withdrawRequest.status ==
+                                              "approved" ? (
+                                                <span className="text-green-700">
+                                                    {withdrawRequest.status}
+                                                </span>
+                                            ) : (
+                                                <span className="text-red-700">
+                                                    {withdrawRequest.status}
+                                                </span>
+                                            )}
+                                        </div>{" "}
+                                    </Table.Cell>
+
+                                    <Table.Cell>
+                                        <div className="dark:text-white">
+                                            {/*  <WithdrawRequestLine withdrawRequest={withdrawRequest} /> */}
+                                        </div>{" "}
+                                    </Table.Cell>
+
+                                    <Table.Cell>
+                                        <div className="dark:text-white">
+                                            {/*  <WithdrawRequestLine withdrawRequest={withdrawRequest} /> */}
+                                        </div>{" "}
                                     </Table.Cell>
                                 </Table.Row>
                             ))}
@@ -102,9 +122,5 @@ const WithdrawRequest = () => {
 export default WithdrawRequest;
 
 const ActionsLine = () => {
-    return(
-        <div>
-            
-        </div>
-    )
-}
+    return <div></div>;
+};

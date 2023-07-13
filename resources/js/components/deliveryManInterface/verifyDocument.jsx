@@ -65,36 +65,46 @@ const VerifyDocument = () => {
                             {userDocuments?.map((userDocument, index) => (
                                 <Table.Row key={index}>
                                     <Table.Cell>
-                                        {" "}
-                                        #{userDocument.id}{" "}
+                                        <div className="dark:text-white">
+                                            {" "}
+                                            #{userDocument.id}{" "}
+                                        </div>
                                     </Table.Cell>
                                     <Table.Cell>
-                                        {userDocument.delivery_man_name}
+                                        <div className="dark:text-white">
+                                            {userDocument.delivery_man_name}
+                                        </div>
                                     </Table.Cell>
                                     <Table.Cell>
-                                        {userDocument.document_name}
+                                        <div className="dark:text-white">
+                                            {userDocument.document_name}
+                                        </div>
                                     </Table.Cell>
                                     <Table.Cell>
-                                        <div className="flex justify-start">
-                                            <Image
-                                                src={
-                                                    userDocument.delivery_man_document
-                                                }
-                                                width={80}
-                                                height={60}
-                                            />
+                                        <div className="dark:text-white">
+                                            <div className="flex justify-start">
+                                                <Image
+                                                    src={
+                                                        userDocument.delivery_man_document
+                                                    }
+                                                    width={80}
+                                                    height={60}
+                                                />
+                                            </div>
                                         </div>
                                     </Table.Cell>
 
                                     <Table.Cell>
-                                        {dayjs(userDocument.created_at).format(
-                                            "DD-MM-YYYY; HH:mm:ss"
-                                        )}
+                                        <div className="dark:text-white">
+                                            {dayjs(
+                                                userDocument.created_at
+                                            ).format("DD-MM-YYYY; HH:mm:ss")}
+                                        </div>
                                     </Table.Cell>
 
-                                    {/*  <Table.Cell>
+                                    {/*  <Table.Cell><div className="dark:text-white">
                                           <userDocumentLine userDocument={userDocument} />
-                                    </Table.Cell> */}
+                                    </div></Table.Cell> */}
                                 </Table.Row>
                             ))}
                         </Table.Body>

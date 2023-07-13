@@ -5,8 +5,6 @@ import Index from "./userInterface";
 import Login from "./userInterface/login";
 import Register from "./userInterface/register";
 import { UserContextProvider } from "./contexts/userContext";
-import PlaceOrder from "./userInterface/userDashboard/placeOrder";
-import Profile from "./userInterface/userDashboard/profile";
 import AdminDashboardLayout from "./adminInterface/layout";
 import Country from "./adminInterface/country";
 import City from "./adminInterface/city";
@@ -56,6 +54,8 @@ import ViewUser from "./adminInterface/viewUser";
 import TermAndCondition from "./partials/termAndCondition";
 import AllNotifications from "./adminInterface/allNotifications";
 import StripePayment from "./partials/stripePayment";
+import Profile from "./partials/profile";
+import NotFoundPage from "./partials/404";
 
 
 const router = createBrowserRouter([
@@ -142,6 +142,10 @@ const router = createBrowserRouter([
                 path: "payment",
                 element: <Payment />,
             },
+            {
+                path : "notifications",
+                element : <AllNotifications />
+            }
         ],
     },
 
@@ -196,6 +200,11 @@ const router = createBrowserRouter([
                 path: "payment",
                 element: <Payment />,
             },
+
+            {
+                path : "notifications",
+                element : <AllNotifications />
+            }
         ],
     },
 
@@ -366,6 +375,11 @@ const router = createBrowserRouter([
             }
         ],
     },
+
+    {
+        path : "*",
+        element : <NotFoundPage />
+    }
 ]);
 
 if (document.getElementById("page-top")) {

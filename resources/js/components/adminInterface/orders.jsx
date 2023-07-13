@@ -104,79 +104,125 @@ const Orders = () => {
                         }}
                     >
                         <Table.Header>
-                            <Table.Column align="center" width={"auto"}>Order Id</Table.Column>
-                            <Table.Column align="center" width={"auto"}>Customer Name</Table.Column>
-                            <Table.Column align="center" width={"auto"}>Delivery Person</Table.Column>
-                            <Table.Column align="center" width={"auto"}>PickUp Date</Table.Column>
-                            <Table.Column align="center" width={"auto"}>PickUp Address</Table.Column>
-                            <Table.Column align="center" width={"auto"}>Delivery Address</Table.Column>
-                            <Table.Column align="center" width={"auto"}>Create Date</Table.Column>
-                            <Table.Column align="center" width={"auto"}>Status</Table.Column>
-                            <Table.Column align="center" width={"auto"}>Assign</Table.Column>
-                            <Table.Column align="center" width={"auto"}>Actions</Table.Column>
+                            <Table.Column align="center" width={"auto"}>
+                                Order Id
+                            </Table.Column>
+                            <Table.Column align="center" width={"auto"}>
+                                Customer Name
+                            </Table.Column>
+                            <Table.Column align="center" width={"auto"}>
+                                Delivery Person
+                            </Table.Column>
+                            <Table.Column align="center" width={"auto"}>
+                                PickUp Date
+                            </Table.Column>
+                            <Table.Column align="center" width={"auto"}>
+                                PickUp Address
+                            </Table.Column>
+                            <Table.Column align="center" width={"auto"}>
+                                Delivery Address
+                            </Table.Column>
+                            <Table.Column align="center" width={"auto"}>
+                                Create Date
+                            </Table.Column>
+                            <Table.Column align="center" width={"auto"}>
+                                Status
+                            </Table.Column>
+                            <Table.Column align="center" width={"auto"}>
+                                Assign
+                            </Table.Column>
+                            <Table.Column align="center" width={"auto"}>
+                                Actions
+                            </Table.Column>
                         </Table.Header>
                         <Table.Body>
                             {orders?.map((order, index) => (
                                 <Table.Row key={index}>
                                     <Table.Cell>
-                                        <Link
-                                            className="underline"
-                                            to={
-                                                "/" +  user?.user_type + "/orderdetail/order_Id/" +
-                                                order?.id
-                                            }
-                                        >
-                                            #{order?.id}
-                                        </Link>
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                        <div className="truncate w-[80px]">
-                                            {order?.client_name}
+                                        <div className="dark:text-white">
+                                            <Link
+                                                className="underline"
+                                                to={
+                                                    "/" +
+                                                    user?.user_type +
+                                                    "/orderdetail/order_Id/" +
+                                                    order?.id
+                                                }
+                                            >
+                                                #{order?.id}
+                                            </Link>
                                         </div>
                                     </Table.Cell>
                                     <Table.Cell>
-                                        <div className="truncate w-[80px]">
-                                            {order?.delivery_man_name}
+                                        <div className="dark:text-white">
+                                            <div className="truncate w-[80px]">
+                                                {order?.client_name}
+                                            </div>
                                         </div>
                                     </Table.Cell>
                                     <Table.Cell>
-                                        {dayjs(order?.pickup_point.date).format(
-                                            "DD-MM-YYYY; HH:mm:ss"
-                                        )}
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                        <div className="truncate w-[80px]">
-                                            {order?.pickup_point.address}
+                                        <div className="dark:text-white">
+                                            <div className="truncate w-[80px]">
+                                                {order?.delivery_man_name}
+                                            </div>
                                         </div>
                                     </Table.Cell>
                                     <Table.Cell>
-                                        <div className="truncate w-[80px]">
-                                            {order?.delivery_point.address}
+                                        <div className="dark:text-white">
+                                            {dayjs(
+                                                order?.pickup_point.date
+                                            ).format("DD-MM-YYYY; HH:mm:ss")}
                                         </div>
                                     </Table.Cell>
                                     <Table.Cell>
-                                        {dayjs(order?.date).format(
-                                            "DD-MM-YYYY; HH:mm:ss"
-                                        )}
+                                        <div className="dark:text-white">
+                                            <div className="truncate w-[80px]">
+                                                {order?.pickup_point.address}
+                                            </div>
+                                        </div>
                                     </Table.Cell>
                                     <Table.Cell>
-                                        <Status order={order} />
+                                        <div className="dark:text-white">
+                                            <div className="truncate w-[80px]">
+                                                {order?.delivery_point.address}
+                                            </div>
+                                        </div>
                                     </Table.Cell>
                                     <Table.Cell>
-                                        <Assign
-                                            order={order}
-                                            setOpenUpdate={setOpenUpdate}
-                                            setSelectedOrder={setSelectedOrder}
-                                            setOpenCancel={setOpenCancel}
-                                        />
+                                        <div className="dark:text-white">
+                                            {dayjs(order?.date).format(
+                                                "DD-MM-YYYY; HH:mm:ss"
+                                            )}
+                                        </div>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <div className="dark:text-white">
+                                            <Status order={order} />
+                                        </div>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <div className="dark:text-white">
+                                            <Assign
+                                                order={order}
+                                                setOpenUpdate={setOpenUpdate}
+                                                setSelectedOrder={
+                                                    setSelectedOrder
+                                                }
+                                                setOpenCancel={setOpenCancel}
+                                            />
+                                        </div>
                                     </Table.Cell>
 
                                     <Table.Cell>
-                                        <OrderLine
-                                            order={order}
-                                            setSelectedOrder={setSelectedOrder}
-                                            setOpenDelete={setOpenDelete}
-                                        />
+                                        <div className="dark:text-white">
+                                            <OrderLine
+                                                order={order}
+                                                setSelectedOrder={
+                                                    setSelectedOrder
+                                                }
+                                                setOpenDelete={setOpenDelete}
+                                            />
+                                        </div>
                                     </Table.Cell>
                                 </Table.Row>
                             ))}

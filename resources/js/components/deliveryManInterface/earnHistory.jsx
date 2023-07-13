@@ -34,9 +34,9 @@ const EarnHistory = () => {
                 <Table.Body>
                     {orders?.map((order, index) => (
                         <Table.Row key={index}>
-                            <Table.Cell> {order.id} </Table.Cell>
-                            <Table.Cell> {order.user_name} </Table.Cell>
-                            <Table.Cell> {order.amount} </Table.Cell>
+                            <Table.Cell><div className="dark:text-white"> {order.id} </div></Table.Cell>
+                            <Table.Cell><div className="dark:text-white"> {order.user_name} </div></Table.Cell>
+                            <Table.Cell><div className="dark:text-white"> {order.amount} </div></Table.Cell>
                         </Table.Row>
                     ))}
                 </Table.Body>

@@ -50,41 +50,70 @@ const Vehicle = () => {
                     <Table.Body>
                         {vehicles?.map((vehicle, index) => (
                             <Table.Row key={index}>
-                                <Table.Cell> {vehicle.id} </Table.Cell>
-                                <Table.Cell>{vehicle.title}</Table.Cell>
-                                <Table.Cell> {vehicle.size} </Table.Cell>
-                                <Table.Cell> {vehicle.capacity} </Table.Cell>
-
-                                <Table.Cell>{vehicle.description}</Table.Cell>
                                 <Table.Cell>
-                                    {vehicle.status == 1 ? (
-                                        <span className="text-green-700">
-                                            Enabled
-                                        </span>
-                                    ) : (
-                                        <span className="text-red-700">
-                                            Disabled
-                                        </span>
-                                    )}
+                                    <div className="dark:text-white">
+                                        {" "}
+                                        {vehicle.id}{" "}
+                                    </div>
                                 </Table.Cell>
                                 <Table.Cell>
-                                    <div className="flex justify-start w-full">
-                                        <Image
-                                            src={vehicle.vehicle_image}
-                                            width={80}
-                                            height={60}
-                                            alt={"vehicle image"}
-                                        />
+                                    <div className="dark:text-white">
+                                        {vehicle.title}
+                                    </div>
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <div className="dark:text-white">
+                                        {" "}
+                                        {vehicle.size}{" "}
+                                    </div>
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <div className="dark:text-white">
+                                        {" "}
+                                        {vehicle.capacity}{" "}
                                     </div>
                                 </Table.Cell>
 
                                 <Table.Cell>
-                                    <VehicleLine
-                                        setOpenDelete={setOpenDelete}
-                                        setOpenUpdate={setOpenUpdate}
-                                        setSelected={setSelected}
-                                        vehicle={vehicle}
-                                    />
+                                    <div className="dark:text-white">
+                                        {vehicle.description}
+                                    </div>
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <div className="dark:text-white">
+                                        {vehicle.status == 1 ? (
+                                            <span className="text-green-700">
+                                                Enabled
+                                            </span>
+                                        ) : (
+                                            <span className="text-red-700">
+                                                Disabled
+                                            </span>
+                                        )}
+                                    </div>
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <div className="dark:text-white">
+                                        <div className="flex justify-start w-full">
+                                            <Image
+                                                src={vehicle.vehicle_image}
+                                                width={80}
+                                                height={60}
+                                                alt={"vehicle image"}
+                                            />
+                                        </div>
+                                    </div>
+                                </Table.Cell>
+
+                                <Table.Cell>
+                                    <div className="dark:text-white">
+                                        <VehicleLine
+                                            setOpenDelete={setOpenDelete}
+                                            setOpenUpdate={setOpenUpdate}
+                                            setSelected={setSelected}
+                                            vehicle={vehicle}
+                                        />
+                                    </div>
                                 </Table.Cell>
                             </Table.Row>
                         ))}
@@ -430,9 +459,9 @@ const UpdateModal = ({ oldVehicle, open, setOpen }) => {
 
         const res = await postWithAxios("/api/vehicle-save", data);
         setOpen(false);
-        
+
         if (res.message == "Vehicle has been save successfully.") {
-            setImages([])
+            setImages([]);
             toast(res.message, {
                 type: "success",
                 hideProgressBar: true,

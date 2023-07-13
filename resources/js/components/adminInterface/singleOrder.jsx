@@ -63,7 +63,7 @@ const SingleOrder = () => {
                 }
 
                 if (user?.user_type == "delivery_man") {
-                    const url = "/delivery_man/orders";
+                    const url = "/delivery_man/order-list";
                     navigate(url);
                 }
             }
