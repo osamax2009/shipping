@@ -274,7 +274,10 @@ const AdminCreateOrder = () => {
                 extra_charges: extraChargesData(),
                 parcel_type: service.value,
                 total_weight: weight,
-                total_distance: distance,
+                total_distance: haversine_distance(
+                    pickLocationDetails,
+                    deliveryLocationDetails
+                ),
                 payment_collect_from: receivePaymentFrom,
                 status: "draft",
                 payment_type: "cash",

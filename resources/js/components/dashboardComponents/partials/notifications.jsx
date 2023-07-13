@@ -1,22 +1,25 @@
 import { BsBell } from "react-icons/bs";
 import { postWithAxios } from "../../api/axios";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { UserContext } from "../../contexts/userContext";
+import { useContext } from "react";
+import { Avatar } from "@nextui-org/react";
+import { FaRegComments } from "react-icons/fa";
 
 const Notifications = () => {
+    const [notifications, setNotifications] = useState([]);
+    const [unread, setUnread] = useState(0);
 
-    const [notifications, setNotifications] = useState([])
-    const [unread, setUnread] = useState(0)
-
-    const getNotifications = async() => {
-        const res = await postWithAxios("/api/notification-list")
-        setNotifications(res.data.notification_data)
-        setUnread(res.data.all_unread_count)
-    }
+    const getNotifications = async () => {
+        const res = await postWithAxios("/api/notification-list");
+        setNotifications(res.notification_data);
+        setUnread(res.all_unread_count);
+    };
 
     useEffect(() => {
-        getNotifications()
-    }, [])
-
+        getNotifications();
+    }, []);
 
     return (
         <li className="nav-item dropdown">
@@ -27,43 +30,50 @@ const Notifications = () => {
                 aria-expanded="false"
             >
                 <BsBell className="text-lg" />
-                <span className="badge badge-warning navbar-badge"> {unread} </span>
+                <span className="badge badge-warning navbar-badge">
+                    {" "}
+                    {unread}{" "}
+                </span>
             </a>
             <div
-                className="dropdown-menu dropdown-menu-lg dropdown-menu-right"
+                className="dropdown-menu gap-4 dropdown-menu-right shadow animated--grow-in"
                 style={{ left: "inherit", right: "0px;" }}
             >
                 <span className="dropdown-item dropdown-header">
-                    {unread} Notifications
+                    <div className="flex justify-between">
+                        <span>{unread} Notifications</span>
+                        <button className="text-appGreen">Mark all us read</button>
+                    </div>
+
                 </span>
                 <div className="dropdown-divider"></div>
-                <a href="#" className="dropdown-item">
-                    <i className="fas fa-envelope mr-2"></i> 4 new messages
-                    <span className="float-right text-muted text-sm">
-                        3 mins
-                    </span>
-                </a>
+                {notifications?.slice(0,4).map((notification, index) => (
+                    <Notification notification={notification} key={index} />
+                ))}
+
                 <div className="dropdown-divider"></div>
-                <a href="#" className="dropdown-item">
-                    <i className="fas fa-users mr-2"></i> 8 friend requests
-                    <span className="float-right text-muted text-sm">
-                        12 hours
-                    </span>
-                </a>
-                <div className="dropdown-divider"></div>
-                <a href="#" className="dropdown-item">
-                    <i className="fas fa-file mr-2"></i> 3 new reports
-                    <span className="float-right text-muted text-sm">
-                        2 days
-                    </span>
-                </a>
-                <div className="dropdown-divider"></div>
-                <a href="#" className="dropdown-item dropdown-footer">
+                <Link to={"/admin/notifications"} className="dropdown-item dropdown-footer">
                     See All Notifications
-                </a>
+                </Link>
             </div>
         </li>
     );
 };
 
 export default Notifications;
+
+const Notification = ({ notification }) => {
+    const {user, setUser} = useContext(UserContext)
+    return (
+        <Link className="dropdown-item" to={ "/" + user?.user_type + "/orderdetail/order_Id/" + notification?.data.id}>
+            <div className="flex gap-4 px-3 items-center focus:no-underline">
+            <Avatar size={'lg'} icon={<FaRegComments className="text-appGreen" />} /> <div className="grid gap-2">
+                <div className="font-bold"> {notification?.data.subject} </div>
+                <div> {notification?.data.message} </div>
+               </div>
+                <span className="float-right text-muted text-sm">  {notification?.created_at} </span>
+           
+            </div>
+        </Link>
+    );
+};

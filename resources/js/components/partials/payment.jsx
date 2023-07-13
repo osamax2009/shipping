@@ -3,21 +3,41 @@ import { useLocation } from "react-router-dom";
 import { getWithAxios, postWithAxios } from "../api/axios";
 import { useEffect } from "react";
 import { Image } from "@nextui-org/react";
+import { useContext } from "react";
+import { AppSettingsContext } from "../contexts/appSettings";
+import StripePaymentForm from "./stripePayment";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe(
+    "pk_test_51Lzc2NHoogcL4mgfk0PWSVUoNIL6594xgpkQQKtAZextrkEH7Yk2UTXukicZDPhkHIgUQ1hYNsrKimVG3qfo5piZ002WnIwWEz"
+);
 
 const Payment = () => {
     const [paymentMethods, setPaymentMethods] = useState();
     const [selectedGateway, setSelectedGateway] = useState();
+    const { appSettings, setAppSettings } = useContext(AppSettingsContext);
     const location = useLocation();
     const state = location.state;
 
+    const options = {
+        //clientSecret: selectedGateway ? selectedGateway?.test_value.secret_key : '',
+        clientSecret: "{{CLIENT_SECRET}}",
+        //  mode : "payment"
+    };
+
     const getPaymentsMethods = async () => {
         const res = await getWithAxios("/api/paymentgateway-list");
-        console.log(res);
+
         setPaymentMethods(res.data);
     };
 
     const savePayment = async () => {
-        const dataToSend = {};
+        
+        const dataToSend = {
+            amount: state.paymentAmount,
+            currency: appSettings?.currency_code,
+        };
 
         const res = await postWithAxios("/api/paymentgateway-save", dataToSend);
     };
@@ -50,27 +70,13 @@ const Payment = () => {
                     </div>
                 ))}
             </div>
-            {
-                selectedGateway && <div className=" grid md:grid-cols-2 gap-4 pt-6">
-                    <div className="col-span-2">
-                        Add your informations
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor=""> Title</label>
-                        <input type="text" disabled value={selectedGateway.type} className="form-control" />
-                    </div>
-
-                    <div className="form-group">
-                        <label htmlFor="">Amount</label>
-                        <input type="text" disabled value={state.paymentAmount} className="form-control" />
-                    </div>
-                    
-                    <div className="form-group">
-                        <label htmlFor=""> Credit card Number </label>
-                        <input type="text" disabled value={selectedGateway.type} className="form-control" />
-                    </div>
+            {selectedGateway?.type == "stripe" && (
+                <div className="py-8">
+                    <Elements stripe={stripePromise} options={options}>
+                        <StripePaymentForm />
+                    </Elements>
                 </div>
-            }
+            )}
         </div>
     );
 };

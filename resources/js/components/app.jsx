@@ -54,6 +54,9 @@ import Myfatoorah from "./adminInterface/paymentGateway/myfatoorah";
 import { ThemeProvider } from "next-themes";
 import ViewUser from "./adminInterface/viewUser";
 import TermAndCondition from "./partials/termAndCondition";
+import AllNotifications from "./adminInterface/allNotifications";
+import StripePayment from "./partials/stripePayment";
+
 
 const router = createBrowserRouter([
     /*   Common routes */
@@ -109,6 +112,11 @@ const router = createBrowserRouter([
             {
                 path: "wallet",
                 element: <Wallet />,
+            },
+
+            {
+                path : "payment/stripe",
+                element : <StripePayment />
             },
 
             {
@@ -245,6 +253,11 @@ const router = createBrowserRouter([
             },
 
             {
+                path: "wallet",
+                element: <Wallet />,
+            },
+
+            {
                 path: "paymentgateway",
                 element: <PaymentGateway />,
             },
@@ -346,6 +359,11 @@ const router = createBrowserRouter([
                 path: "orderdetail/order_Id/:order_Id",
                 element: <SingleOrder />,
             },
+
+            {
+                path : "notifications",
+                element : <AllNotifications />
+            }
         ],
     },
 ]);

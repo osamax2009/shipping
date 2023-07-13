@@ -104,16 +104,16 @@ const Orders = () => {
                         }}
                     >
                         <Table.Header>
-                            <Table.Column>Order Id</Table.Column>
-                            <Table.Column>Customer Name</Table.Column>
-                            <Table.Column>Delivery Person</Table.Column>
-                            <Table.Column>PickUp Date</Table.Column>
-                            <Table.Column>PickUp Address</Table.Column>
-                            <Table.Column>Delivery Address</Table.Column>
-                            <Table.Column>Create Date</Table.Column>
-                            <Table.Column>Status</Table.Column>
-                            <Table.Column>Assign</Table.Column>
-                            <Table.Column>Actions</Table.Column>
+                            <Table.Column align="center" width={"auto"}>Order Id</Table.Column>
+                            <Table.Column align="center" width={"auto"}>Customer Name</Table.Column>
+                            <Table.Column align="center" width={"auto"}>Delivery Person</Table.Column>
+                            <Table.Column align="center" width={"auto"}>PickUp Date</Table.Column>
+                            <Table.Column align="center" width={"auto"}>PickUp Address</Table.Column>
+                            <Table.Column align="center" width={"auto"}>Delivery Address</Table.Column>
+                            <Table.Column align="center" width={"auto"}>Create Date</Table.Column>
+                            <Table.Column align="center" width={"auto"}>Status</Table.Column>
+                            <Table.Column align="center" width={"auto"}>Assign</Table.Column>
+                            <Table.Column align="center" width={"auto"}>Actions</Table.Column>
                         </Table.Header>
                         <Table.Body>
                             {orders?.map((order, index) => (

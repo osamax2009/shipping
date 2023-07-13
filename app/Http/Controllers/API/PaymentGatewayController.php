@@ -19,7 +19,7 @@ class PaymentGatewayController extends Controller
             $gateways = $gateways->where('status',request('status'));
         }
 
-        $gateways = $gateways->orderBy('title','asc')->paginate(10);
+        $gateways = $gateways->orderBy('id','asc')->paginate(10);
         $items = PaymentGatewayResource::collection($gateways);
 
         $response = [

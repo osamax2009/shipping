@@ -56,17 +56,16 @@ const GatewayLayout = ({ title, type, fields }) => {
             data.append("gateway_logo", images[0]);
         }
 
-      //  console.log(current?.test_value)
-      //  console.log(data.get('value'))
 
         const res = await postWithAxios("/api/paymentgateway-save", data);
+      
 
         toast(res.message, {
             type: "info",
             hideProgressBar: true,
         });
 
-        navigate("/admin/paymentgateway");
+       navigate("/admin/paymentgateway");
     };
 
     useEffect(() => {
