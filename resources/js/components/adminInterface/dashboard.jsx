@@ -168,7 +168,7 @@ const Minicard = ({ value, title }) => {
 };
 
 const RecentOrder = ({ dashboard }) => {
-    const {user, setUser} = useContext(UserContext)
+    const { user, setUser } = useContext(UserContext);
     return (
         <Table>
             <Table.Header>
@@ -206,13 +206,27 @@ const RecentOrder = ({ dashboard }) => {
                                 #{order?.id}
                             </Link>
                         </Table.Cell>
-                        <Table.Cell> {order.client_name} </Table.Cell>
-                        <Table.Cell> {order.delivery_man_name} </Table.Cell>
                         <Table.Cell>
                             {" "}
-                            {dayjs(order.pickup_point.date).format(
-                                "DD-MM-YYYY; HH:mm:ss"
-                            )}{" "}
+                            <div className="dark:text-white">
+                                {order.client_name}
+                            </div>{" "}
+                        </Table.Cell>
+                        <Table.Cell>
+                            {" "}
+                            <div className="dark:text-white">
+                                {" "}
+                                {order.delivery_man_name}
+                            </div>{" "}
+                        </Table.Cell>
+                        <Table.Cell>
+                            {" "}
+                            <div className="dark:text-white">
+                                {" "}
+                                {dayjs(order.pickup_point.date).format(
+                                    "DD-MM-YYYY; HH:mm:ss"
+                                )}{" "}
+                            </div>
                         </Table.Cell>
                     </Table.Row>
                 ))}
@@ -222,7 +236,7 @@ const RecentOrder = ({ dashboard }) => {
 };
 
 const UpComingOrder = ({ dashboard }) => {
-    const {user, setUser} = useContext(UserContext)
+    const { user, setUser } = useContext(UserContext);
     return (
         <Table>
             <Table.Header>
@@ -260,13 +274,25 @@ const UpComingOrder = ({ dashboard }) => {
                                 #{order?.id}
                             </Link>{" "}
                         </Table.Cell>
-                        <Table.Cell> {order.client_name} </Table.Cell>
-                        <Table.Cell> {order.delivery_man_name} </Table.Cell>
                         <Table.Cell>
-                            {" "}
-                            {dayjs(order.pickup_point.date).format(
-                                "DD-MM-YYYY; HH:mm:ss"
-                            )}{" "}
+                            <div className="dark:text-white">
+                                {" "}
+                                {order.client_name}
+                            </div>{" "}
+                        </Table.Cell>
+                        <Table.Cell>
+                            <div className="dark:text-white">
+                                {" "}
+                                {order.delivery_man_name}{" "}
+                            </div>{" "}
+                        </Table.Cell>
+                        <Table.Cell>
+                            <div className="dark:text-white">
+                                {" "}
+                                {dayjs(order.pickup_point.date).format(
+                                    "DD-MM-YYYY; HH:mm:ss"
+                                )}{" "}
+                            </div>
                         </Table.Cell>
                     </Table.Row>
                 ))}
@@ -299,10 +325,27 @@ const RecentUser = ({ dashboard }) => {
             <Table.Body>
                 {dashboard?.recent_client.map((client, index) => (
                     <Table.Row key={index}>
-                        <Table.Cell> {client.id} </Table.Cell>
-                        <Table.Cell> {client.name} </Table.Cell>
-                        <Table.Cell> {client.email} </Table.Cell>
-                        <Table.Cell> {client.city_name} </Table.Cell>
+                        <Table.Cell>
+                            <div className="dark:text-white"> {client.id} </div>{" "}
+                        </Table.Cell>
+                        <Table.Cell>
+                            {" "}
+                            <div className="dark:text-white">
+                                {client.name}{" "}
+                            </div>{" "}
+                        </Table.Cell>
+                        <Table.Cell>
+                            <div className="dark:text-white">
+                                {" "}
+                                {client.email}{" "}
+                            </div>{" "}
+                        </Table.Cell>
+                        <Table.Cell>
+                            <div className="dark:text-white">
+                                {" "}
+                                {client.city_name}{" "}
+                            </div>{" "}
+                        </Table.Cell>
                     </Table.Row>
                 ))}
             </Table.Body>
@@ -334,10 +377,27 @@ const RecentDeliveryPerson = ({ dashboard }) => {
             <Table.Body>
                 {dashboard?.recent_delivery_man.map((client, index) => (
                     <Table.Row key={index}>
-                        <Table.Cell> {client.id} </Table.Cell>
-                        <Table.Cell> {client.name} </Table.Cell>
-                        <Table.Cell> {client.email} </Table.Cell>
-                        <Table.Cell> {client.city_name} </Table.Cell>
+                        <Table.Cell>
+                            <div className="dark:text-white"> {client.id} </div>{" "}
+                        </Table.Cell>
+                        <Table.Cell>
+                            <div className="dark:text-white">
+                                {" "}
+                                {client.name}
+                            </div>{" "}
+                        </Table.Cell>
+                        <Table.Cell>
+                            <div className="dark:text-white">
+                                {" "}
+                                {client.email}
+                            </div>{" "}
+                        </Table.Cell>
+                        <Table.Cell>
+                            <div className="dark:text-white">
+                                {" "}
+                                {client.city_name}
+                            </div>{" "}
+                        </Table.Cell>
                     </Table.Row>
                 ))}
             </Table.Body>

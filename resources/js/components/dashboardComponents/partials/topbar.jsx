@@ -72,11 +72,15 @@ const Topbar = () => {
 
                 {/* right side controls*/}
                 <div className="flex gap-8 items-center h-full">
-                    {user?.user_type == "admin" && (
+                    {/*  {user?.user_type == "admin" && (
                         <div>
                             <Notifications />
                         </div>
-                    )}
+                    )} */}
+
+                    <div>
+                        <Notifications />
+                    </div>
                     <div>
                         <ThemeSwitcher />
                     </div>

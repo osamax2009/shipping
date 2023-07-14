@@ -51,37 +51,56 @@ const Document = () => {
                         <Table.Body>
                             {documents?.map((document, index) => (
                                 <Table.Row key={index}>
-                                    <Table.Cell> {document.id} </Table.Cell>
-                                    <Table.Cell>{document.name}</Table.Cell>
                                     <Table.Cell>
-                                        {document.is_required == 1
-                                            ? "Yes"
-                                            : "No"}
+                                        <div className="dark:text-white">
+                                            {" "}
+                                            {document.id}{" "}
+                                        </div>
                                     </Table.Cell>
                                     <Table.Cell>
-                                        {" "}
-                                        {dayjs(document.created_at).format("DD-MM-YYYY; HH:mm:ss")}{" "}
+                                        <div className="dark:text-white">
+                                            {document.name}
+                                        </div>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <div className="dark:text-white">
+                                            {document.is_required == 1
+                                                ? "Yes"
+                                                : "No"}
+                                        </div>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <div className="dark:text-white">
+                                            {" "}
+                                            {dayjs(document.created_at).format(
+                                                "DD-MM-YYYY; HH:mm:ss"
+                                            )}{" "}
+                                        </div>
                                     </Table.Cell>
 
                                     <Table.Cell>
-                                        {document.status == 1 ? (
-                                            <span className="text-green-700">
-                                                Enabled
-                                            </span>
-                                        ) : (
-                                            <span className="text-red-700">
-                                                Disabled
-                                            </span>
-                                        )}
+                                        <div className="dark:text-white">
+                                            {document.status == 1 ? (
+                                                <span className="text-green-700">
+                                                    Enabled
+                                                </span>
+                                            ) : (
+                                                <span className="text-red-700">
+                                                    Disabled
+                                                </span>
+                                            )}
+                                        </div>
                                     </Table.Cell>
 
                                     <Table.Cell>
-                                        <DocumentLine
-                                            document={document}
-                                            setOpenUpdate={setOpenUpdate}
-                                            setOpenDelete={setOpenDelete}
-                                            setSelected={setSelected}
-                                        />
+                                        <div className="dark:text-white">
+                                            <DocumentLine
+                                                document={document}
+                                                setOpenUpdate={setOpenUpdate}
+                                                setOpenDelete={setOpenDelete}
+                                                setSelected={setSelected}
+                                            />
+                                        </div>
                                     </Table.Cell>
                                 </Table.Row>
                             ))}

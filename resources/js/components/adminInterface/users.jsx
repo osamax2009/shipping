@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { BsEye, BsEyeSlash, BsPencilFill, BsTrash } from "react-icons/bs";
 import { toast } from "react-toastify";
 import dayjs from "dayjs";
-import  PhoneInput  from "react-phone-input-2";
+import PhoneInput from "react-phone-input-2";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const Users = () => {
@@ -55,43 +55,71 @@ const Users = () => {
                         <Table.Body>
                             {users?.map((user, index) => (
                                 <Table.Row key={index}>
-                                    <Table.Cell> {user.id} </Table.Cell>
-                                    <Table.Cell>{user.name}</Table.Cell>
                                     <Table.Cell>
-                                        {user.contact_number}
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                        <div className="truncate w-[170px]">
-                                            {user.email}
+                                        <div className="dark:text-white">
+                                            {" "}
+                                            {user.id}{" "}
                                         </div>
                                     </Table.Cell>
-                                    <Table.Cell> {user.city_name} </Table.Cell>
-                                    <Table.Cell>{user.country_name}</Table.Cell>
                                     <Table.Cell>
-                                        {dayjs(user.created_at).format(
-                                            "DD-MM-YYYY; HH:mm:ss"
-                                        )}
+                                        <div className="dark:text-white">
+                                            {user.name}
+                                        </div>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <div className="dark:text-white">
+                                            {user.contact_number}
+                                        </div>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <div className="dark:text-white">
+                                            <div className="truncate w-[170px]">
+                                                {user.email}
+                                            </div>
+                                        </div>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <div className="dark:text-white">
+                                            {" "}
+                                            {user.city_name}{" "}
+                                        </div>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <div className="dark:text-white">
+                                            {user.country_name}
+                                        </div>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <div className="dark:text-white">
+                                            {dayjs(user.created_at).format(
+                                                "DD-MM-YYYY; HH:mm:ss"
+                                            )}
+                                        </div>
                                     </Table.Cell>
 
                                     <Table.Cell>
-                                        {user.status == 1 ? (
-                                            <span className="text-green-700">
-                                                Enabled
-                                            </span>
-                                        ) : (
-                                            <span className="text-red-700">
-                                                Disabled
-                                            </span>
-                                        )}
+                                        <div className="dark:text-white">
+                                            {user.status == 1 ? (
+                                                <span className="text-green-700">
+                                                    Enabled
+                                                </span>
+                                            ) : (
+                                                <span className="text-red-700">
+                                                    Disabled
+                                                </span>
+                                            )}
+                                        </div>
                                     </Table.Cell>
 
                                     <Table.Cell>
-                                        <UserLine
-                                            user={user}
-                                            setOpenUpdate={setOpenUpdate}
-                                            setOpenDelete={setOpenDelete}
-                                            setSelected={setSelected}
-                                        />
+                                        <div className="dark:text-white">
+                                            <UserLine
+                                                user={user}
+                                                setOpenUpdate={setOpenUpdate}
+                                                setOpenDelete={setOpenDelete}
+                                                setSelected={setSelected}
+                                            />
+                                        </div>
                                     </Table.Cell>
                                 </Table.Row>
                             ))}
@@ -303,9 +331,7 @@ const CreateModal = ({ open, setOpen }) => {
                             <PhoneInput
                                 forceCallingCode
                                 defaultCountry="ca"
-                                placeholder={
-                                    "phone number"
-                                }
+                                placeholder={"phone number"}
                                 value={user?.contact_number}
                                 onChange={(e) =>
                                     setUser({
@@ -315,11 +341,8 @@ const CreateModal = ({ open, setOpen }) => {
                                 }
                                 className="appearance-none"
                             />
-
                         </div>
                     </div>
-                   
-                
                 </div>
             </Modal.Body>
             <Modal.Footer>
@@ -386,9 +409,7 @@ const UpdateModal = ({ open, setOpen, oldUser }) => {
         setUser(oldUser);
     }, [oldUser]);
 
-    useEffect(() => {
-       
-    }, [user?.contact_number]);
+    useEffect(() => {}, [user?.contact_number]);
 
     return (
         <Modal
@@ -450,9 +471,9 @@ const UpdateModal = ({ open, setOpen, oldUser }) => {
                         <div></div>
                         <div className="form-group">
                             <label className="px-2" htmlFor="">
-                                Contact Number 
+                                Contact Number
                             </label>
-                           
+
                             <PhoneInput
                                 country={"ca"}
                                 value={user?.contact_number}

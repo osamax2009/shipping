@@ -50,39 +50,62 @@ const Country = () => {
                     <Table.Body>
                         {countries?.map((country, index) => (
                             <Table.Row key={index}>
-                                <Table.Cell> {country?.id} </Table.Cell>
-                                <Table.Cell>{country?.name}</Table.Cell>
                                 <Table.Cell>
-                                    {" "}
-                                    {country?.distance_type}{" "}
-                                </Table.Cell>
-                                <Table.Cell>{country?.weight_type}</Table.Cell>
-                                <Table.Cell>
-                                    {dayjs(country?.created_at).format(
-                                        "DD-MM-YYYY; HH:mm:ss"
-                                    )}
+                                    <div className="dark:text-white">
+                                        {" "}
+                                        {country?.id}{" "}
+                                    </div>
                                 </Table.Cell>
                                 <Table.Cell>
-                                    {country?.status == 1 ? (
-                                        <span className="text-appGreen">
-                                            Enabled
-                                        </span>
-                                    ) : (
-                                        <span className="text-red-200">
-                                            Disabled
-                                        </span>
-                                    )}
+                                    <div className="dark:text-white">
+                                        {country?.name}
+                                    </div>
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <div className="dark:text-white">
+                                        {" "}
+                                        {country?.distance_type}{" "}
+                                    </div>
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <div className="dark:text-white">
+                                        {country?.weight_type}
+                                    </div>
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <div className="dark:text-white">
+                                        {dayjs(country?.created_at).format(
+                                            "DD-MM-YYYY; HH:mm:ss"
+                                        )}
+                                    </div>
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <div className="dark:text-white">
+                                        {country?.status == 1 ? (
+                                            <span className="text-appGreen">
+                                                Enabled
+                                            </span>
+                                        ) : (
+                                            <span className="text-red-200">
+                                                Disabled
+                                            </span>
+                                        )}
+                                    </div>
                                 </Table.Cell>
 
                                 <Table.Cell>
-                                    <CountryLine
-                                        country={country}
-                                        setSelectedCountry={setSelectedCountry}
-                                        openDelete={openDelete}
-                                        setOpenDelete={setOpenDelete}
-                                        openUpdate={openUpdate}
-                                        setOpenUpdate={setOpenUpdate}
-                                    />
+                                    <div className="dark:text-white">
+                                        <CountryLine
+                                            country={country}
+                                            setSelectedCountry={
+                                                setSelectedCountry
+                                            }
+                                            openDelete={openDelete}
+                                            setOpenDelete={setOpenDelete}
+                                            openUpdate={openUpdate}
+                                            setOpenUpdate={setOpenUpdate}
+                                        />
+                                    </div>
                                 </Table.Cell>
                             </Table.Row>
                         ))}

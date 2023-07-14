@@ -39,19 +39,53 @@ const VerifyDocuments = () => {
                         <Table.Body>
                             {documents?.map((document, index) => (
                                 <Table.Row key={index}>
-                                    <Table.Cell> {document?.id} </Table.Cell>
-                                    <Table.Cell> {document?.delivery_man_name} </Table.Cell>
-                                    <Table.Cell> {document?.document_name} </Table.Cell>
-                                    <Table.Cell> <div className="flex justify-start w-full">
-                                        <Image
-                                            src={document.delivery_man_document}
-                                            width={80}
-                                            height={60}
-                                            alt={"vehicle image"}
-                                        />
-                                    </div></Table.Cell>
-                                    <Table.Cell> {dayjs(document?.created_at).format("DD-MM-YYYY; HH:mm:ss") } </Table.Cell>
-                                    <Table.Cell> {document?.id} </Table.Cell>
+                                    <Table.Cell>
+                                        <div className="dark:text-white">
+                                            {" "}
+                                            {document?.id}{" "}
+                                        </div>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <div className="dark:text-white">
+                                            {" "}
+                                            {document?.delivery_man_name}{" "}
+                                        </div>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <div className="dark:text-white">
+                                            {" "}
+                                            {document?.document_name}{" "}
+                                        </div>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <div className="dark:text-white">
+                                            {" "}
+                                            <div className="flex justify-start w-full">
+                                                <Image
+                                                    src={
+                                                        document.delivery_man_document
+                                                    }
+                                                    width={80}
+                                                    height={60}
+                                                    alt={"vehicle image"}
+                                                />
+                                            </div>
+                                        </div>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <div className="dark:text-white">
+                                            {" "}
+                                            {dayjs(document?.created_at).format(
+                                                "DD-MM-YYYY; HH:mm:ss"
+                                            )}{" "}
+                                        </div>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <div className="dark:text-white">
+                                            {" "}
+                                            {document?.id}{" "}
+                                        </div>
+                                    </Table.Cell>
                                 </Table.Row>
                             ))}
                         </Table.Body>

@@ -43,39 +43,67 @@ const DeliveryPerson = () => {
                         <Table.Body>
                             {users?.map((user, index) => (
                                 <Table.Row key={index}>
-                                    <Table.Cell> {user.id} </Table.Cell>
-                                    <Table.Cell>{user.name}</Table.Cell>
                                     <Table.Cell>
-                                        {user.contact_number}
+                                        <div className="dark:text-white">
+                                            {" "}
+                                            {user.id}{" "}
+                                        </div>
                                     </Table.Cell>
                                     <Table.Cell>
-                                        {" "}
-                                        <div className="truncate w-[190px]">
-                                            {user.email}
-                                        </div>{" "}
-                                    </Table.Cell>
-                                    <Table.Cell> {user.city_name} </Table.Cell>
-                                    <Table.Cell>
-                                        {" "}
-                                        {user.country_name}{" "}
+                                        <div className="dark:text-white">
+                                            {user.name}
+                                        </div>
                                     </Table.Cell>
                                     <Table.Cell>
-                                        {" "}
-                                        {dayjs(user.created_at).format(
-                                            "DD-MM-YYYY; HH:mm:ss"
-                                        )}{" "}
+                                        <div className="dark:text-white">
+                                            {user.contact_number}
+                                        </div>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <div className="dark:text-white">
+                                            {" "}
+                                            <div className="truncate w-[190px]">
+                                                {user.email}
+                                            </div>{" "}
+                                        </div>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <div className="dark:text-white">
+                                            {" "}
+                                            {user.city_name}{" "}
+                                        </div>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <div className="dark:text-white">
+                                            {" "}
+                                            {user.country_name}{" "}
+                                        </div>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <div className="dark:text-white">
+                                            {" "}
+                                            {dayjs(user.created_at).format(
+                                                "DD-MM-YYYY; HH:mm:ss"
+                                            )}{" "}
+                                        </div>
                                     </Table.Cell>
 
                                     <Table.Cell>
-                                        <Status
-                                            user={user}
-                                            setOpen={setOpenStatus}
-                                            setSelectedUser={setSelectedUser}
-                                        />
+                                        <div className="dark:text-white">
+                                            <Status
+                                                user={user}
+                                                setOpen={setOpenStatus}
+                                                setSelectedUser={
+                                                    setSelectedUser
+                                                }
+                                            />
+                                        </div>
                                     </Table.Cell>
 
                                     <Table.Cell>
-                                        <UserLine user={user} />
+                                        <div className="dark:text-white">
+                                            <UserLine user={user} />
+                                        </div>
                                     </Table.Cell>
                                 </Table.Row>
                             ))}
@@ -125,7 +153,6 @@ const UserLine = ({ user }) => {
 };
 
 const Status = ({ setSelectedUser, setOpen, user }) => {
-    
     const handleModal = () => {
         setSelectedUser(user);
         setOpen(true);

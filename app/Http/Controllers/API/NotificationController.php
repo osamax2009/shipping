@@ -62,4 +62,6 @@ class NotificationController extends Controller
         return json_custom_response($response);
     }
 
+    
+
 }

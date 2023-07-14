@@ -14,11 +14,10 @@ const DeliveryManDocument = () => {
     const [openVerify, setOpenVerify] = useState(false);
     const [selectedDocument, setSelectedDocument] = useState();
 
-    const params = useParams()
-    const deliveryManId = params.delivery_man_id
+    const params = useParams();
+    const deliveryManId = params.delivery_man_id;
 
     const getDeliveryManDocuments = async () => {
-
         const res = await getWithAxios("/api/delivery-man-document-list", {
             delivery_man_id: deliveryManId,
         });
@@ -51,43 +50,63 @@ const DeliveryManDocument = () => {
                                 (deliveryManDocument, index) => (
                                     <Table.Row key={index}>
                                         <Table.Cell>
-                                            {" "}
-                                            #{deliveryManDocument.id}{" "}
+                                            <div className="dark:text-white">
+                                                {" "}
+                                                #{deliveryManDocument.id}{" "}
+                                            </div>
                                         </Table.Cell>
                                         <Table.Cell>
-                                            {
-                                                deliveryManDocument.delivery_man_name
-                                            }
-                                        </Table.Cell>
-                                        <Table.Cell>
-                                            {deliveryManDocument.document_name}
-                                        </Table.Cell>
-                                        <Table.Cell>
-                                            {" "}
-                                            <Image
-                                                src={
-                                                    deliveryManDocument.delivery_man_document
+                                            <div className="dark:text-white">
+                                                {
+                                                    deliveryManDocument.delivery_man_name
                                                 }
-                                                width={80}
-                                                height={60}
-                                            />
+                                            </div>
+                                        </Table.Cell>
+                                        <Table.Cell>
+                                            <div className="dark:text-white">
+                                                {
+                                                    deliveryManDocument.document_name
+                                                }
+                                            </div>
+                                        </Table.Cell>
+                                        <Table.Cell>
+                                            <div className="dark:text-white">
+                                                {" "}
+                                                <Image
+                                                    src={
+                                                        deliveryManDocument.delivery_man_document
+                                                    }
+                                                    width={80}
+                                                    height={60}
+                                                />
+                                            </div>
                                         </Table.Cell>
 
                                         <Table.Cell>
-                                            {dayjs(
-                                                deliveryManDocument.created_at
-                                            ).format("DD-MM-YYYY; HH:mm:ss")}
+                                            <div className="dark:text-white">
+                                                {dayjs(
+                                                    deliveryManDocument.created_at
+                                                ).format(
+                                                    "DD-MM-YYYY; HH:mm:ss"
+                                                )}
+                                            </div>
                                         </Table.Cell>
 
                                         <Table.Cell>
-                                            <DeliveryManDocumentLine
-                                                document={deliveryManDocument}
-                                                setOpenVerify={setOpenVerify}
-                                                openVerify={openVerify}
-                                                setSelectedDocument={
-                                                    setSelectedDocument
-                                                }
-                                            />
+                                            <div className="dark:text-white">
+                                                <DeliveryManDocumentLine
+                                                    document={
+                                                        deliveryManDocument
+                                                    }
+                                                    setOpenVerify={
+                                                        setOpenVerify
+                                                    }
+                                                    openVerify={openVerify}
+                                                    setSelectedDocument={
+                                                        setSelectedDocument
+                                                    }
+                                                />
+                                            </div>
                                         </Table.Cell>
                                     </Table.Row>
                                 )

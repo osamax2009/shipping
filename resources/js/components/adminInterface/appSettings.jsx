@@ -52,21 +52,21 @@ const AppSettings = () => {
                                 <tr>
                                     <th>
                                         {" "}
-                                        <span className="text-black font-bold">
+                                        <span className="text-black dark:text-white font-bold">
                                             {" "}
                                             Type
                                         </span>{" "}
                                     </th>
                                     <th>
                                         {" "}
-                                        <span className="text-black font-bold">
+                                        <span className="text-black dark:text-white font-bold">
                                             {" "}
                                             ONE SIGNAL
                                         </span>{" "}
                                     </th>
                                     <th>
                                         {" "}
-                                        <span className="text-black font-bold">
+                                        <span className="text-black dark:text-white font-bold">
                                             {" "}
                                             FIREBASE (For admin)
                                         </span>{" "}
@@ -233,10 +233,14 @@ const AppSettings = () => {
                                             }
                                         >
                                             <Radio value="km">
-                                                <div className="pl-6">km</div>
+                                                <div className="pl-6 dark:text-white">
+                                                    km
+                                                </div>
                                             </Radio>
                                             <Radio value="mile">
-                                                <div className="pl-6">Mile</div>
+                                                <div className="pl-6 dark:text-white">
+                                                    Mile
+                                                </div>
                                             </Radio>
                                         </Radio.Group>
                                     </div>
