@@ -1,4 +1,4 @@
-import { Button, Modal } from "@nextui-org/react";
+import { Button, Loading, Modal } from "@nextui-org/react";
 import { useContext, useEffect, useState } from "react";
 import { getWithAxios, postWithAxios } from "../api/axios";
 import { UserContext } from "../contexts/userContext";
@@ -8,6 +8,8 @@ import { AppSettingsContext } from "../contexts/appSettings";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import StripePayment from "./stripePayment";
+import PaypalPayment from "./paypalPayment";
+import { toast } from "react-toastify";
 
 const Wallet = () => {
     const [wallet, setWallet] = useState(0.0);
@@ -67,8 +69,14 @@ const Wallet = () => {
                 setOpenStripe={setOpenStripe}
             />
             {state && (
-                <StripePayment open={openStripe} setOpen={setOpenStripe} getWallet={getWallet} />
+                <StripePayment
+                    open={openStripe}
+                    setOpen={setOpenStripe}
+                    getWallet={getWallet}
+                />
             )}
+
+            <PaypalPayment />
         </div>
     );
 };
@@ -77,7 +85,8 @@ export default Wallet;
 
 const AddMoneyModal = ({ amount, setAmount, open, setOpen, setOpenStripe }) => {
     const [paymentMethods, setPaymentMethods] = useState();
-    const [selectedGateway, setSelectedGateway] = useState("stripe");
+    const [selectedGateway, setSelectedGateway] = useState("Visa/Mastercard");
+    const [processing, setProcessing] = useState(false);
 
     const navigate = useNavigate();
     const { user, setUser } = useContext(UserContext);
@@ -89,29 +98,40 @@ const AddMoneyModal = ({ amount, setAmount, open, setOpen, setOpenStripe }) => {
     };
 
     const handlePayement = async () => {
-        if (selectedGateway == "stripe") {
-            const dataToSend = {
-                amount: amount,
-                currency: appSettings?.currency_code.toLowerCase(),
-            };
+        if (!amount) {
+            toast("Enter the amount", {
+                type: "error",
+                hideProgressBar: true,
+            });
+        } else {
+            setProcessing(true);
+            if (selectedGateway == "Visa/Mastercard") {
+                const dataToSend = {
+                    amount: amount,
+                    currency: appSettings?.currency_code.toLowerCase(),
+                };
 
-            const res = await postWithAxios("/api/stripe/intent", dataToSend);
+                const res = await postWithAxios(
+                    "/api/stripe/intent",
+                    dataToSend
+                );
 
-            if (res.intent) {
-                const intent = res.intent;
-                console.log(intent);
-                setOpenStripe(true);
-                const url = "/" + user?.user_type + "/wallet";
-                navigate(url, {
-                    state: {
-                        intent: intent,
-                    },
-                });
+                if (res.intent) {
+                    const intent = res.intent;
+                    console.log(intent);
+                    setOpenStripe(true);
+                    const url = "/" + user?.user_type + "/wallet";
+                    navigate(url, {
+                        state: {
+                            intent: intent,
+                        },
+                    });
+                }
+                setProcessing(false);
+                setOpen(false);
+
+                //  console.log(res)
             }
-
-            setOpen(false);
-
-            //  console.log(res)
         }
 
         /*    */
@@ -160,7 +180,7 @@ const AddMoneyModal = ({ amount, setAmount, open, setOpen, setOpenStripe }) => {
                             onSelectionChange={setSelectedGateway}
                         >
                             {paymentMethods?.map((method, index) => (
-                                <Dropdown.Item key={method?.type}>
+                                <Dropdown.Item key={method?.title}>
                                     <div className="flex">
                                         <span> {method?.title} </span>
                                     </div>
@@ -173,7 +193,11 @@ const AddMoneyModal = ({ amount, setAmount, open, setOpen, setOpenStripe }) => {
             <Modal.Footer>
                 <div className="flex">
                     <Button auto onPress={handlePayement} color={"success"}>
-                        Submit
+                        {processing ? (
+                            <Loading type="spinner" color={"white"} />
+                        ) : (
+                            "submit"
+                        )}
                     </Button>
                 </div>
             </Modal.Footer>
