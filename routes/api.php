@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers;
 use App\Http\Controllers\API;
+use App\Http\Controllers\API\PaypalController;
 use App\Http\Controllers\API\StripeController;
 use Illuminate\Support\Facades\Auth;
 
@@ -133,6 +134,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::post('stripe/intent', [StripeController::class, 'paymentIntent']);
     Route::post('stripe/payment', [StripeController::class, 'confirmPaymentIntent']);
+
+
+    Route::post('/create-payment', [PaypalController::class, 'createPayment']);
+    Route::post('/execute-payment', [PaypalController::class, 'executePayment']);
 
 
 });

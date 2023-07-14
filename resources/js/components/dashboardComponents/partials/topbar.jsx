@@ -165,7 +165,7 @@ const UserMenu = ({ handleLogout }) => {
                 Change Location
             </button>
 
-            <Link className="dropdown-item" to={"#"}>
+            {/* <Link className="dropdown-item" to={"#"}>
                 <i className="fas fa-globe fa-sm fa-fw mr-2 text-gray-400"></i>
                 Language
             </Link>
@@ -173,7 +173,7 @@ const UserMenu = ({ handleLogout }) => {
             <Link className="dropdown-item" to={"#"}>
                 <i className="fas fa-sun fa-sm fa-fw mr-2 text-gray-400"></i>
                 Theme
-            </Link>
+            </Link> */}
 
             <Link className="dropdown-item" to={"/privacypolicy"}>
                 <i className="fas fa-file-alt fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -249,7 +249,7 @@ const AdminMenu = ({ handleLogout }) => {
                 Change Password
             </button>
 
-            <Link className="dropdown-item" to={"#"}>
+            {/* <Link className="dropdown-item" to={"#"}>
                 <i className="fas fa-globe fa-sm fa-fw mr-2 text-gray-400"></i>
                 Language
             </Link>
@@ -257,7 +257,7 @@ const AdminMenu = ({ handleLogout }) => {
             <Link className="dropdown-item" to={"#"}>
                 <i className="fas fa-sun fa-sm fa-fw mr-2 text-gray-400"></i>
                 Theme
-            </Link>
+            </Link> */}
 
             <Link className="dropdown-item" to={"/privacypolicy"}>
                 <i className="fas fa-file-alt fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -333,7 +333,7 @@ const DeliveryMan = ({ handleLogout }) => {
                 Change Password
             </button>
 
-            <Link className="dropdown-item" to={"#"}>
+            {/* <Link className="dropdown-item" to={"#"}>
                 <i className="fas fa-globe fa-sm fa-fw mr-2 text-gray-400"></i>
                 Language
             </Link>
@@ -341,7 +341,7 @@ const DeliveryMan = ({ handleLogout }) => {
             <Link className="dropdown-item" to={"#"}>
                 <i className="fas fa-sun fa-sm fa-fw mr-2 text-gray-400"></i>
                 Theme
-            </Link>
+            </Link> */}
 
             <Link className="dropdown-item" to={"/privacypolicy"}>
                 <i className="fas fa-file-alt fa-sm fa-fw mr-2 text-gray-400"></i>
