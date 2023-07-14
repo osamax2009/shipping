@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
-import { postWithAxios } from "../api/axios";
+import { getWithAxios, postWithAxios } from "../api/axios";
 import { toast } from "react-toastify";
 import {
     Elements,
@@ -15,9 +15,20 @@ import { useContext } from "react";
 import { AppSettingsContext } from "../contexts/appSettings";
 import { UserContext } from "../contexts/userContext";
 
-const stripePromise = loadStripe(
-    "pk_test_51Lzc2NHoogcL4mgfk0PWSVUoNIL6594xgpkQQKtAZextrkEH7Yk2UTXukicZDPhkHIgUQ1hYNsrKimVG3qfo5piZ002WnIwWEz"
-);
+
+
+const getStripeKey = async () => {
+    let key = null
+    const res = await getWithAxios("/api/paymentgateway-list");
+    const stripe = res.data.filter((e) => e.type == "stripe"); 
+    key = stripe[0].test_value.publishable_key;
+    return key
+};
+
+const publishable_key  = await getStripeKey()
+
+
+const stripePromise = loadStripe(publishable_key);
 
 const StripePayment = ({ open, setOpen, getWallet }) => {
     const location = useLocation();
@@ -35,7 +46,11 @@ const StripePayment = ({ open, setOpen, getWallet }) => {
 
     return (
         <Elements stripe={stripePromise} options={options}>
-            <StripePaymentForm open={open} setOpen={setOpen} getWallet={getWallet} />
+            <StripePaymentForm
+                open={open}
+                setOpen={setOpen}
+                getWallet={getWallet}
+            />
         </Elements>
     );
 };
@@ -72,7 +87,6 @@ const StripePaymentForm = ({ open, setOpen, getWallet }) => {
         const { success, error } = response;
 
         if (success) {
-           
             const dataToSend = {
                 user_id: user?.id,
                 type: "credit",
