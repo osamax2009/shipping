@@ -76,7 +76,7 @@ const Wallet = () => {
                 />
             )}
 
-            <PaypalPayment />
+            {/* <PaypalPayment /> */}
         </div>
     );
 };
