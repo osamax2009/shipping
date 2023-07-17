@@ -11,17 +11,7 @@ use PayPal\Api\PaymentExecution;
 
 class PaypalController extends Controller
 {
-    private $apiContext;
-    
-    public function __construct()
-    {
-        $this->apiContext = new ApiContext(
-            new OAuthTokenCredential(
-                config('services.paypal.client_id'),
-                config('services.paypal.secret')
-            )
-        );
-    }
+   
 
     public function createPayment(Request $request)
     {
@@ -30,7 +20,7 @@ class PaypalController extends Controller
         $apiContext = new ApiContext(
             new OAuthTokenCredential(
                 $paypal['client_id'],
-                $paypal['client_id']
+                $paypal['secret_id']
             )
         );
 
@@ -38,7 +28,7 @@ class PaypalController extends Controller
         // Set payment details
         
         try {
-            $payment->create($this->apiContext);
+            $payment->create($apiContext);
             return response()->json([
                 'approvalUrl' => $payment->getApprovalLink()
             ]);
@@ -49,16 +39,26 @@ class PaypalController extends Controller
 
     public function executePayment(Request $request)
     {
+        $paypal = PaymentGateway::where("type", "paypal")->first();
+
+        $apiContext = new ApiContext(
+            new OAuthTokenCredential(
+                $paypal['client_id'],
+                $paypal['secret_id']
+            )
+        );
+
+        
         $paymentId = $request->input('paymentId');
         $payerId = $request->input('payerId');
 
-        $payment = Payment::get($paymentId, $this->apiContext);
+        $payment = Payment::get($paymentId, $apiContext);
 
         $execution = new PaymentExecution();
         $execution->setPayerId($payerId);
 
         try {
-            $result = $payment->execute($execution, $this->apiContext);
+            $result = $payment->execute($execution, $apiContext);
             return response()->json($result);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);

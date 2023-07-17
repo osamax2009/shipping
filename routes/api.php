@@ -6,6 +6,7 @@ use App\Http\Controllers;
 use App\Http\Controllers\API;
 use App\Http\Controllers\API\PaypalController;
 use App\Http\Controllers\API\StripeController;
+use App\Http\Controllers\API\UserController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -30,14 +31,14 @@ Route::get('/user', function (Request $request) {
     ]);
 });
 
-Route::post('register', [API\UserController::class, 'register']);
-Route::post('login', [API\UserController::class,'login']);
-Route::post('forget-password', [ API\UserController::class,'forgetPassword']);
-Route::post('social-login', [ API\UserController::class, 'socialLogin' ]);
-Route::get('user-list', [API\UserController::class, 'userList']);
+Route::post('register', [UserController::class, 'register']);
+Route::post('login', [UserController::class,'login']);
+Route::post('forget-password', [ UserController::class,'forgetPassword']);
+Route::post('social-login', [ UserController::class, 'socialLogin' ]);
+Route::get('user-list', [UserController::class, 'userList']);
 Route::get('staticdata-list', [API\StaticDataController::class,'getList']);
 
-Route::get('user-detail', [API\UserController::class, 'userDetail']);
+Route::get('user-detail', [UserController::class, 'userDetail']);
 Route::get('country-list', [ API\CountryController::class, 'getList' ]);
 Route::get('country-detail', [ API\CountryController::class, 'getDetail' ]);
 Route::get('city-list', [ API\CityController::class, 'getList' ]);
@@ -50,13 +51,13 @@ Route::get('place-autocomplete-api', [ API\CommonController::class, 'placeAutoCo
 Route::get('place-detail-api', [ API\CommonController::class, 'placeDetail' ]);
 Route::get('distance-between-places', [ API\CommonController::class, 'distanceBetwennTwoPlaces' ]);
 
-Route::get('get-appsetting', [API\UserController::class,'getAppSetting']);
+Route::get('get-appsetting', [UserController::class,'getAppSetting']);
 
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
 
-    Route::get('dashboard-detail', [ API\UserController::class, 'dashboard' ]);
-    Route::get('dashboard-chartdata', [ API\UserController::class, 'dashboardChartData' ]);
+    Route::get('dashboard-detail', [ UserController::class, 'dashboard' ]);
+    Route::get('dashboard-chartdata', [ UserController::class, 'dashboardChartData' ]);
 
     Route::post('country-save', [ App\Http\Controllers\CountryController::class, 'store' ]);
     Route::post('country-delete/{id}', [ App\Http\Controllers\CountryController::class, 'destroy' ]);
@@ -97,13 +98,13 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('notification-list', [API\NotificationController::class,'getList']);
     Route::get('notification-count', [API\NotificationController::class,'notificationCounts']);
 
-    Route::post('update-user-status', [API\UserController::class, 'updateUserStatus']);
-    Route::post('change-password', [API\UserController::class, 'changePassword']);
-    Route::post('update-profile', [API\UserController::class,'updateProfile']);
-    Route::post('delete-user', [API\UserController::class,'deleteUser']);
-    Route::post('user-action', [ API\UserController::class, 'userAction' ]);
+    Route::post('update-user-status', [UserController::class, 'updateUserStatus']);
+    Route::post('change-password', [UserController::class, 'changePassword']);
+    Route::post('update-profile', [UserController::class,'updateProfile']);
+    Route::post('delete-user', [UserController::class,'deleteUser']);
+    Route::post('user-action', [ UserController::class, 'userAction' ]);
 
-    Route::post('update-appsetting', [API\UserController::class,'updateAppSetting']);
+    Route::post('update-appsetting', [UserController::class,'updateAppSetting']);
 
     Route::get('document-list', [ API\DocumentController::class, 'getList' ]);
     Route::post('document-save', [ App\Http\Controllers\DocumentController::class, 'store' ]);
@@ -119,13 +120,13 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
 
 
-    Route::get('logout', [ API\UserController::class, 'logout' ]);
+    Route::get('logout', [ UserController::class, 'logout' ]);
     Route::get('wallet-detail', [ API\WalletController::class, 'getWallatDetail']);
 
     Route::get('client-dashboard', [ API\DashboardController::class, 'clientDashboard' ]);
     Route::get('deliveryman-earning-list', [ API\PaymentController::class, 'getDeliveryManEarningList' ]);
 
-    Route::get('user-profile-detail', [ API\UserController::class, 'commonUserDetail' ]);
+    Route::get('user-profile-detail', [ UserController::class, 'commonUserDetail' ]);
 
     Route::post('vehicle-save', [ App\Http\Controllers\VehicleController::class, 'store' ]);
     Route::post('vehicle-delete/{id}', [ App\Http\Controllers\VehicleController::class, 'destroy' ]);

@@ -1,6 +1,20 @@
 import React, { useState } from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import { postWithAxios } from "../api/axios";
+import { getWithAxios, postWithAxios } from "../api/axios";
+
+const getpaypalKey = async () => {
+    let key = null;
+    const res = await getWithAxios("/api/paymentgateway-list");
+    const paypal = res.data.filter((e) => e.type == "paypal");
+    key = paypal[0]?.test_value?.client_id;
+    return key;
+};
+
+const client_id = await getpaypalKey();
+
+const options = {
+    "client-id": client_id,
+};
 
 const PaypalPayment = () => {
     const [approvalUrl, setApprovalUrl] = useState(null);
@@ -13,7 +27,7 @@ const PaypalPayment = () => {
                 dataToSend
             );
 
-            const data =  response;
+            const data = response;
             setApprovalUrl(data.approvalUrl);
         } catch (error) {
             console.error(error);
@@ -41,9 +55,7 @@ const PaypalPayment = () => {
     };
 
     return (
-        <PayPalScriptProvider
-            options={{ "client-id": "your_paypal_client_id" }}
-        >
+        <PayPalScriptProvider options={options}>
             <div>
                 <button onClick={createPayment}>Create Payment</button>
             </div>

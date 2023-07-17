@@ -6,8 +6,13 @@ const Paypal = () => {
 
     const fields = [
         {
-            label: "Tokenization key",
-            value: "tokenization_key",
+            label: "Client id",
+            value: "client_id",
+        },
+
+        {
+            label: "Secret Id",
+            value: "secret_id",
         },
     ]
     return(

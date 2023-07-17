@@ -21,7 +21,7 @@ const getStripeKey = async () => {
     let key = null
     const res = await getWithAxios("/api/paymentgateway-list");
     const stripe = res.data.filter((e) => e.type == "stripe"); 
-    key = stripe[0].test_value.publishable_key;
+    key = stripe[0]?.test_value?.publishable_key;
     return key
 };
 

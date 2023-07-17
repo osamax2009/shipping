@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\UserController;
 use App\Models\AppSetting;
 use App\Models\Order;
 use App\Models\User;
@@ -21,8 +22,8 @@ use Illuminate\Support\Facades\Storage;
 |
 */
 
-Route::post('login', [API\UserController::class,'login']);
-Route::get('logout', [ API\UserController::class, 'logout' ]);
+Route::post('login', [UserController::class,'login']);
+Route::get('logout', [ UserController::class, 'logout' ]);
 
 
 
