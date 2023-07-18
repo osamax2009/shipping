@@ -25,9 +25,10 @@ const getStripeKey = async () => {
 };
 
 const publishable_key = await getStripeKey();
+ 
+// const stripePromise = loadStripe(publishable_key);
 
-const stripePromise = loadStripe(publishable_key);
-
+// console.log(await stripePromise)
 const StripePayment = ({ open, setOpen, getWallet }) => {
     
    
@@ -48,7 +49,7 @@ const StripePayment = ({ open, setOpen, getWallet }) => {
     
 
     return (
-        <Elements stripe={stripePromise} options={options}>
+        <Elements stripe={loadStripe(publishable_key)} options={options}>
             <StripePaymentForm
                 open={open}
                 setOpen={setOpen}
