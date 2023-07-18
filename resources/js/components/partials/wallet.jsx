@@ -68,13 +68,13 @@ const Wallet = () => {
                 setOpen={setOpen}
                 setOpenStripe={setOpenStripe}
             />
-            {state && (
+           {/*  {state && (
                 <StripePayment
                     open={openStripe}
                     setOpen={setOpenStripe}
                     getWallet={getWallet}
                 />
-            )}
+            )} */}
 
             {/* <PaypalPayment /> */}
         </div>
