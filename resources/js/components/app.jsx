@@ -382,6 +382,7 @@ const router = createBrowserRouter([
     }
 ]);
 
+
 if (document.getElementById("page-top")) {
     const Index = ReactDOM.createRoot(document.getElementById("page-top"));
     Index.render(
