@@ -10,11 +10,10 @@ import {
 } from "@stripe/react-stripe-js";
 
 import { Loading, Modal } from "@nextui-org/react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AppSettingsContext } from "../contexts/appSettings";
 import { UserContext } from "../contexts/userContext";
-
 
 const getStripeKey = async () => {
     let key = null;
@@ -25,13 +24,11 @@ const getStripeKey = async () => {
 };
 
 const publishable_key = await getStripeKey();
- 
+
 // const stripePromise = loadStripe(publishable_key);
 
 // console.log(await stripePromise)
-const StripePayment = ({ open, setOpen, getWallet }) => {
-    
-   
+const StripePayment = () => {
     const location = useLocation();
     const state = location.state;
 
@@ -43,31 +40,27 @@ const StripePayment = ({ open, setOpen, getWallet }) => {
         },
     };
 
-   // console.log(state?.intent.client_secret)
+    // console.log(state?.intent.client_secret)
 
     //const stripe = useStripe();
-    
 
     return (
         <Elements stripe={loadStripe(publishable_key)} options={options}>
-            <StripePaymentForm
-                open={open}
-                setOpen={setOpen}
-                getWallet={getWallet}
-            />
+            <StripePaymentForm />
         </Elements>
     );
 };
 
 export default StripePayment;
 
-const StripePaymentForm = ({ open, setOpen, getWallet }) => {
+const StripePaymentForm = () => {
     const { appSettings, setAppSettings } = useContext(AppSettingsContext);
     const { user, setUser } = useContext(UserContext);
     const [error, setError] = useState();
     const [processing, setProcessing] = useState(false);
     const location = useLocation();
     const state = location.state;
+    const navigate = useNavigate();
 
     const stripe = useStripe();
     const elements = useElements();
@@ -104,14 +97,15 @@ const StripePaymentForm = ({ open, setOpen, getWallet }) => {
             const pay = await postWithAxios("/api/save-wallet", dataToSend);
 
             setProcessing(false);
-            setOpen(false);
+           
 
             toast(pay.message, {
                 type: "success",
                 hideProgressBar: true,
             });
 
-            getWallet();
+            const url = "/" + user?.user_type + "/wallet";
+            navigate(url);
         } else {
             setError(error);
             setProcessing(false);
@@ -126,35 +120,21 @@ const StripePaymentForm = ({ open, setOpen, getWallet }) => {
     };
 
     return (
-        <Modal
-            open={open}
-            closeButton
-            preventClose
-            onClose={() => setOpen(false)}
-        >
-            <Modal.Header></Modal.Header>
-            <Modal.Body>
-                <div className="flex w-full justify-center">
-                    <form
-                        onSubmit={handlePayment}
-                        id="stripeForm"
-                        className="w-full"
-                    >
-                        <PaymentElement />
-                        <button className="btn btn-success my-4 w-full">
-                            {processing ? (
-                                <Loading type="spinner" color={"white"} />
-                            ) : (
-                                <span>
-                                    {" "}
-                                    Pay {appSettings?.currency}
-                                    {state.intent.amount}{" "}
-                                </span>
-                            )}
-                        </button>
-                    </form>
-                </div>
-            </Modal.Body>
-        </Modal>
+        <div className="flex w-full justify-center">
+            <form onSubmit={handlePayment} id="stripeForm" className="w-full">
+                <PaymentElement />
+                <button className="btn btn-success my-4 w-full">
+                    {processing ? (
+                        <Loading type="spinner" color={"white"} />
+                    ) : (
+                        <span>
+                            {" "}
+                            Pay {appSettings?.currency}
+                            {state.intent.amount}{" "}
+                        </span>
+                    )}
+                </button>
+            </form>
+        </div>
     );
 };
