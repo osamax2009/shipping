@@ -36,7 +36,6 @@ import Users from "./adminInterface/users";
 import AppSettings from "./adminInterface/appSettings";
 import WithdrawRequest from "./adminInterface/withdrawRequestList";
 import DeliveryPerson from "./adminInterface/deliveryPerson";
-import VerifyDocuments from "./adminInterface/verifyDocuments";
 import { AppSettingsContextProvider } from "./contexts/appSettings";
 import Dashboard from "./adminInterface/dashboard";
 import PaymentSetup from "./adminInterface/paymentSetup";

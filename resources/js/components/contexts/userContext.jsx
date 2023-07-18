@@ -25,20 +25,29 @@ export const UserContextProvider = ({ children }) => {
         const loadData = async () => {
             getUser();
             await new Promise((r) => setTimeout(r, 2000));
-            setLoading((loading) => !loading);
+            setLoading(loading => !loading);
         };
 
         loadData();
     }, []);
 
-    if (loading) {
-        return <Loader />;
-    } else {
-        return (
-            <UserContext.Provider value={contextMemo}>
-               <FirebaseNotification/>
-                <div>{children}</div>
-            </UserContext.Provider>
-        );
-    }
+    return (
+        <UserContext.Provider value={contextMemo}>
+           <FirebaseNotification/>
+            <div>{children}</div>
+        </UserContext.Provider>
+    );
+
+   /*  return (
+        <UserContext.Provider value={contextMemo}>
+            {loading ? (
+                <Loader />
+            ) : (
+                <div>
+                    <FirebaseNotification />
+                    {children}
+                </div>
+            )}
+        </UserContext.Provider>
+    ); */
 };

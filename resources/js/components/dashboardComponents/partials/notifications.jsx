@@ -51,7 +51,7 @@ const Notifications = () => {
             </a>
             <div
                 className="dropdown-menu gap-4 dropdown-menu-right shadow animated--grow-in"
-                style={{ left: "inherit", right: "0px;" }}
+                style={{ left: "inherit", right: "0px" }}
             >
                 <span className="dropdown-item dropdown-header">
                     <div className="flex justify-between">
