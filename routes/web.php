@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\API\UserController;
 use App\Models\AppSetting;
 use App\Models\Order;
 use App\Models\User;
+use Barryvdh\DomPDF\PDF;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,8 +23,8 @@ use Illuminate\Support\Facades\Storage;
 |
 */
 
-Route::post('login', [API\UserController::class,'login']);
-Route::get('logout', [ API\UserController::class, 'logout' ]);
+Route::post('login', [UserController::class,'login']);
+Route::get('logout', [ UserController::class, 'logout' ]);
 
 
 
@@ -75,4 +77,4 @@ Route::get("/get-invoice-from-backend", function (Request $request) {
 Route::fallback(function () {
     return view("index");
 
-})->name("home");
+});

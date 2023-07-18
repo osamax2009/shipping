@@ -11,9 +11,8 @@ const Notifications = () => {
     const [notifications, setNotifications] = useState([]);
     const [unread, setUnread] = useState(0);
     const { user, setUser } = useContext(UserContext);
-    const location = useLocation()
-    const path = location.pathName
-
+    const location = useLocation();
+    const path = location.pathName;
 
     const getNotifications = async () => {
         const res = await postWithAxios("/api/notification-list");
@@ -52,7 +51,7 @@ const Notifications = () => {
             </a>
             <div
                 className="dropdown-menu gap-4 dropdown-menu-right shadow animated--grow-in"
-                style={{ left: "inherit", right: "0px;" }}
+                style={{ left: "inherit", right: "0px" }}
             >
                 <span className="dropdown-item dropdown-header">
                     <div className="flex justify-between">
@@ -100,27 +99,23 @@ const Notification = ({ notification, getNotifications }) => {
             notification?.data.id;
         navigate(url);
         getNotifications();
-        
     };
 
-
     return (
-        <button
-            onClick={handleNotification}
-            className="dropdown-item"
-           
-        >
-            <div className="flex gap-4 px-3 items-center focus:no-underline">
-                <Avatar
-                    size={"lg"}
-                    icon={<FaRegComments className="text-appGreen" />}
-                />{" "}
-                <div className="grid gap-2">
-                    <div className="font-bold">
-                        {" "}
-                        {notification?.data.subject}{" "}
+        <button onClick={handleNotification} className="dropdown-item">
+            <div className="flex gap-4 px-3 items-center justify-between focus:no-underline">
+                <div className="flex items-center gap-2 ">
+                    <Avatar
+                        size={"lg"}
+                        icon={<FaRegComments className="text-appGreen" />}
+                    />{" "}
+                    <div className="grid gap-2">
+                        <div className="font-bold">
+                            {" "}
+                            {notification?.data.subject}{" "}
+                        </div>
+                        <div> {notification?.data.message} </div>
                     </div>
-                    <div> {notification?.data.message} </div>
                 </div>
                 <span className="float-right text-muted text-sm">
                     {" "}
