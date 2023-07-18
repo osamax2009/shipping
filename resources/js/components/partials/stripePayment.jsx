@@ -16,33 +16,36 @@ import { AppSettingsContext } from "../contexts/appSettings";
 import { UserContext } from "../contexts/userContext";
 
 
-
 const getStripeKey = async () => {
-    let key = null
+    let key = null;
     const res = await getWithAxios("/api/paymentgateway-list");
-    const stripe = res.data.filter((e) => e.type == "stripe"); 
+    const stripe = res.data.filter((e) => e.type == "stripe");
     key = stripe[0]?.test_value?.publishable_key;
-    return key
+    return key;
 };
 
-const publishable_key  = await getStripeKey()
-
+const publishable_key = await getStripeKey();
 
 const stripePromise = loadStripe(publishable_key);
 
 const StripePayment = ({ open, setOpen, getWallet }) => {
+    
+   
     const location = useLocation();
     const state = location.state;
 
     const options = {
-        clientSecret: state.intent.client_secret,
+        clientSecret: state?.intent.client_secret,
         layout: {
             type: "tabs",
             defaultCollapsed: false,
         },
     };
 
+   // console.log(state?.intent.client_secret)
+
     //const stripe = useStripe();
+    
 
     return (
         <Elements stripe={stripePromise} options={options}>

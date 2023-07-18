@@ -11,6 +11,18 @@ import StripePayment from "./stripePayment";
 import PaypalPayment from "./paypalPayment";
 import { toast } from "react-toastify";
 
+const getStripeKey = async () => {
+    let key = null;
+    const res = await getWithAxios("/api/paymentgateway-list");
+    const stripe = res.data.filter((e) => e.type == "stripe");
+    key = stripe[0]?.test_value?.publishable_key;
+    return key;
+};
+
+const publishable_key = await getStripeKey();
+
+const stripePromise = loadStripe(publishable_key);
+
 const Wallet = () => {
     const [wallet, setWallet] = useState(0.0);
     const [amount, setAmount] = useState();
@@ -68,15 +80,17 @@ const Wallet = () => {
                 setOpen={setOpen}
                 setOpenStripe={setOpenStripe}
             />
+
             {state && (
                 <StripePayment
                     open={openStripe}
                     setOpen={setOpenStripe}
                     getWallet={getWallet}
+                   // stripePromise={stripePromise}
                 />
             )}
 
-           {/*  <PaypalPayment /> */}
+            {/*  <PaypalPayment /> */}
         </div>
     );
 };
@@ -118,7 +132,7 @@ const AddMoneyModal = ({ amount, setAmount, open, setOpen, setOpenStripe }) => {
 
                 if (res.intent) {
                     const intent = res.intent;
-                    console.log(intent);
+                   
                     setOpenStripe(true);
                     const url = "/" + user?.user_type + "/wallet";
                     navigate(url, {
