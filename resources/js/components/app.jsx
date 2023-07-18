@@ -48,14 +48,12 @@ import Paytabs from "./adminInterface/paymentGateway/paytabs";
 import Mercadopago from "./adminInterface/paymentGateway/mercadopago";
 import Paytm from "./adminInterface/paymentGateway/paytm";
 import Myfatoorah from "./adminInterface/paymentGateway/myfatoorah";
-import { ThemeProvider } from "next-themes";
 import ViewUser from "./adminInterface/viewUser";
 import TermAndCondition from "./partials/termAndCondition";
 import AllNotifications from "./adminInterface/allNotifications";
 import StripePayment from "./partials/stripePayment";
 import Profile from "./partials/profile";
 import NotFoundPage from "./partials/404";
-
 
 const router = createBrowserRouter([
     /*   Common routes */
@@ -80,8 +78,8 @@ const router = createBrowserRouter([
     },
 
     {
-        path : "/term&condition",
-        element : <TermAndCondition />
+        path: "/term&condition",
+        element: <TermAndCondition />,
     },
 
     {
@@ -114,8 +112,8 @@ const router = createBrowserRouter([
             },
 
             {
-                path : "payment/stripe",
-                element : <StripePayment />
+                path: "payment/stripe",
+                element: <StripePayment />,
             },
 
             {
@@ -142,9 +140,9 @@ const router = createBrowserRouter([
                 element: <Payment />,
             },
             {
-                path : "notifications",
-                element : <AllNotifications />
-            }
+                path: "notifications",
+                element: <AllNotifications />,
+            },
         ],
     },
 
@@ -154,7 +152,6 @@ const router = createBrowserRouter([
         path: "/delivery_man",
         element: <DeliveryManDashboard />,
         children: [
-
             {
                 path: "profile",
                 element: <Profile />,
@@ -201,12 +198,11 @@ const router = createBrowserRouter([
             },
 
             {
-                path : "notifications",
-                element : <AllNotifications />
-            }
+                path: "notifications",
+                element: <AllNotifications />,
+            },
         ],
     },
-
 
     /* Admin routes */
 
@@ -340,8 +336,8 @@ const router = createBrowserRouter([
             },
 
             {
-                path : "users/user_Id/:user_Id",
-                element : <ViewUser />
+                path: "users/user_Id/:user_Id",
+                element: <ViewUser />,
             },
 
             {
@@ -369,32 +365,29 @@ const router = createBrowserRouter([
             },
 
             {
-                path : "notifications",
-                element : <AllNotifications />
-            }
+                path: "notifications",
+                element: <AllNotifications />,
+            },
         ],
     },
 
     {
-        path : "*",
-        element : <NotFoundPage />
-    }
+        path: "*",
+        element: <NotFoundPage />,
+    },
 ]);
-
 
 if (document.getElementById("page-top")) {
     const Index = ReactDOM.createRoot(document.getElementById("page-top"));
     Index.render(
-        <ThemeProvider>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <UserContextProvider>
-                    <AppSettingsContextProvider>
-                        <React.StrictMode>
-                            <RouterProvider router={router} />
-                        </React.StrictMode>
-                    </AppSettingsContextProvider>
-                </UserContextProvider>
-            </LocalizationProvider>
-        </ThemeProvider>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <UserContextProvider>
+                <AppSettingsContextProvider>
+                    <React.StrictMode>
+                        <RouterProvider router={router} />
+                    </React.StrictMode>
+                </AppSettingsContextProvider>
+            </UserContextProvider>
+        </LocalizationProvider>
     );
 }
