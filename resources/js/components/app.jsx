@@ -112,6 +112,11 @@ const router = createBrowserRouter([
             },
 
             {
+                path : "wallet/stripePayment",
+                element  : <StripePayment />
+            },
+
+            {
                 path: "payment/stripe",
                 element: <StripePayment />,
             },
@@ -165,6 +170,11 @@ const router = createBrowserRouter([
             {
                 path: "wallet",
                 element: <Wallet />,
+            },
+
+            {
+                path : "wallet/stripePayment",
+                element  : <StripePayment />
             },
 
             {
@@ -259,6 +269,11 @@ const router = createBrowserRouter([
             {
                 path: "wallet",
                 element: <Wallet />,
+            },
+
+            {
+                path : "wallet/stripePayment",
+                element  : <StripePayment />
             },
 
             {

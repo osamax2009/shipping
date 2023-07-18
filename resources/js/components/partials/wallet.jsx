@@ -81,14 +81,7 @@ const Wallet = () => {
                 setOpenStripe={setOpenStripe}
             />
 
-            {state && (
-                <StripePayment
-                    open={openStripe}
-                    setOpen={setOpenStripe}
-                    getWallet={getWallet}
-                   // stripePromise={stripePromise}
-                />
-            )}
+            
 
             {/*  <PaypalPayment /> */}
         </div>
@@ -133,11 +126,12 @@ const AddMoneyModal = ({ amount, setAmount, open, setOpen, setOpenStripe }) => {
                 if (res.intent) {
                     const intent = res.intent;
                    
-                    setOpenStripe(true);
-                    const url = "/" + user?.user_type + "/wallet";
+                  
+                    const url = "/" + user?.user_type + "/wallet/stripePayment";
                     navigate(url, {
                         state: {
                             intent: intent,
+                            
                         },
                     });
                 }
