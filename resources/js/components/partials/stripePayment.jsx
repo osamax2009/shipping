@@ -44,11 +44,13 @@ const StripePayment = () => {
 
     //const stripe = useStripe();
 
-    return (
-        <Elements stripe={loadStripe(publishable_key)} options={options}>
-            <StripePaymentForm />
-        </Elements>
-    );
+    if (publishable_key) {
+        return (
+            <Elements stripe={loadStripe(publishable_key)} options={options}>
+                <StripePaymentForm />
+            </Elements>
+        );
+    }
 };
 
 export default StripePayment;
@@ -97,7 +99,6 @@ const StripePaymentForm = () => {
             const pay = await postWithAxios("/api/save-wallet", dataToSend);
 
             setProcessing(false);
-           
 
             toast(pay.message, {
                 type: "success",

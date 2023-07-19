@@ -111,15 +111,15 @@ const router = createBrowserRouter([
                 element: <Wallet />,
             },
 
-            {
+           /*  {
                 path : "wallet/stripePayment",
                 element  : <StripePayment />
-            },
+            }, */
 
-            {
+           /*  {
                 path: "payment/stripe",
                 element: <StripePayment />,
-            },
+            }, */
 
             {
                 path: "createorder",
@@ -172,10 +172,10 @@ const router = createBrowserRouter([
                 element: <Wallet />,
             },
 
-            {
+           /*  {
                 path : "wallet/stripePayment",
                 element  : <StripePayment />
-            },
+            }, */
 
             {
                 path: "earning-history",
@@ -271,10 +271,10 @@ const router = createBrowserRouter([
                 element: <Wallet />,
             },
 
-            {
+           /*  {
                 path : "wallet/stripePayment",
                 element  : <StripePayment />
-            },
+            }, */
 
             {
                 path: "paymentgateway",

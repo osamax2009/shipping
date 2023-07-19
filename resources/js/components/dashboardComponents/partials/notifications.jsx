@@ -50,7 +50,7 @@ const Notifications = () => {
                 </span>
             </a>
             <div
-                className="dropdown-menu gap-4 dropdown-menu-right shadow animated--grow-in"
+                className="dropdown-menu gap-4 dropdown-menu-right shadow animated--grow-in w-fit"
                 style={{ left: "inherit", right: "0px" }}
             >
                 <span className="dropdown-item dropdown-header">
@@ -110,11 +110,11 @@ const Notification = ({ notification, getNotifications }) => {
                         icon={<FaRegComments className="text-appGreen" />}
                     />{" "}
                     <div className="grid gap-2">
-                        <div className="font-bold">
+                        <div className="font-bold ">
                             {" "}
                             {notification?.data.subject}{" "}
                         </div>
-                        <div> {notification?.data.message} </div>
+                        <div className="md:w-[180px] truncate"> {notification?.data.message} </div>
                     </div>
                 </div>
                 <span className="float-right text-muted text-sm">
