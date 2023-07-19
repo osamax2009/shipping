@@ -51,7 +51,7 @@ import Myfatoorah from "./adminInterface/paymentGateway/myfatoorah";
 import ViewUser from "./adminInterface/viewUser";
 import TermAndCondition from "./partials/termAndCondition";
 import AllNotifications from "./adminInterface/allNotifications";
-import StripePayment from "./partials/stripePayment";
+/* import StripePayment from "./partials/stripePayment"; */
 import Profile from "./partials/profile";
 import NotFoundPage from "./partials/404";
 

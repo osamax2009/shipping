@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+/* import React, { useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { getWithAxios, postWithAxios } from "../api/axios";
 import { toast } from "react-toastify";
@@ -53,7 +53,7 @@ const StripePayment = () => {
     }
 };
 
-export default StripePayment;
+// export default StripePayment;
 
 const StripePaymentForm = () => {
     const { appSettings, setAppSettings } = useContext(AppSettingsContext);
@@ -139,3 +139,4 @@ const StripePaymentForm = () => {
         </div>
     );
 };
+ */

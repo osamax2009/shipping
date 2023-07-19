@@ -5,13 +5,13 @@ import { UserContext } from "../contexts/userContext";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Dropdown } from "@nextui-org/react";
 import { AppSettingsContext } from "../contexts/appSettings";
-import { Elements } from "@stripe/react-stripe-js";
+/* import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import StripePayment from "./stripePayment";
-import PaypalPayment from "./paypalPayment";
+import PaypalPayment from "./paypalPayment"; */
 import { toast } from "react-toastify";
 
-const getStripeKey = async () => {
+/* const getStripeKey = async () => {
     let key = null;
     const res = await getWithAxios("/api/paymentgateway-list");
     const stripe = res.data.filter((e) => e.type == "stripe");
@@ -21,7 +21,7 @@ const getStripeKey = async () => {
 
 const publishable_key = await getStripeKey();
 
-const stripePromise = loadStripe(publishable_key);
+const stripePromise = loadStripe(publishable_key); */
 
 const Wallet = () => {
     const [wallet, setWallet] = useState(0.0);
