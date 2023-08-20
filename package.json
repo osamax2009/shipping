@@ -14,12 +14,12 @@
         "@inertiajs/inertia": "^0.10.0",
         "@inertiajs/inertia-vue3": "^0.5.1",
         "@inertiajs/progress": "^0.2.6",
-        "@tailwindcss/forms": "^0.4.0",
+        "@tailwindcss/forms": "^0.5.4",
         "@tailwindcss/typography": "^0.5.0",
         "@vue/compiler-sfc": "^3.0.5",
         "animated-tailwindcss": "^4.0.0",
         "axios": "^0.21",
-        "bootstrap": "4.6.0",
+        "bootstrap": "^5.3.1",
         "browser-sync": "^2.29.3",
         "browser-sync-webpack-plugin": "^2.3.0",
         "daisyui": "^3.1.0",
@@ -38,6 +38,9 @@
         "vue": "^3.0.5",
         "vue-loader": "^16.1.2"
     },
+    "resolutions": {
+        "autoprefixer": "^10.4.15"
+    },
     "dependencies": {
         "@emotion/react": "^11.11.1",
         "@emotion/styled": "^11.11.0",
@@ -48,6 +51,7 @@
         "@react-pdf/renderer": "^3.1.12",
         "@stripe/react-stripe-js": "^2.1.1",
         "@stripe/stripe-js": "^1.54.1",
+        "autoprefixer": "^10.4.15",
         "chart.js": "^4.3.0",
         "dayjs": "^1.11.8",
         "firebase": "^10.0.0",

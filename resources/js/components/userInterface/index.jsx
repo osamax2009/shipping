@@ -17,7 +17,7 @@ const Index = () => {
             <Brand/>
             <WorkWith/>
             <ParcelTypes />
-            <HowToShip/>
+             <HowToShip/>
             <DeliveryMan />
             <Prohibited/>
             <FollowShipment/>

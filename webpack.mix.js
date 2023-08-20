@@ -1,4 +1,4 @@
-const mix = require('laravel-mix');
+const mix = require("laravel-mix");
 
 /*
  |--------------------------------------------------------------------------
@@ -11,15 +11,20 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js').react()
-    .postCss('resources/css/app.css', 'public/css', [
-        require('postcss-import'),
-        require('tailwindcss'),
+mix.js("resources/js/app.js", "public/js")
+    .react()
+    .postCss("resources/css/app.css", "public/css", [
+        require("postcss-import"),
+        require("tailwindcss"),
     ])
-    .webpackConfig(require('./webpack.config'));
+    .webpackConfig(require("./webpack.config"), {
+        stats: {
+            children: true,
+        },
+    });
 
 if (mix.inProduction()) {
     mix.version();
 }
 
-mix.browserSync('laravel.test');
+mix.browserSync("laravel.test");
